@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Hard Game</title>
+    <meta charset="utf-8">
+    <base href="..">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/4850321074896896.png" />
+    <style>
+      .big{
+        font-size: 50px;
+        margin-left: 200px;
+        margin-top: 50px;
+      }.sub{
+        font-size: 30px;
+        margin-left: 250px;
+        color: #BBB;
+        text-decoration: none;
+      }.gap{
+        display: block;
+        height: 100px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  </head>
+  <body>
+    <canvas id="back"></canvas>
+    <a id="github" href="https://github.com/KY246/KY246.github.io">
+      <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      Fix, Contribute, Star
+    </a>
+    <script src="back.js"></script>
+    
+    <h1 class="big">
+      The Hard Game
+    </h1>
+    
+    <canvas id="game"></canvas>
+    
+    <br/>
+    <br/>
+    <br/>
+    <a href="index.html" class="sub">
+      &raquo; Back Home
+    </a>
+    
+    <p class="gap"></p>
+    <footer>
+      &copy;2021 Kynan - Some rights reserved under the MIT License
+      <br/>
+      <a href="https://github.com/KY246" title="Github">
+        <img class="icon" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      </a>
+      <a href="https://www.khanacademy.org/profile/kyprogramming/projects" title="Khan Academy">
+        <img class="icon" src="https://avatars.githubusercontent.com/u/15455?s=280&v=4"/>
+      </a>
+      <a href="https://replit.com/@KY246" title="repl.it">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Repl.it_logo.svg/1024px-Repl.it_logo.svg.png"/>
+      </a>
+      <a href="https://stackoverflow.com/users/14630063/ky246" title="Stack Overflow">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"/>
+      </a>
+    </footer>
+    <noscript class="noscript">
+      Please Enable JavaScript In your browser.
+    </noscript>
+    
+    <script>
+    var sketchProc = function(pi) {
+      with (pi) {
+        size(400, 400);
+        
+        /**
+          Extremely simple game
+          Which I call “The Hard Game” because I'm extremely creative and thought long and hard on a great name like this.
+
+          Credit to The Coding Train (Youtube) and wikipedia for the basic reaycasting algoriths
+          The code for the casting was based off of the code shown in the source above, 
+
+          Note: I know that all the levels are possible, because I completed all sections of them. However, it got too hard so I didn't actually complete the last level. 
+
+          If it freezes, type a space here -->
+
+          People who beat it (No Longer taking winners)  :
+            sameascopy
+            Terro
+            Doctor137
+            Nitrobeast101
+            Banana97286
+          */
+          textAlign(CENTER, CENTER);
+          var lines=[];
+          var px = 100;
+          var py = 100;
+          var vx = 0;
+          var vy = 0;
+          var dead = 0;
+          var won = 0;
+          var cd = 0;
+          var keys=[];
+          var dec = 0;
+          var level = 0;
+          var home = 1;
+          var colours=[255,color(255,0,0),color(0,255,100)];
+          function ray(x, y, dx, dy){
+            //Credit to the Coding Train for the basics of this function. It still has my implementations though.
+            var hitting;
+            var x1 = x;
+            var y1 = y;
+            var x2 = x + dx;
+            var y2 = y + dy;
+            for(var i = 0; i < lines.length; i+=5){
+              var x3 = lines[i];
+              var y3 = lines[i+1];
+              var x4 = lines[i+2];
+              var y4 = lines[i+3];
+              var de = (x3 - x4) * (y1 - y2) - (y3 - y4) * (x1 - x2);
+              if(de !== 0){
+                var t = ((x3 - x1) * (y1 - y2) - (y3 - y1) * (x1 - x2)) / de;
+                var u =-((x3 - x4) * (y3 - y1) - (y3 - y4) * (x3 - x1)) / de;
+                if(t > 0 && t < 1 && u > 0){
+                  var ix = ~~(x3 + t * (x4 - x3));
+                  var iy = ~~(y3 + t * (y4 - y3));
+                  var di = ~~dist(x, y, ix, iy);
+                  if(!hitting|| di < hitting[0]){
+                    hitting = [di, ix, iy, lines[i+4]];
+                  }
+                }
+              }
+            }
+            return hitting;
+          }
+          function rt(x, y, s, sp, t, wt, sk){
+            for(var i=0; i < 3; i ++){
+              if(i === 1 && sk){continue;}
+              lines.push(x + s * Math.sin(sp * frameCount/15 + i*2*Math.PI/t), y + s * Math.cos(sp * frameCount/15 + i*2*Math.PI/t), x + s * Math.sin(sp * frameCount/15 + (i + 1)*2*Math.PI/t), y + s * Math.cos(sp * frameCount/15 + (i + 1)*2*Math.PI/t), wt);
+            }
+          }
+          function levels(){
+            switch(level){
+              case 0:
+                lines=[10, 10, 390, 10, 0, 10, 390, 10, 10, 0, 10, 390, 390, 390, 0, 390, 10, 390, 390, 0, 350, 390, 390, 350, 2];
+                text("Arrow Keys to move.\nGet to the green.", 250, 150);
+              break;
+              case 1:
+                lines=[10, 10, 390, 10, 0, 10, 390, 10, 10, 0, 10, 390, 390, 390, 0, 390, 10, 390, 390, 0, 350, 390, 390, 350, 2, 200, 100, 200, 390, 1];
+                text("Don\'t Touch\nthe Red!", 300, 150);
+              break;
+              case 2:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 350, 390, 390, 350, 2, 100, 100, 100, 390, 1, 200, 10, 200, 300, 1, 300, 100, 300, 390, 1];
+                text("Still easy!", 300, 150);
+              break;
+              case 3:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 345, 360, 390, 350, 2, 55, 55, 100, 390, 1, 145, 10, 145, 345, 1, 325, 100, 345, 390, 1, 145, 330, 290, 300, 1, 200, 260, 320, 210, 1];
+                text("Tight Squeeze", 240, 150);
+              break;
+              case 4:
+                lines=[10, 10, 390, 10, 0, 10, 390, 10, 10, 0, 10, 390, 390, 390, 0, 390, 10, 390, 390, 0, 60, 60, 340, 60, 0, 60, 60, 60, 340, 0, 390, 150, 340, 60, 0, 110, 210, 110, 390, 0, 110, 110, 110, 160, 0, 110, 210, 210, 210, 0, 260, 160, 260, 390, 0, 110, 160, 260, 160, 0, 160, 110, 310, 110, 0, 340, 330, 310, 110, 0, 340, 330, 310, 330, 0, 340, 330, 390, 330, 0, 340, 330, 340, 390, 0, 210, 340, 210, 210, 0, 210, 340, 160, 340, 0, 160, 340, 160, 260, 0];
+                rt(185, 315, 15, 1, 3, 2, 0);
+                text("Maze Time!", 240, 135);
+              break;
+              case 5:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 300, 10, 300, 100, 1, 300, 390, 300, 300, 1, 300, 210, 300, 190, 1, 150, 300, 150, 100, 1, 75 + 65 * Math.sin(frameCount / 15), 75 + 65 * Math.cos(frameCount / 15), 75 - 65 * Math.sin(frameCount / 15), 75 - 65 * Math.cos(frameCount / 15), 1, 75 + 65 * Math.sin(-frameCount / 15), 325 + 65 * Math.cos(-frameCount / 15), 75 - 65 * Math.sin(-frameCount / 15), 325 - 65 * Math.cos(-frameCount / 15), 1];
+                rt(45, 200, 20, 1, 3, 2, 0);
+                rt(300, 200 + 65 * Math.sin(frameCount / 50), 20, 1, 3, 1, 0);
+                rt(300, 200 - 65 * Math.sin(frameCount / 50), 20, 1, 3, 1, 0);
+                text("Getting Harder?", 240, 135);
+              break;
+              case 6:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 60, 200 + 175 * Math.sin(frameCount / 40), 140, 200 + 175 * Math.sin(frameCount / 40), 1, 60, 200 - 175 * Math.sin(frameCount / 40), 140, 200 - 175 * Math.sin(frameCount / 40), 1, 160, 200 + 175 * Math.cos(frameCount / 40), 240, 200 + 175 * Math.cos(frameCount / 40), 1, 160, 200 - 175 * Math.cos(frameCount / 40), 240, 200 - 175 * Math.cos(frameCount / 40), 1, 260, 200 + 175 * Math.sin(frameCount / 40), 340, 200 + 175 * Math.sin(frameCount / 40), 1, 260, 200 - 175 * Math.sin(frameCount / 40), 340, 200 - 175 * Math.sin(frameCount / 40), 1, 100 + 100 * Math.sin(frameCount / 40), 200, 300 + 100 * Math.sin(frameCount / 40), 200, 1, 350, 390, 390, 350, 2];
+                text("Having fun?", 240, 135);
+              break;
+              case 7:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 200 + 175 * Math.sin(-frameCount / 15), 200 + 175 * Math.cos(-frameCount / 15), 200 - 175 * Math.sin(-frameCount / 15), 200 - 175 * Math.cos(-frameCount / 15), 1, 200 + 275 * Math.sin(-frameCount / 45), 200 + 275 * Math.cos(-frameCount / 45), 200 - 275 * Math.sin(-frameCount / 45), 200 - 275 * Math.cos(-frameCount / 45), 1];
+                rt(55, 350, 20, 1, 3, 2, 0);
+                rt(55, 350, 50, 1, 4, 1, 1);
+                rt(200, 200, 140, 1, 3, 1, 0);
+                text("Still here?", 200, 200);
+              break;
+              case 8:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 10, 90, 300, 90, 1, 10, 250, 300, 250, 1, 100, 170, 390, 170, 1, 100, 330, 390, 330, 1];
+                text("Impressive.", 240, 135);
+                rt(345, 55, 45, 1, 4, 1, 0);
+                rt(345, 135, -45, 1, 4, 1, 0);
+                rt(55, 135, 45, 1, 4, 1, 0);
+                rt(55, 215, -45, 1, 4, 1, 0);
+                rt(345, 215, 45, 1, 4, 1, 0);
+                rt(345, 295, -45, 1, 4, 1, 0);
+                rt(55, 330, 45, 1, 4, 1, 1);
+                rt(355, 365, 20, 1, 3, 2, 0);
+              break;
+              case 9:
+                lines=[10, 10, 390, 10, 1, 10, 390, 10, 10, 1, 10, 390, 390, 390, 1, 390, 10, 390, 390, 1, 100, 100, 100, 390, 1, 200, 10, 200, 300, 1, 300, 100, 300, 390, 1, 0, 300, 50 + 50 * Math.sin(frameCount / 15), 300, 1, 400, 300, 350 - 50 * Math.sin(frameCount / 15), 300, 1];
+                rt(340, 60, 45, 1, 4, 1, 0);
+                rt(260, 60, -45, 1, 4, 1, 0);
+                rt(150, 60, 45, 1, 4, 1, 0);
+                rt(60, 60, -45, 1, 4, 1, 0);
+                rt(150, 340, 45, 1, 4, 1, 0);
+                rt(250, 340, -45, 1, 4, 1, 0);
+                rt(60, 200, -45, 1, 4, 1, 0);
+                rt(150, 200, -45, 1, 4, 1, 0);
+                rt(250, 200, -45, 1, 4, 1, 0);
+                rt(340, 200, -45, 1, 4, 1, 0);
+                rt(345, 355, 20, 1, 3, 2, 0);
+                text("Almost There.", 240, 135);
+              break;
+            }
+          }
+          // frameRate(30);
+          frameCount = 0;
+          var levlen = 10;
+          var setupL = [
+            100, 100,
+            50, 200,
+            50, 350,
+            50, 350,
+            40, 40,
+            360, 200,
+            40, 40,
+            40, 40,
+            50, 50,
+            50, 350
+          ];
+          background(0);
+          draw = function(){
+            if(!home){
+              try{
+                fill(0, 40);
+                rect(-1, -1, width+2, height +2);
+                
+                fill(255);
+                textSize(20);
+                levels();
+                
+                if(!(dead || won)){
+                  if(keys[UP] || keys[87]){
+                    vy -= 0.7;
+                  }
+                  if(keys[DOWN] || keys[83]){
+                    vy += 0.7;
+                  }
+                  if(keys[LEFT] || keys[65]){
+                    vx -= 0.7;
+                  }
+                  if(keys[RIGHT] || keys[68]){
+                    vx += 0.7;
+                  }
+                  vx *= 0.9;
+                  vy *= 0.9;
+                  px += vx;
+                  py += vy;
+                  
+                  if(px < 0 || py < 0 || px > 400 || py > 400){
+                    dead = 1;
+                    cd = 30;
+                  }
+                  
+                  strokeWeight(4);
+                  var off = random();
+                  for(var j=off; j<off+2*Math.PI; j+=0.0225){
+                    var ve = ray(px, py, Math.sin(j), Math.cos(j));
+                    if(ve){
+                      fill(colours[ve[3]]);
+                      noStroke();
+                      ellipse(ve[1], ve[2], 15/sqrt(ve[0])+2, 15/sqrt(ve[0])+2);
+                      stroke(200, 15);
+                      line(ve[1], ve[2], px, py);
+                      if(sq(ve[1] - px) + sq(ve[2] - py) < 225){
+                        if(ve[3] === 1){ 
+                          dead = 1;
+                          cd = 30;
+                        }else if(ve[3] === 2){ 
+                          won = 1;
+                          cd = 30;
+                        }else{ 
+                          var s = dist(0, 0, vx, vy);
+                          vx = - (s + 0.01) * Math.sin(j);
+                          vy = - (s + 0.01) * Math.cos(j);
+                        }
+                      }
+                    }
+                  }
+                  fill(255);
+                  stroke(255, 100);
+                  strokeWeight(10);
+                  ellipse(px, py, 20, 20);
+                }else{
+                  cd --;
+                  if(cd < 0 && dead){
+                    dead = 0;
+                    dec ++;
+                    px = setupL[level * 2];
+                    py = setupL[level * 2 + 1];
+                    vx = 0;
+                    vy = 0;
+                  }else if(cd < 0){
+                    if(level < levlen - 1){
+                      won = 0;
+                      level ++;
+                      px = setupL[level * 2];
+                      py = setupL[level * 2 + 1];
+                      vx = 0;
+                      vy = 0;
+                    }else{
+                      background(0);
+                      fill(255);
+                      textSize(60);
+                      text("You won!", 200, 100);
+                      textSize(30);
+                      text("Congratulations!\nYou finished in " + frameCount + " frames\nwith " + dec + " deaths!", 200, 200);
+                      textSize(20);
+                      text("(Click to Restart)", 200, 290);
+                      noLoop();
+                    }
+                  }
+                }
+              }catch(Error){if(Error.message){println(Error.message);}}
+            }else{
+              background(0);
+              fill(min(frameCount * 4, 255));
+              textSize(60);
+              text("The Hard\nGame", 200, 120);
+              textSize(30);
+              text("A 2D Raycaster", 200, 250);
+              textSize(20);
+              text("(Click to Start)", 200, 330);
+            }
+          };
+          keyPressed=function(){
+            keys[keyCode] = 1;
+          };
+          keyReleased=function(){
+            delete keys[keyCode];
+          };
+          mouseClicked = function(){
+            if(won){
+              Program.restart();
+            }else if(home){
+              home = 0;
+            }
+          };
+          //Less than 300 lines!
+      }
+    }
+
+    new Processing(document.getElementById("game"), sketchProc); 
+ </script>
+  </body>
+</html>

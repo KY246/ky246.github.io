@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dice</title>
+    <meta charset="utf-8">
+    <base href="..">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/4850321074896896.png" />
+    <style>
+      .big{
+        font-size: 50px;
+        margin-left: 200px;
+        margin-top: 50px;
+      }.sub{
+        font-size: 30px;
+        margin-left: 250px;
+        color: #BBB;
+        text-decoration: none;
+      }.gap{
+        display: block;
+        height: 100px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  </head>
+  <body>
+    <canvas id="back"></canvas>
+    <a id="github" href="https://github.com/KY246/KY246.github.io">
+      <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      Fix, Contribute, Star
+    </a>
+    <script src="back.js"></script>
+    
+    <h1 class="big">
+      Dice
+    </h1>
+    
+    <canvas id="game"></canvas>
+    
+    <br/>
+    <br/>
+    <br/>
+    <a href="index.html" class="sub">
+      &raquo; Back Home
+    </a>
+    
+    <p class="gap"></p>
+    <footer>
+      &copy;2021 Kynan - Some rights reserved under the MIT License
+      <br/>
+      <a href="https://github.com/KY246" title="Github">
+        <img class="icon" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      </a>
+      <a href="https://www.khanacademy.org/profile/kyprogramming/projects" title="Khan Academy">
+        <img class="icon" src="https://avatars.githubusercontent.com/u/15455?s=280&v=4"/>
+      </a>
+      <a href="https://replit.com/@KY246" title="repl.it">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Repl.it_logo.svg/1024px-Repl.it_logo.svg.png"/>
+      </a>
+      <a href="https://stackoverflow.com/users/14630063/ky246" title="Stack Overflow">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"/>
+      </a>
+    </footer>
+    <noscript class="noscript">
+      Please Enable JavaScript In your browser.
+    </noscript>
+    
+    <script>
+    var sketchProc = function(pi) {
+      with (pi) {
+        size(600, 600);
+        
+        var difficulty="easy";//easy or hard
+          /*
+              Circles tower defense.
+
+              Click the light green spots to place towers.
+              To change the game speed or pause, press any key on your keyboard.
+              To start the round, click "Start Round."
+              
+              50 rounds total!
+              
+              All within 1500 lines of code!
+              
+              The cleanest code I ever wrote.
+              
+              See more of my projects here:
+          https://www.khanacademy.org/profile/kaid_734655799699922356147662/projects
+          */
+          /**Variables*/
+          //frameRate
+          frameRate(50);
+          //All four trails that enemies follow.
+          var trail=[
+              [-20,0,100,100,300,100,250,200,320,331,200,300,50,380,50,500,250,550,400,450,500,490,600,600],
+              [380,-13,300,100,400,200,550,249,550,350,380,350,200,300,50,380,50,500,250,550,400,450,500,490,600,600],
+              [-20,0,100,100,300,100,400,200,550,249,550,350,380,350,200,300,50,380,50,500,250,550,400,450,500,490,600,600],
+              [380,-13,300,100,250,200,320,331,200,300,50,380,50,500,250,550,400,450,500,490,600,600],
+          ];
+          //Where you can place towers. (place=[x1,y1,x2,y2,x3,y3, ... ];)
+          var place=[
+              130,40,200,40,270,40,377,91,400,41,405,140,494,176,319,191,340,249,379,298,425,259,454,306,501,281,560,201,430,90,214,151,195,206,218,258,156,149,160,263,371,406,434,407,506,569,158,389,207,388,257,389,261,437,260,486,209,486,159,486,157,439,210,439,25,110,452,527
+          ];
+          //Where have you placed towers? 1 if placed on that spot.
+          var placed=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+          //Info and upgrades for all of the towers.
+          //info=[
+          //    [
+          //        price
+          //        tower name
+          //        upgrade 1:[DAMAGE , RELOAD , RANGE , EXPLOSION_RADIUS, BULLETS , SLOW_DOWN , FREEZE , INACCURACY]
+          //    ]
+          //];  Look here to see how info works
+          var info=[
+              [
+                  50,
+                  "Basic",
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 1/3",20],
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 2/3",25],
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 3/3",30],
+                  [1,1,1.25,1,1,1,1,1,"Range 1/3",40],
+                  [1,1,1.25,1,1,1,1,1,"Range 2/3",50],
+                  [1,1,1.25,1,1,1,1,1,"Range 3/3",60],
+                  [1.2,1,1,1,1,1,1,1,"Power 1/3",75],
+                  [1.2,1,1,1,1,1,1,1,"Power 2/3",100],
+                  [1.2,1,1,1,1,1,1,1,"Power 3/3",125]
+              ],
+              [
+                  100,
+                  "shotgun",
+                  [1.25,0.9,1,1,1,1,1,1,"Basic 1/3",50],
+                  [1.25,0.9,1,1,1,1,1,1,"Basic 2/3",60],
+                  [1.25,0.9,1,1,1,1,1,1,"Basic 3/3",70],
+                  [1,1,1.2,1,1,1,1,1,"Range 1/3",75],
+                  [1,1,1.2,1,1,1,1,1,"Range 2/3",90],
+                  [1,1,1.2,1,1,1,1,1,"Range 3/3",105],
+                  [1,1,1,1,4/3,1,1,1,"4 shots",115],
+                  [1,1,1,1,5/4,1,1,1,"5 shots",115],
+                  [1,1,1,1,6/5,1,1,1,"6 shots",115]
+              ],
+              [
+                  100,
+                  "Freeze",
+                  [1.05,0.8,1,1,1,1,1,1,"Basic 1/3",50],
+                  [1.05,0.8,1,1,1,1,1,1,"Basic 2/3",60],
+                  [1.05,0.8,1,1,1,1,1,1,"Basic 3/3",70],
+                  [1,1,1.2,1,1,1,1,1,"Range 1/3",80],
+                  [1,1,1.2,1,1,1,1,1,"Range 2/3",90],
+                  [1,1,1.2,1,1,1,1,1,"Range 3/3",100],
+                  [1,1,1,1,1,1,1.5,1,"Freeze 1/3",105],
+                  [1,1,1,1,1,1,1.5,1,"Freeze 2/3",120],
+                  [1,1,1,1,1,1,1.5,1,"Freeze 3/3",135],
+                  [1,1,1,1,1,100,1,1,"Slow 1/3",145],
+                  [1,1,1,1,1,2,1,1,"Slow 2/3",150],
+                  [1,1,1,1,1,3/2,1,1,"Slow 3/3",150]
+              ],
+              [
+                  100,
+                  "Flame",
+                  [1,0.9,1.2,1,1,1,1,1,"Basic 1/3",50],
+                  [1,0.9,1.2,1,1,1,1,1,"Basic 2/3",60],
+                  [1,0.9,1.2,1,1,1,1,1,"Basic 3/3",70],
+                  [1.15,1,1,1,1,1,1,1,"Power 1/3",75],
+                  [1.15,1,1,1,1,1,1,1,"Power 2/3",90],
+                  [1.15,1,1,1,1,1,1,1,"Power 3/3",105],
+                  [1,1,1,1,1,50,1,1,"Slow 1/3",115],
+                  [1,1,1,1,1,2,1,1,"Slow 2/3",135],
+                  [1,1,1,1,1,2,1,1,"Slow 3/3",150]
+              ],
+              [
+                  150,
+                  "Multi",
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 1/3",75],
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 2/3",90],
+                  [1.15,0.85,1,1,1,1,1,1,"Basic 3/3",105],
+                  [1,1,1.25,1,1,1,1,1,"Range 1/3",115],
+                  [1,1,1.25,1,1,1,1,1,"Range 2/3",135],
+                  [1,1,1.25,1,1,1,1,1,"Range 3/3",155],
+                  [1,1,1,1,2,1,1,1,"4 shots",175],
+                  [1,1,1,1,2,1,1,1,"8 shots",200],
+                  [1,1,1,1,2,1,1,1,"16 shots",225]
+              ],
+              [
+                  200,
+                  "Bomb",
+                  [1.1,0.9,1.1,1,1,1,1,1,"Basic 1/3",100],
+                  [1.1,0.9,1.1,1,1,1,1,1,"Basic 2/3",110],
+                  [1.1,0.9,1.1,1,1,1,1,1,"Basic 3/3",120],
+                  [1.1,1,1,1.25,1,1,1,1,"Bang 1/3",125],
+                  [1.1,1,1,1.25,1,1,1,1,"Bang 2/3",150],
+                  [1.1,1,1,1.25,1,1,1,1,"Bang 3/3",175],
+                  [1,0.9,1.2,1,1,1,1,1,"Super 1/3",200],
+                  [1,0.9,1.2,1,1,1,1,1,"Super 2/3",215],
+                  [1,0.9,1.2,1,1,1,1,1,"Super 3/3",230]
+              ],
+              [
+                  250,
+                  "Laser",
+                  [1.25,1,1,1,1,1,1,1,"Basic 1/3",125],
+                  [1.25,1,1,1,1,1,1,1,"Basic 2/3",140],
+                  [1.25,1,1,1,1,1,1,1,"Basic 3/3",155],
+                  [1,1,1.2,1,1,1,1,1,"Range 1/3",175],
+                  [1,1,1.2,1,1,1,1,1,"Range 2/3",195],
+                  [1,1,1.2,1,1,1,1,1,"Range 3/3",215],
+                  [1,1,1,1,2,1,1,1,"2 Lasers",250]
+              ],
+              [
+                  750,
+                  "Strong",
+                  [1.2,0.9,1.15,1,1,1,1,1,"Basic 1/3",375],
+                  [1.2,0.9,1.15,1,1,1,1,1,"Basic 2/3",400],
+                  [1.2,0.9,1.15,1,1,1,1,1,"Basic 3/3",425],
+                  [1,0.75,1,1,1,1,1,1,"Speed 1/3",450],
+                  [1,0.75,1,1,1,1,1,1,"Speed 2/3",485],
+                  [1,0.75,1,1,1,1,1,1,"Speed 3/3",520],
+                  [1.3,1,1,1,1,1,1,1,"Power 1/3",550],
+                  [1.3,1,1,1,1,1,1,1,"Power 2/3",600],
+                  [1.3,1,1,1,1,1,1,1,"Power 3/3",650]
+              ]
+          ];
+          //enemy information
+          //speed , size , health , worth , insides , regen , colour , fireRate , freeze , range
+          var eInf=[
+              //basic :: a
+              1.4,25,3,2,"",0,color(0,0,255),Infinity,0,0,
+              //strong :: b
+              1.2,35,10,5,"",0,color(0,0,150),Infinity,0,0,
+              //speedy :: c
+              1.7,20,2,3,"",0,color(0,255,0),Infinity,0,0,
+              //regen :: d
+              1.1,40,7,5,"",0.02,color(255,0,0),Infinity,0,0,
+              //carrier :: e
+              1,35,15,7,"a",0,color(200),Infinity,0,0,
+              //extra strong :: f
+              1.1,35,50,10,"",0,color(100),Infinity,0,0,
+              //strong regen carrier :: g
+              1,40,25,10,"b",0.02,color(255,0,255),Infinity,0,0,
+              //really strong :: h
+              1,45,100,15,"",0,color(0,150,255),Infinity,0,0,
+              //carrier carrier :: i
+              1,40,25,10,"e",0,color(0,100,0),Infinity,0,0,
+              //strong strong :: j
+              0.9,40,125,25,"",0,color(0),Infinity,0,0,
+              //freeze :: k
+              1.3,25,15,10,"",0,color(255),150,90,150,
+              //strong strong :: l
+              0.7,50,350,50,"",0,color(255,255,0),Infinity,0,0,
+              //carrier carrier carrier:: m
+              0.9,45,50,15,"i",0,color(255,100,0),Infinity,0,0,
+              //carrier carrier carrier carrier :: n
+              0.6,55,75,25,"m",0,color(255,255,200),Infinity,0,0,
+              //strong regen :: o
+              1,50,101,15,"",0.03,color(255,200,150),Infinity,0,0,
+              //really extra strong :: p
+              0.5,50,500,75,"",0,color(200,255,200),Infinity,0,0,
+          ];
+          //allows code to pick enemies later
+          var as="abcdefghijklmnop";
+          //set arrays
+          var enemies=[],towers=[],bullets=[],explosions=[],trailD=[];
+          //health
+          var health=100;
+          //starting money
+          var money=100;
+          //level
+          var level=0;
+          //is the shop opened?
+          var shopO=false;
+          //what message should be displayed by the mouse?
+          var message;
+          //what message should be declared in the center of the screen?
+          var message2=0;
+          //is one of the tower's upgrade shops open?
+          var towerO=-1;
+          //is the computer currently creating enemies?
+          var creating=0;
+          //should the computer start making enemies?
+          var start=0;
+          //what scene is it on?
+          var scene='menu';
+          //what is the frameRate?
+          var speed=50;
+          // ... will be redefined later ...
+          var bullet;
+          //All of the levels.
+          var levels=[
+              "\n\nWelcome to Circles Defense!\nClick the light green spots to\nplace towers. To change\nthe gamespeed or pause,\npress any key on your\nkeyboard.To start the round,\nclick \"Start Round.\"\nTo exit this message, click\nanywhere on the screen.",
+              "","","a      a   a          a  a       a","",
+              "You get 10 dollars at\nthe end of every round.",
+              "","","a  a     a      a a   a  a    a  a   a","",
+              "Click on the towers\nto upgrade them.",
+              "","","a a   a  a    a    a  aa  a    aa a  a","",
+              "Ready for some\nstronger enemies?",
+              "","","b                 b  a    a     a    a","",
+              "More of them coming.",
+              "","","b        b        b        b       a    a","",
+              "Lots of regulars",
+              "","","a  a  a  a  a  a  a  a  a  a  a","",
+              "Why are there so many trails?",
+              "a         a         a","","a         a         a","",
+              "Speedys!",
+              "","","c             c             c","",
+              "Now a combination of all 3",
+              "","","b    b    b    a    a    a    c    c    c","",
+              "The only tower that never\nmisses are the laser towers.",
+              "","","b  a  c  b  a  c  b  a  c  b  a  c","",
+              "Now some enemies\nthat can regenerate",
+              "","","b  b  b  d","",
+              "Both the freeze and flame\ntowers can slow down\nenemies if upgraded.",
+              "b   b","","d   d   d   d   d   d   d   d","",
+              "The\'re coming down\nthe wrong trail!",
+              "","                d        d        d        d","b     a     b     a     b     a     b     a     b     a     b     a     b     a     b     a","",
+              "Get the flame, bomb,\nmulti, or shotgun tower!\nThey can get crowds of enemies.",
+              "","","aaaaaaaaaaaaaaaaaaaaaaaa","",
+              "Sometimes, upgrading is\nbetter than buying.",
+              "","","dbacdbacdbacdbacdbacdbac","",
+              "beware the carrier",
+              "","","e     e     e     e     e","",
+              "The fully upgraded multi\ntower can shoot\n16 shots a time.",
+              "b     b     b     b     b     b     b","               e    e    e    e","b     b     b     b     b     b     b","",
+              "Extra Strong",
+              "","","a     a     a","f",
+              "Lots of them.",
+              "f","f","f","f",
+              "Now a combination.",
+              " f  b  e  d  a  c","","f  b  e  d  a  c","",
+              "Strong regenerating carriers",
+              "","","g  f  f","",
+              "More of them!",
+              "","g       g       g       g","aaaaaaaaaaaaaa","",
+              "Even stronger ones!",
+              "","","h","",
+              "Say hi to your favorite,\nthe speedy!",
+              "","h","c    c    c    c    c    c    c    c","",
+              "3 strong ones.",
+              "","","h          h          h","",
+              "This enemy holds a carrier",
+              "","","i     i     i     i","",
+              "Ten of them.",
+              "","","i      i      i      i      i      i      i      i      i      i","",
+              "All of the previous enemies\ncould have been destroyed\nby one shot from\nan unupgraded strong\ntower. This one can\'t.",
+              "","","j          j          j","",
+              "The freezing point of\nwater is 273.15° Kelvin.",
+              "","","k    i    k    i    k    i","",
+              "More strong ones.",
+              "h","h","     h","     h",
+              "can you count them all?",
+              "a a a a a a a a a a a a a a"," a a a a a a a a a a a a a a"," a a a a a a a a a a a a a a","a a a a a a a a a a a a a a",
+              "Do you like the carriers?",
+              "","","i  e   i   e   a  a   e    i   i   e   a   i   i    a   a  i ee    a   a i    e  a a   i  e","",
+              "Do you have any strong\ntowers yet? You\nmight want them.",
+              "","l","","",
+              "Prepare for the cold!",
+              "","","k      k      k      k      k      k    i    i    i","",
+              "Carrier carrier carrier",
+              "","","m        m         m        m        m        m","",
+              "Uh - Oh",
+              "","","m     m    m    m    m    l","",
+              "Lots of carriers",
+              "e e e e e e"," e e e e e e"," e e e e e e","e e e e e e",
+              "2 supers",
+              "","l                l","","",
+              "Getting hard yet?",
+              "","","m    m    m    m    m    m    m    m","",
+              "\"Oh noes! A for loop\nis taking too long to run.\"\n Amount of enemies coming.",
+              "a a a a a a a a a a a a a a m"," a a a a a a a a a a a a a a m"," a a a a a a a a a a a a a a m","a a a a a a a a a a a a a a m",
+              "Every type of enemy",
+              "","","abcdefghijklm","",
+              "Bit too easy? It is,\nif you have the right\ntowers. If you're someone\ninvesting in basic towers,\nyou'll be sorry.",
+              "                                              b        b        b        b        b        b        b        b        b b      b b      b b      b b        b b      b b      b b      b b      b b b    b b b    b b b    b b b    b b b    b b b    b b b    b b b    b b b b  b b b b  b b b b  b b b b","","b        b        b        b        b        b        b        b        b        b b      b b      b b      b b        b b      b b      b b      b b      b b b    b b b    b b b    b b b    b b b    b b b    b b b    b b b    b b b b  b b b b  b b b b  b b b b  b b b b  b b b b  b b b b  b b b b","",
+              "The fully upgraded laser\ntower can shoot\nat two targets.",
+              "      l","l","l","      l",
+              "Here's a new one!",
+              "","","","n           n           n           n",
+              "Almost there!",
+              "","","i  e   i  n    m e   a   m     a   e    i  m i   e   n     n   a   i   i  m  a   a  i ee    n   m  a   a i    me  a a   i  e   n","",
+              "Strong regenerating ones!",
+              "","","o        o        o        o        o        o        o        o        o        o        o        o        o        o        o","",
+              "Lots of carriers!",
+              "","","n    n    n    n    n    n    n    n    n    n","",
+              "Extra strong.",
+              "","","p","",
+              "Second last!",
+              " a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a","               p","a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a","",
+              "I put every type of\nenemy into this final round!",
+              "                    a    a    a    a    a    a    a c  a c  a c  a c  a c  a c  a c  a c  a c  a c  a c  a cm a cm a cm a cm a                                                                           h        h        h        h        h                                                i    i    i    i                                                                                                                                                                   o    o    o    o    o    o    o    o",
+              "                                                                      d    d    d    d    d    d    d    d    d    d    d    d                                                                                                                                                                                                                                                                                                     n    n    n    n",
+              "a    a    a    a    a    a    a    a b  a b  a b  a b  a b  a b  a    a b  a b  a b  a b  a be a be a be a be a be a be a be a                                                         f        f        f        f   j    f   j    f    j   f                            g    g    g    g    g    g    g    g                                                                                                 m    m    m    m    m    m    m    m                                                  l    l    l    lp",
+              "                                                                                                                                                                                                                                                                                                                                                         k    k    k    k    k    k"
+          ];
+          //first message
+          message2=0;
+          //did the game just start?
+          var justStarted=1;
+          //title
+          var string="Circles Tower Defense";
+          //size differrence in menu page for title letters
+          var sizeDiff=[];
+          for(var i=0;i<string.length;i++){
+              sizeDiff.push(random(-15,30));
+          }
+          //Basic setup
+          rectMode(CENTER);
+          textAlign(CENTER,CENTER);
+          angleMode="RADIAN";
+          //Helps allow the enemies to use the trail array to traverse.
+          for(var t=0;t<trail.length;t++){
+              trailD.push([]);
+              for(var i=0;i<trail[t].length-2;i+=2){
+                  trailD[t].push(round(dist(trail[t][i],trail[t][i+1],trail[t][i+2],trail[t][i+3])));
+                  if(i>0){
+                      trailD[t][trailD[t].length-1]+=trailD[t][trailD[t].length-2];
+                  }
+              }
+          }
+          /**Functions*/
+          function shop(x,y){
+              //shop background
+              noStroke();
+              fill(255,100);
+              rect(x,y,160,110,20);
+              strokeWeight(3);
+              stroke(0,100);
+              //pictures of the towers
+              fill(255,0,0);
+              ellipse(x-60,y-40,20,20);
+              fill(255,0,255);
+              ellipse(x-20,y-40,20,20);
+              fill(0,0,255);
+              ellipse(x+20,y-40,20,20);
+              fill(150,0,150);
+              ellipse(x+60,y-40,20,20);
+              fill(255,255,0);
+              ellipse(x-60,y+15,20,20);
+              fill(0,255,0);
+              ellipse(x-20,y+15,20,20);
+              fill(255,100,0);
+              ellipse(x+20,y+15,20,20);
+              fill(0,100,0);
+              ellipse(x+60,y+15,20,20);
+              fill(0);
+              //the barrels of the towers
+              rect(x-53,y-40,14,4);
+              rect(x-13,y-40,14,4);
+              rect(x+27,y-40,14,4);
+              rect(x+67,y-40,14,4);
+              ellipse(x-60,y+15,5,5);
+              rect(x-13,y+15,14,4);
+              rect(x+27,y+15,14,4);
+              rect(x+67,y+15,14,4);
+              textSize(15);
+              //the prices of the towers
+              text("$"+info[0][0],x-60,y-15);
+              text("$"+info[1][0],x-20,y-15);
+              text("$"+info[2][0],x+20,y-15);
+              text("$"+info[3][0],x+60,y-15);
+              text("$"+info[4][0],x-60,y+40);
+              text("$"+info[5][0],x-20,y+40);
+              text("$"+info[6][0],x+20,y+40);
+              text("$"+info[7][0],x+60,y+40);
+              strokeWeight(1);
+              stroke(0);
+              //the dividers
+              line(x-80,y,x+80,y);
+              line(x-40,y-55,x-40,y+55);
+              line(x,y-55,x,y+55);
+              line(x+40,y-55,x+40,y+55);
+          }
+          //background
+          function back(){
+              //background
+              background(0,150,0);
+              stroke(200,100,0);
+              strokeWeight(40);
+              //draw the trails (just the first two, because the others overlap).
+              for(var t=0;t<2;t++){
+                  for(var i=0;i<trail[t].length-2;i+=2){
+                      line(trail[t][i],trail[t][i+1],trail[t][i+2],trail[t][i+3]);
+                  }
+              }
+              //the darker, thinner part of the trails
+              stroke(148, 74, 0);
+              strokeWeight(15);
+              for(var t=0;t<2;t++){
+                  for(var i=0;i<trail[t].length-2;i+=2){
+                      line(trail[t][i],trail[t][i+1],trail[t][i+2],trail[t][i+3]);
+                  }
+              }
+              strokeWeight(1);
+              stroke(0);
+              fill(255,100);
+              //the circle where you can place towers.
+              for(var i=0;i<place.length;i+=2){
+                  ellipse(place[i],place[i+1],40,40);
+              }
+          }
+          //the enemies
+          function follower(x,y,ti,tr,ty){
+              //stands for offset, how far off are the enemies drawn? this makes two enemies at the same spot look like they are at slightly different spots, allowing you to see them both.
+              this.off=[random(-5,5),random(-5,5)];
+              //position
+              this.pos=new PVector(x,y);
+              //time (needed for movement)
+              this.ti=ti;
+              //which trail to follow (out of 4)
+              this.tr=tr;
+              //type
+              this.ty=ty;
+              //retrieve values from enemy Info array{
+                  //speed
+                  this.speed=eInf[as.indexOf(this.ty)*10];
+                  //size
+                  this.s=eInf[as.indexOf(this.ty)*10+1];
+                  //health
+                  this.h=eInf[as.indexOf(this.ty)*10+2];
+                  //worth when killed
+                  this.worth=eInf[as.indexOf(this.ty)*10+3];
+                  //others it is carrying
+                  this.within=eInf[as.indexOf(this.ty)*10+4];
+                  //regen
+                  this.regen=eInf[as.indexOf(this.ty)*10+5];
+                  //colour
+                  this.c=eInf[as.indexOf(this.ty)*10+6];
+                  //fire Rate (for ice shooters)
+                  this.fR=eInf[as.indexOf(this.ty)*10+7];
+                  //How long towers are frozen (for ice shooters)
+                  this.freezer=eInf[as.indexOf(this.ty)*10+8];
+                  //range (for ice shooters)
+                  this.range=eInf[as.indexOf(this.ty)*10+9];
+                  //howsecond health variable for the health bar
+              //}
+              this.totalH=this.h;
+              //Is this enemy being slowed down?
+              this.slow=0;
+              //Is this enemy currently frozen?
+              this.freeze=0;
+              //waiting time till it can shoot (for ice shooters)
+              this.shoot=this.fR;
+              this.run=function(){
+                  //called every frame
+                  noStroke();
+                  //navigation
+                  //which section of the trail is it on?
+                  var stretch=0;
+                  for(var a=0;a<trailD[this.tr].length;a++){
+                      //uses the current time and compares it with the trail time array
+                      if(this.ti>trailD[this.tr][a]){
+                          stretch++;
+                      }
+                  }
+                  if(this.freeze<=0){
+                      //where to go
+                      var target=new PVector(trail[this.tr][stretch*2+2],trail[this.tr][stretch*2+3]);
+                      //velocity
+                      var vel=PVector.sub(target,this.pos);
+                      //velocity = 1 in correct direction (normalization)
+                      vel.normalize();
+                      //multiply velocity by speed
+                      vel.mult(this.speed*(100-this.slow)/100);
+                      //add velocity to position
+                      this.pos.add(vel);
+                      //update the time, for future navigation
+                      this.ti+=this.speed*(100-this.slow)/100;
+                      //for shooters only
+                      if(this.freezer){
+                          //show shooting area.
+                          fill(0,200,255,50);
+                          ellipse(this.pos.x+this.off[0],this.pos.y+this.off[1],this.range*2,this.range*2);
+                          //can it shoot now, or should it wait?
+                          if(this.shoot<=0){
+                              //is there a tower in range?
+                              var distance=Infinity,vel;
+                              for(var i=0;i<towers.length;i++){
+                                  var distance2=dist(this.pos.x,towers[i].pos.y,towers[i].pos.x,this.pos.y);
+                                  if(distance2<this.range&&distance2<distance){
+                                      //find the closest tower
+                                      distance=distance2;
+                                      //find the velocity for the bullet.
+                                      vel=PVector.sub(towers[i].pos,this.pos);
+                                  }
+                              }
+                              //if there is a target
+                              if(distance!==Infinity){
+                                  //reset shooting wait time, so that it doesn't fire every frame.
+                                  this.shoot=this.fR;
+                                  //normalize bullet velocity
+                                  vel.normalize();
+                                  //make a bullet
+                                  bullets.push(new bullet(this.pos.x,this.pos.y,vel,-1,[this.freezer,0,this.range],8));
+                              }
+                          }else{
+                              //Get ready to fire soon... (countdown)
+                              this.shoot--;
+                          }
+                      }
+                  }else{
+                      //if frozen, countdown till effect ends
+                      this.freeze--;
+                  }
+                  //if health is less than 0
+                  if(this.h<=0){
+                      //now dead
+                      this.dead=1;
+                      //add worth to money (give prize)
+                      money+=this.worth;
+                      //spawn any enemies inside
+                      for(var q=0;q<this.within.length;q++){
+                          enemies.push(new follower(this.pos.x,this.pos.y,this.ti,this.tr,this.within[q]));
+                      }
+                  }else if(stretch>=trailD[this.tr].length){
+                      //if reached the end
+                      //make player lose health
+                      health--;
+                      //now dead
+                      this.dead=1;
+                  }else{
+                      //if there is less health than the enemy started with
+                      if(this.h<this.totalH){
+                          //regenerate if it is the right type of enemy
+                          this.h+=this.regen;
+                          //don't let regenerating enemies have more than 100% health
+                          this.h=min(this.h,this.totalH);
+                          //draw the health bar
+                          //the white part for the health bar background
+                          fill(255);
+                          rect(this.pos.x+this.off[0],this.pos.y+this.off[1]-this.s,this.s,this.s/4);
+                          //the red part that shows what percent of health it has remaining
+                          fill(255,0,0);
+                          rect(this.pos.x+this.off[0],this.pos.y+this.off[1]-this.s,this.s*this.h/this.totalH,this.s/4);
+                      }
+                      //draw the enemy!
+                      fill(this.c);
+                      ellipse(this.pos.x+this.off[0],this.pos.y+this.off[1],this.s,this.s);
+                  }
+              };
+          }
+          bullet = function(x,y,v,t,info,s){
+              //position
+              this.pos=new PVector(x,y);
+              //velocity
+              this.v=new PVector(v.x,v.y);
+              //multiply velocity by speed
+              this.v.mult(s);
+              //type
+              this.t=t;
+              //the inherited information
+              //for benevolent bullets: DAMAGE , RELOAD , RANGE , EXPLOSION_RADIUS, BULLETS , SLOW_DOWN , FREEZE , INACCURACY
+              //for malevolent bullets: FREEZING_TIME , UNDEFINED , RANGE
+              this.info=[].concat(info);
+              //size
+              this.si=5;
+              //speed
+              this.sp=s;
+              //damage / freezing time
+              this.d=this.info[0];
+              //range
+              this.r=this.info[2];
+              //change the bullet size depending on the type
+              if(this.t===2||this.t===-1){
+                  this.si=15;
+              }else if(this.t===5){
+                  this.si=10;
+              }
+              this.run=function(){
+                  //called every frame
+                  //if bullet is still alive
+                  if(!this.dead){
+                      noStroke();
+                      //add the velocity to the position
+                      this.pos.add(this.v);
+                      //subtract from its life, so that the bullet can die even if it misses. (stops overloading the KAInfiniteLoopCount)
+                      this.info[2]-=this.sp;
+                      //display the bullets
+                      switch(this.t){
+                          case -1:case 2:
+                              //spinning white square bullets for freezze towers and shots fired by the enemy
+                              fill(255);
+                              pushMatrix();
+                                  translate(this.pos.x,this.pos.y);
+                                  rotate(frameCount/4);
+                                  rect(0,0,this.si,this.si);
+                              popMatrix();
+                          break;
+                          case 3:
+                              //growing and fading fire bullets
+                              //adds to size
+                              this.si+=5;
+                              //decreases from damage
+                              this.info[0]=this.d*this.info[2]/this.r;
+                              //draw the actual bullet
+                              fill(255,100,0,this.info[2]*200/this.r+55);
+                              ellipse(this.pos.x,this.pos.y,this.si,this.si);
+                          break;
+                          default:
+                              //a black circular bullet for the other towers. (The laser bullets aren't actual bullets, so they aren't drawn here).
+                              fill(0);
+                              ellipse(this.pos.x,this.pos.y,this.si,this.si);
+                          break;
+                      }
+                      //if the bullet is off of the screen or the bullet traveled further than its limited range, destroy it,
+                      if(this.pos.x<0||this.pos.y<0||this.pos.x>600||this.pos.y>600||this.info[2]<0){
+                          this.dead=1;
+                      }
+                      //if this is a benevolent bullet (if there ever is such a thing)
+                      if(this.t>=0){
+                          for(var i=0;i<enemies.length;i++){
+                              //calculate if it is colliding with any enemies.
+                              if(dist(this.pos.x,enemies[i].pos.y,enemies[i].pos.x,this.pos.y)<this.si/2+enemies[i].s/2){
+                                  //kill bullet
+                                  this.dead=1;
+                                  //subtract the damage from the enemy's health
+                                  enemies[i].h-=this.info[0];
+                                  //if this bullet had a slowing effect, slow down the enemy accordingly
+                                  enemies[i].slow=max(enemies[i].slow,this.info[5]);
+                                  //if this bullet had a freezing effect, freeze the enemy accordingly
+                                  enemies[i].freeze=this.info[6];
+                                  //if this bullet explodes
+                                  if(this.info[3]){
+                                      ////create an explosion
+                                      explosions.push(this.pos.x,this.pos.y,this.info[3],0,this.info[0]/2);
+                                  }
+                                  //stop the for loop, so that the bullet can't hit more than one enemy.
+                                  i=Infinity;
+                              }
+                          }
+                      }else{
+                          //if this is a bullet shot by an enemy
+                          for(var i=0;i<towers.length;i++){//calculate if it is colliding with any towers.
+                              if(dist(this.pos.x,towers[i].pos.y,towers[i].pos.x,this.pos.y)<this.si/2+17){
+                                  //kill bullet
+                                  this.dead=1;
+                                  //freeze tower
+                                  towers[i].freeze=this.info[0];
+                                  //stop the loop, to free up space
+                                  i=Infinity;
+                              }
+                          }
+                      }
+                  }
+              };
+          }
+          function tower(x,y,ty){
+              //position
+              this.pos=new PVector(x,y);
+              //time
+              this.ti=0;
+              //type
+              this.ty=ty;
+              //How much money you get if you sell it
+              this.price=info[this.ty][0]*3/4;
+              ////how many bullets to shoot in a row (for shotguns)
+              this.re=3;
+              //display positions for upgrade shop
+              this.dx=min(max(this.pos.x,90),510);
+              this.dy=min(max(this.pos.y+80,60),540);
+              //how upgraded is this?
+              this.upgrade=0;
+              //angle the turret is pointing
+              this.ang=0;
+              //is this tower frozen?
+              this.freeze=0;
+              //the tower information:
+              //this.info=[ DAMAGE , RELOAD , RANGE , EXPLOSION_RADIUS, BULLETS , SLOW_DOWN , FREEZE , INACCURACY];
+              switch(this.ty){
+                  case 0:
+                      //BASIC
+                      this.c=color(255,0,0);
+                      this.info=[1,30,125,0,1,0,0,0];
+                  break;
+                  case 1:
+                      //SHOT GUN
+                      this.c=color(255,0,255);
+                      this.info=[2,60,100,0,3,0,0,0.3];
+                  break;
+                  case 2:
+                      //FREEZE
+                      this.c=color(0,0,255);
+                      this.info=[0.5,40,100,0,1,0.1,60,0];
+                  break;
+                  case 3:
+                      //FLAME
+                      this.c=color(150,0,150);
+                      this.info=[0.5,3,70,0,1,0.1,0,0.5];
+                  break;
+                  case 4:
+                      //MULTI
+                      this.c=color(255,255,0);
+                      this.info=[1,45,100,0,2,0,0,0];
+                  break;
+                  case 5:
+                      //BOMB
+                      this.c=color(0,255,0);
+                      this.info=[1,60,110,100,1,0,0,0];
+                  break;
+                  case 6:
+                      //LASER
+                      this.c=color(255,100,0);
+                      this.info=[0.1,0,110,0,1,0,0,0];
+                  break;
+                  case 7:
+                      //STRONG
+                      this.c=color(0,100,0);
+                      this.info=[100,180,150,0,1,0,0,0];
+                  break;
+              }
+              this.run=function(){
+                  //called every frame
+                  //display the circular part of the tower
+                  noStroke();
+                  fill(this.c);
+                  ellipse(this.pos.x,this.pos.y,35,35);
+                  if(this.ty===4||(this.ty===6&&this.info[4]>1)){
+                      //display the black circle in the center of the tower for the multi tower and the upgraded laser tower
+                      fill(0);
+                      ellipse(this.pos.x,this.pos.y,10,10);
+                  }else{
+                      //draw the turret for the other towers
+                      fill(0);
+                      pushMatrix();
+                      translate(this.pos.x,this.pos.y);
+                      //rotate it so that it is pointing at its target
+                      rotate(this.ang);
+                          rect(15,0,30,10);
+                      popMatrix();
+                  }
+                  if(this.freeze>0){
+                      //if frozen
+                      //display ice
+                      fill(0,150,255,150);
+                      rect(this.pos.x,this.pos.y,40,40);
+                      //countdown till not frozen
+                      this.freeze--;
+                  }else{
+                      //search for targets if not frozen
+                      //set nessasary variables.
+                      var time=-1;
+                      var time2=-1;
+                      var vel,tar,tar2;
+                      //search for enemies
+                      for(var i=0;i<enemies.length;i++){
+                          //if there is an enemy within range and is further down the trail from the current target
+                          if(dist(this.pos.x,enemies[i].pos.y,enemies[i].pos.x,this.pos.y)<this.info[2]&&enemies[i].ti>time){
+                              //prepare to fire
+                              time=enemies[i].ti;
+                              //set velocity for the bullet it will soon fire
+                              vel=PVector.sub(enemies[i].pos,this.pos);
+                              //make calling that certain enemy easy (tar stands for target)
+                              tar=enemies[i];
+                          }
+                      }
+                      //if there is a target, change the angle of the turret to point at it. Else, don't change
+                      this.ang=vel?vel.heading():this.ang;
+                      //if the tower is ready to fire
+                      if(this.ti<=0){
+                          //if there is an enemy within range and it isn't a laser tower
+                          if(time>=0&&this.ty!==6){
+                              if(this.ty!==1||this.re<=1){
+                                  //if this tower isn't a shot gun or the multple bullets is down to one
+                                  //reset multiple bullets
+                                  this.re=this.info[4];
+                                  //reset shooting timer
+                                  this.ti+=this.info[1];
+                              }else{
+                                  //subtract one from multiple bullets
+                                  this.re--;
+                              }
+                              //velocity = 1 in correct direction (normalization)
+                              vel.normalize();
+                              //if inaccurate
+                              if(this.info[7]){
+                                  //make the bullets inacuurate by changing the angle
+                                  var theta=random(-this.info[7],this.info[7]);
+                                  //temporary variable redo
+                                  var re=cos(theta)*vel.x-sin(theta)*vel.y;
+                                  vel.y=cos(theta)*vel.y+sin(theta)*vel.x;
+                                  vel.x=re;
+                              }
+                              //make a bullet
+                              bullets.push(new bullet(this.pos.x,this.pos.y,vel,this.ty,this.info,8));
+                              //if this is a multi tower
+                              if(this.ty===4){
+                                  //how much angle there should be between each bullet
+                                  var theta=TWO_PI/this.info[4];
+                                  //bu stands for bullet_amount
+                                  for(var bu=0;bu<this.info[4]-1;bu++){
+                                      var re=cos(theta)*vel.x-sin(theta)*vel.y;
+                                      vel.y=cos(theta)*vel.y+sin(theta)*vel.x;
+                                      vel.x=re;
+                                      //make bullets spread around in a circle
+                                      bullets.push(new bullet(this.pos.x,this.pos.y,vel,this.ty,this.info,8));
+                                  }
+                              }
+                          }else if(time>=0){
+                              //if this is a laser tower
+                              //draw the laser
+                              strokeWeight(2);
+                              stroke(255,0,0);
+                              line(tar.pos.x,tar.pos.y,this.pos.x,this.pos.y);
+                              //make the target lose health
+                              tar.h-=this.info[0];
+                              if(this.info[4]>1){
+                                  //if this laser tower has 2 barrels
+                                  //do another search for the next enemy in line
+                                  for(var i=0;i<enemies.length;i++){
+                                      if(dist(this.pos.x,enemies[i].pos.y,enemies[i].pos.x,this.pos.y)<this.info[2]&&enemies[i].ti>time2&&enemies[i].ti!==time){
+                                          time2=enemies[i].ti;
+                                          tar2=enemies[i];
+                                      }
+                                  }
+                                  //if there is another enemy target candidate, fire at it
+                                  if(tar2){
+                                      //second laser drawing
+                                      line(tar2.pos.x,tar2.pos.y,this.pos.x,this.pos.y);
+                                      //make the second target lose health.
+                                      tar2.h-=this.info[0];
+                                  }
+                              }
+                          }
+                      }else{
+                          //if not ready to fire, count down until it is ready to fire
+                          this.ti--;
+                      }
+                  }
+              };
+          }
+          /**User Interactions + Draw*/
+          draw=function(){
+              try{
+                  //overide KAInfinitLoopCount (sort of)
+                  if(scene==="play"&&!message2){
+                      if(justStarted){
+                          justStarted=undefined;
+                          message2=levels[level];
+                      }
+                      //the message is displayed as white writing in a translucent black box that follows the mouse
+                      message=0;
+                      //if currently making enemies
+                      if(frameCount%15===0&&start){
+                          var making=0;
+                          for(var i=0;i<4;i++){
+                              if(levels[level+i+1][creating]){
+                                  making=1;
+                                  //if the level information isn't a space, which means wait 15 frames
+                                  if(levels[level+i+1][creating]!==" "){
+                                      //create enemy
+                                      enemies.push(new follower(trail[i][0],trail[i][1],0,i,levels[level+i+1][creating]));
+                                  }
+                              }
+                          }
+                          //if the program is no longer making enemies, and there are no enemies left
+                          if(!making&&enemies.length===0){
+                              //get ready for starting the next level
+                              start=0;
+                              creating=-1;
+                              //update the level counter, so that it is set on the next one
+                              level+=5;
+                              //Give money if the difficulty is easy
+                              if(difficulty==="easy"){
+                                  money+=10;
+                              }
+                              //if all of the levels have been completed
+                              if(level>=levels.length){
+                                  //go to the scene for winning
+                                  scene="win";
+                              }else{
+                                  //show people the message for the next level
+                                  message2=levels[level];
+                              }
+                          }
+                          creating++;
+                      }
+                      //set cursor (mouse) to the default arrow shape
+                      cursor("default");
+                      //background
+                      back();
+                      fill(255,200,0);
+                      //if the mouse is hovering above the "Start Round" button
+                      if(mouseX>465&&mouseX<595&&mouseY>110&&mouseY<150){
+                          //if the player is allowed to start the next level
+                          if(start===0){
+                              //set cursor to "pointer"
+                              cursor(HAND);
+                              //change the filll colour for the button
+                              fill(255,150,0);
+                              //change the message to let users know what will happen if they click
+                              message="start wave";
+                          }else{
+                              //if the player is not allowed to start the next level
+                              //change cursor to the red can't be done symbol
+                              cursor("not-allowed");
+                          }
+                      }
+                      //draw button
+                      rect(530,130,130,40);
+                      textSize(25);
+                      fill(0);
+                      //display the basic Info
+                      text("$"+money,530,30);
+                      text("Level:"+(level/5+1),530,60);
+                      text("Health:"+health,530,90);
+                      textSize(20);
+                      //display the "Start Round" message on the button
+                      text("Start Round",530,130);
+                      //run all of the towers
+                      for(var i=0;i<towers.length;i++){
+                          towers[i].run();
+                          if(towers[i].dead){
+                              //if the tower is dead, dispose of it.
+                              towers.splice(i,1);
+                              //helps account for the loss in the array. This ensures that nothing will be skipped this frame
+                              i--;
+                          }
+                      }
+                      //run all of the enemies
+                      for(var i=0;i<enemies.length;i++){
+                          enemies[i].run();
+                          if(enemies[i].dead){
+                              //if the enemy is dead, dispose of it.
+                              enemies.splice(i,1);
+                              //helps account for the loss in the array. This ensures that nothing will be skipped this frame
+                              i--;
+                          }
+                      }
+                      //run all of the bullets
+                      for(var i=0;i<bullets.length;i++){
+                          bullets[i].run();
+                          if(bullets[i].dead){
+                              //if the bullet is dead, dispose of it.
+                              bullets.splice(i,1);
+                              //helps account for the loss in the array. This ensures that nothing will be skipped this frame
+                              i--;
+                          }
+                      }
+                      noFill();
+                      strokeWeight(5);
+                      //if a tower has its upgrade shop open
+                      if(towerO!==-1){
+                          noStroke();
+                          fill(255,50);
+                          //display the tower's range
+                          ellipse(towers[towerO].pos.x,towers[towerO].pos.y,towers[towerO].info[2]*2,towers[towerO].info[2]*2);
+                          fill(255,100);
+                          //display the background for the upgrade shop
+                          rect(towers[towerO].dx,towers[towerO].dy,160,110,20);
+                          
+                          fill(255,0,0,200);
+                          //display the "sell" button
+                          rect(towers[towerO].dx+40,towers[towerO].dy,60,90,20);
+                          //if there are more upgrades available
+                          if(info[towers[towerO].ty][towers[towerO].upgrade+2]){
+                              fill(255,200,0,200);
+                              //draw the upgrade button
+                              rect(towers[towerO].dx-35,towers[towerO].dy,75,90,20);
+                              fill(0);
+                              textSize(15);
+                              //display the upgrade button text
+                              text("Upgrade\n$"+info[towers[towerO].ty][towers[towerO].upgrade+2][9],towers[towerO].dx-35,towers[towerO].dy);
+                          }else{
+                              //if maxed out on upgrades
+                              fill(150,200);
+                              //draw the upgrade button
+                              rect(towers[towerO].dx-35,towers[towerO].dy,75,90,20);
+                              fill(0);
+                              textSize(15);
+                              //display the Maxed message
+                              text("Maxed",towers[towerO].dx-35,towers[towerO].dy);
+                          }
+                          //display the message for the sell button.
+                          text("Sell\nFor\n$"+towers[towerO].price.toFixed(0),towers[towerO].dx+40,towers[towerO].dy);
+                      }
+                      //run all of the explosions
+                      for(var i=0;i<explosions.length;i+=5){
+                          noFill();
+                          //display the explosions
+                          stroke(255,100,0,255-255*explosions[i+3]/explosions[i+2]);
+                          ellipse(explosions[i],explosions[i+1],explosions[i+3],explosions[i+3]);
+                          //make the explosion grow in size
+                          explosions[i+3]+=2;
+                          if(frameCount%10===0){
+                              //find any enemies that are within range to get harmed by the explosion
+                              for(var z=0;z<enemies.length;z++){
+                                  if(dist(explosions[i],enemies[z].pos.y,enemies[z].pos.x,explosions[i+1])<explosions[i+3]/2+enemies[z].s/2){
+                                      //make those enemies lose health
+                                      enemies[z].h-=explosions[i+4];
+                                  }
+                              }
+                          }
+                          //if the explosion radius is greater than its maximum radius
+                          if(explosions[i+3]>explosions[i+2]){
+                              //dispose of the explosion
+                              explosions.splice(i,5);
+                              //helps account for the loss in the array. This ensures that nothing will be skipped this frame
+                              i-=5;
+                          }
+                      }
+                      //if the shop is open
+                      if(shopO){
+                          //run the shop
+                          shop(shopO[0],shopO[1]);
+                      }
+                      //if the shop is open and the mouse is hovering above it
+                      if(shopO&&mouseX>shopO[0]-80&&mouseX<shopO[0]+80&&mouseY>shopO[1]-55&&mouseY<shopO[1]+55){
+                          //change the cursor to "pointer"
+                          cursor(HAND);
+                          //see where the mouse position is
+                          if(mouseY<shopO[1]){
+                              if(mouseX<shopO[0]-40){
+                                  //if the mouse is hovering above the basic tower
+                                  if(money<info[0][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[0][1];
+                              }else if(mouseX<shopO[0]){
+                                  //if the mouse is hovering above the shotgun tower
+                                  if(money<info[1][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[1][1];
+                              }else if(mouseX<shopO[0]+40){
+                                  //if the mouse is hovering above the freeze tower
+                                  if(money<info[2][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[2][1];
+                              }else{
+                                  //if the mouse is hovering above the flame tower
+                                  if(money<info[3][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[3][1];
+                              }
+                          }else{
+                              if(mouseX<shopO[0]-40){
+                                  //if the mouse is hovering above the multi tower
+                                  if(money<info[4][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[4][1];
+                              }else if(mouseX<shopO[0]){
+                                  //if the mouse is hovering above the bomb tower
+                                  if(money<info[5][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[5][1];
+                              }else if(mouseX<shopO[0]+40){
+                                  //if the mouse is hovering above the laser tower
+                                  if(money<info[6][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[6][1];
+                              }else{
+                                  //if the mouse is hovering above the strong tower
+                                  if(money<info[7][0]){
+                                      //if player can't afford it, change cursor to let them know.
+                                      cursor("not-allowed");
+                                  }
+                                  //change message to let players know what tower they are hovering above
+                                  message=info[7][1];
+                              }
+                          }
+                      }else if(towerO!==-1&&(dist(towers[towerO].pos.x,mouseY,mouseX,towers[towerO].pos.y)<towers[towerO].info[2]||mouseX>towers[towerO].dx-80&&mouseX<towers[towerO].dx+80&&mouseY>towers[towerO].dy-55&&mouseY<towers[towerO].dy+55)){
+                          //if the mouse is within the tower upgrade shop or in its range
+                          if(mouseX>towers[towerO].dx-75&&mouseX<towers[towerO].dx+5&&mouseY>towers[towerO].dy-45&&mouseY<towers[towerO].dy+45){
+                              //if the mouse is above the upgrade button
+                              //change cursor to "pointer"
+                              cursor(HAND);
+                              //if there is an upgrade available
+                              if(info[towers[towerO].ty][towers[towerO].upgrade+2]){
+                                  //change message to the name of the upgrade
+                                  message=info[towers[towerO].ty][towers[towerO].upgrade+2][8];
+                                  if(money<info[towers[towerO].ty][towers[towerO].upgrade+2][9]){
+                                      //if the player can't afford it, change the cursor to alert them
+                                      cursor("not-allowed");
+                                  }
+                              }else{
+                                  //if the tower has maxed out on upgrades, let the player know that
+                                  cursor("not-allowed");
+                                  message="maxed";
+                              }
+                          }else if(mouseX>towers[towerO].dx+10&&mouseX<towers[towerO].dx+72&&mouseY>towers[towerO].dy-45&&mouseY<towers[towerO].dy+45){
+                              //if the mouse is hovering above the sell button
+                              //change cursor to let them know they are hovering above a button
+                              cursor(HAND);
+                              //change the message to sell.
+                              message="SELL";
+                          }
+                      }else{
+                          for(var i=0;i<place.length;i+=2){
+                              if(dist(place[i],mouseY,mouseX,place[i+1])<20){
+                                  //if the mouse is hovering above one of the spots where you can place towers
+                                  //change cursor to let them know they are hovering above a button
+                                  cursor("pointer");
+                                  if(placed[place.indexOf(place[i])/2]===0){
+                                      //if there is nothing placed there, give the message "place"
+                                      message="place";
+                                  }else{
+                                      //if there is something placed there, give the message "view"
+                                      message="view";
+                                  }
+                              }
+                          }
+                      }
+                      //if there is a message thet needs to be displaye
+                      if(message){
+                          textSize(15);
+                          noStroke();
+                          fill(1,150);
+                          //display the translucent black rectangle
+                          rect(min(mouseX+50,550),min(mouseY+20,575),80,30,50);
+                          fill(255);
+                          //display the message
+                          text(message,min(mouseX+50,550),min(mouseY+20,575));
+                      }
+                      if(health<=0){
+                          //if you lost all of your health, take player to "you lose" scene
+                          scene="dead";
+                      }
+                  }else if(scene==="play"){
+                      //set cursor to default, so that it doesn't look like the user is clicking a button.
+                      cursor("default");
+                      stroke(0);
+                      strokeWeight(2);
+                      fill(255);
+                      //draw the message background
+                      rect(300,300,400,400);
+                      textSize(25);
+                      fill(0);
+                      //display the message
+                      text(message2,300,270);
+                  }else if(scene==="menu"){
+                      //if the scene is at menu
+                      //set cursor to default value
+                      cursor("default");
+                      //background
+                      background(0,200,0);
+                      noStroke();
+                      //display thetitle
+                      for(var i=0;i<string.length;i++){
+                          textSize(60+sizeDiff[i]);
+                          fill(200,150,0);
+                          text(string[i],300+i*28-string.length*13.5,100);
+                      }
+                      for(var i=0;i<string.length;i++){
+                          textSize(50+sizeDiff[i]);
+                          fill(255,200,0);
+                          text(string[i],300+i*28-string.length*13.5,100);
+                      }
+                      //the button
+                      fill(0,255,0);
+                      if(mouseX>100&&mouseX<500&&mouseY>350&&mouseY<450){
+                          //if the mouse is hovering above the button
+                          //change the cursor to let them know
+                          cursor(HAND);
+                          //change the colour of the button
+                          fill(0,150,0);
+                      }
+                      //display the button
+                      rect(300,400,400,100);
+                      fill(0);
+                      textSize(50);
+                      //the writing on the button
+                      text("PLAY",300,400);
+                  }else if(scene==="win"){
+                      //if the scene is currently win
+                      cursor('default');
+                      //background
+                      background(0,200,0);
+                      fill(0,100);
+                      //area for writing to go in
+                      rect(300,300,400,300);
+                      fill(0);
+                      textSize(35);
+                      //Let players know that they won, and how well they did.
+                      text("You win!\nHealth remaining: "+health+"\n\nClick Anywhere to\nRestart",300,300);
+                  }else{
+                      //if the scene is "lose"
+                      cursor('default');
+                      //background
+                      background(255,100,0);
+                      fill(0,100);
+                      //area for writing to go in
+                      rect(300,300,400,300);
+                      fill(0);
+                      textSize(35);
+                      //Let players know that they lost, and how well they did.
+                      text("You lose.\nLevel: "+(level/5+1)+"\n\nClick Anywhere to\nRestart",300,300);
+                  }
+              }catch(error){
+                  //make any errors get thrown here (namely "A for Loop is taking too long" type errors, instead of to Oh Noes.
+              }
+          };
+          mouseClicked=function(){
+              //is the player playing?
+              if(scene==='play'&&!message2){
+                  //if the tower upgrade shop is open, is the mouse inside of it?
+                  if(towerO!==-1&&mouseX>towers[towerO].dx-80&&mouseX<towers[towerO].dx+80&&mouseY>towers[towerO].dy-55&&mouseY<towers[towerO].dy+55){
+                      //is the mouse in the upgrade button?
+                      if(mouseX>towers[towerO].dx-75&&mouseX<towers[towerO].dx+5&&mouseY>towers[towerO].dy-45&&mouseY<towers[towerO].dy+45){
+                          //can the tower be upgraded
+                          if(info[towers[towerO].ty][towers[towerO].upgrade+2]&&money>=info[towers[towerO].ty][towers[towerO].upgrade+2][9]){
+                              //upgrade each of the 8 parts of the tower Information array that needs to be upgraded.
+                              for(var w=0;w<8;w++){
+                                  towers[towerO].info[w]*=info[towers[towerO].ty][towers[towerO].upgrade+2][w];
+                              }
+                              //make the player pay for the upgrades
+                              money-=info[towers[towerO].ty][towers[towerO].upgrade+2][9];
+                              //Make the tower give off more money if sold
+                              towers[towerO].price+=info[towers[towerO].ty][towers[towerO].upgrade+2][9]*3/4;
+                              //make the tower acknoledge that it has been upgraded
+                              towers[towerO].upgrade++;
+                          }
+                      }else if(mouseX>towers[towerO].dx+10&&mouseX<towers[towerO].dx+72&&mouseY>towers[towerO].dy-45&&mouseY<towers[towerO].dy+45){
+                          
+                          money+=+towers[towerO].price.toFixed(0);
+                          placed[place.indexOf(towers[towerO].pos.x)/2]=0;
+                          towers[towerO].dead=1;
+                          towerO=-1;
+                      }
+                  }else{
+                      //if the tower Upgrade shop isn't open, or the mouse isn't in it
+                      //if the mouse is in the "Start Round" button
+                      if(mouseX>465&&mouseX<595&&mouseY>110&&mouseY<150&&start===0){
+                          //make the level start
+                          start=1;
+                      }
+                      //the currently selected tower
+                      var change=-1;
+                      //check to see if player clicked any towers
+                      for(var i=0;i<towers.length;i++){
+                          if(dist(towers[i].pos.x,mouseY,mouseX,towers[i].pos.y)<20){
+                              //reset change to the array position of that tower.
+                              change=i;
+                          }
+                      }
+                      //open the tower info if selected
+                      towerO=change;
+                      //used to see if a placeable has been clicked
+                      var hit=0;
+                      //if the shop is open, is the mouse in it?
+                      if(shopO&&mouseX>shopO[0]-80&&mouseX<shopO[0]+80&&mouseY>shopO[1]-55&&mouseY<shopO[1]+55){
+                          //what type of tower should be placed?
+                          var type;
+                          if(mouseY<shopO[1]){
+                              if(mouseX<shopO[0]-40&&money>=info[0][0]){
+                                  //if the mouse is clicking the basic tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=0;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[0][0];
+                              }else if(mouseX<shopO[0]&&money>=info[1][0]){
+                                  //if the mouse is clicking the shotgun tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=1;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[1][0];
+                              }else if(mouseX<shopO[0]+40&&money>=info[2][0]){
+                                  //if the mouse is clicking the freeze tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=2;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[2][0];
+                              }else if(money>=info[3][0]){
+                                  //if the mouse is clicking the flame tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=3;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[3][0];
+                              }
+                          }else{
+                              if(mouseX<shopO[0]-40&&money>=info[4][0]){
+                                  //if the mouse is clicking the multi tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=4;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[4][0];
+                              }else if(mouseX<shopO[0]&&money>=info[5][0]){
+                                  //if the mouse is clicking the bomb tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=5;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[5][0];
+                              }else if(mouseX<shopO[0]+40&&money>=info[6][0]){
+                                  //if the mouse is clicking the laser tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=6;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[6][0];
+                              }else if(money>=info[7][0]){
+                                  //if the mouse is clicking the strong tower, and it is affordable
+                                  //set type to the appropriate tower
+                                  type=7;
+                                  //deduct the worth of the tower from the money
+                                  money-=info[7][0];
+                              }
+                          }
+                          //create the tower
+                          towers.push(new tower(shopO[2],shopO[3],type));
+                          //make it so that it is impossible to place more towers on the same spot.
+                          placed[place.indexOf(shopO[2])/2]=1;
+                          //close the shop
+                          shopO=0;
+                      }else{
+                          for(var i=0;i<place.length;i+=2){
+                              if(dist(place[i],mouseY,mouseX,place[i+1])<20&&placed[place.indexOf(place[i])/2]===0){
+                                  shopO=[min(max(place[i],90),510),min(max(place[i+1],60),540),place[i],place[i+1]];
+                                  hit=1;
+                              }
+                          }
+                          if(!hit){
+                              shopO=0;
+                          }
+                      }
+                  }
+              }else if(scene==="play"){
+                  message2=0;
+              }else if(scene==="menu"){
+                  if(mouseX>100&&mouseX<500&&mouseY>350&&mouseY<450){
+                      scene="play";
+                  }
+              }else{
+                  //if on the win or the lose page, restart the program
+                  Program.restart();
+              }
+          };
+          keyPressed=function(){
+              //change the speed (if normal, fast forward; if fast, slow down; if slow, go normal.
+              speed=speed===50?100:speed===100?20:50;
+              //update frameRate
+              frameRate(speed);
+          };
+
+      }
+    }
+
+    new Processing(document.getElementById("game"), sketchProc); 
+ </script>
+  </body>
+</html>

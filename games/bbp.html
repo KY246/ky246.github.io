@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BBP Defense</title>
+    <meta charset="utf-8">
+    <base href="..">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/4850321074896896.png" />
+    <style>
+      .big{
+        font-size: 50px;
+        margin-left: 200px;
+        margin-top: 50px;
+      }.sub{
+        font-size: 30px;
+        margin-left: 250px;
+        color: #BBB;
+        text-decoration: none;
+      }.gap{
+        display: block;
+        height: 100px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  </head>
+  <body>
+    <canvas id="back"></canvas>
+    <a id="github" href="https://github.com/KY246/KY246.github.io">
+      <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      Fix, Contribute, Star
+    </a>
+    <script src="back.js"></script>
+    
+    <h1 class="big">
+      BBP Defense
+    </h1>
+    
+    <canvas id="game"></canvas>
+    
+    <br/>
+    <br/>
+    <br/>
+    <a href="index.html" class="sub">
+      &raquo; Back Home
+    </a>
+    
+    <p class="gap"></p>
+    <footer>
+      &copy;2021 Kynan - Some rights reserved under the MIT License
+      <br/>
+      <a href="https://github.com/KY246" title="Github">
+        <img class="icon" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      </a>
+      <a href="https://www.khanacademy.org/profile/kyprogramming/projects" title="Khan Academy">
+        <img class="icon" src="https://avatars.githubusercontent.com/u/15455?s=280&v=4"/>
+      </a>
+      <a href="https://replit.com/@KY246" title="repl.it">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Repl.it_logo.svg/1024px-Repl.it_logo.svg.png"/>
+      </a>
+      <a href="https://stackoverflow.com/users/14630063/ky246" title="Stack Overflow">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"/>
+      </a>
+    </footer>
+    <noscript class="noscript">
+      Please Enable JavaScript In your browser.
+    </noscript>
+    
+    <script>
+    var sketchProc = function(pi) {
+      with (pi) {
+        size(1150, 700);
+        
+        /**********************************
+         * Add this to the end of any Khan Academy URL for full-screen:
+         * /embedded?editor=yesCode&&width=1200&&height=700
+        **********************************/
+        frameRate(30);
+        var mode="auto";
+        var difficulty="easy";
+        /**********************************
+         * My First Large Project!
+         * Average Playing Time: 2 hours
+         * Instructions on how to play game on line 38.
+         * This program works better when set on Mozilla Firefox instead of Google Chrome
+         * This program's current speed is set to prevent lag. If your computer can handle complex programs, set line five's frameRate(x) to a larger number. If it is extremely weak to lag, set x to a smaller number. (Recommended: 4~30)
+         * If you want a challenge, you can play this game on normal screen size (600 x 600)px.
+         * This program changes themes with the season. (My personal favorites are Autumn for its home page, and Summer for its trail) If you want to set the program on a certain theme, instead of the current state of constantly updating itself, set line six's var mode="Theme" to one of the following: ("auto" Updates itself according to season based on the Northern Hemisphere)
+         * "auto"
+         * "Spring/Summer"
+         * "Halloween"
+         * "Autumn"
+         * "Winter"
+         * 
+         * You can change the difficulty of the game. You can do that by changing line seven's var difficulty="Difficulty"; to one of the following:
+         * "easy"
+         * "hard"
+         * 
+         * All code original and programmed by KY PROOGRAMMING
+         * Game ideas and characters by his little brother
+         * IF YOU FLAG THIS PROJECT, PLEASE STATE YOUR REASON.
+         * Also, please do not copy the code in this project. If you would like a copy, click the "Spin-off" button between the Restart button and the save button.
+         * 
+         * Coming Soon From KY PROGRAMMING:
+         *      Algebraic Defense
+         *          A Tower Defense Game where you have to calculate the trail using Algebra and Trigonometry
+         *      Battlefield
+         *          A war game based on conquering land by deploying soldiers, vehicles, walls, and turrets.
+         * Ideas for future projects are welcome. 
+         * 
+         * To Play: Your goal in this game is to stop enemy attackers from reaching the right side of the screen, by placing and upgrading towers. You can place towers by first selecting them by clicking the store (On the right side), and then clicking a circle on the map. You can buy different types of towers by clicking the small bage rectangles on the top of the store. You can upgrade towers by clicking an already placed tower. This will turn the store into the tower's upgrade shop. You can deselect the tower by clicking anywhere else on the map. To start a level, click "Start Wave", near the top left of the screen.
+         * To people trying to view the code: I tried to organize the code as well as I can, but it is still extremely messy. There will be many variables which are named differently from what they stand for. ALSO: If you find where the money or health can be tweaked, PLEASE do not write that spot in the comments.
+         * Also: I know this is possible to beat, from personal experience.
+        **********************************/
+        //{
+        angleMode="radians";
+        textFont(createFont("serif"));
+        var m=month();
+        var towerSelected=false;
+        var Projectiles, MenuB, Walkers, Here, D1;
+        var tAdd=new PVector(0,0);
+        var ID;
+        var spots=[];
+        var sqf=sqrt(5);
+        var qq, qqq;
+        var waveOver=true;
+        var wave=0;
+
+        var waves=[
+            [0],
+            [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+            [2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2],
+            [2,1,0,0,0,2,1,0,0,0,2,1,0,0,0,2,1,0,0,0,2,1,0,0,0,2,1],
+            [3],
+            [3,0,0,1,0,0,2,0,0,1,0,0,2,0,0,1,0,0,2,0,0,1,0,0,1,0,0,1,0,0,1],
+            [3,0,0,0,0,0,3,0,0,0,0,0,3,0,0,0,0,0,1,0,0,1,0,0,1,0,0,2,0,0,2,0,0,2],
+            [3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,1,0,0,1,0,0,2],
+            [3,101,0,0,0,0,3,101,0,0,0,0,3,101,0,0,0,0,3,101,0,0,0,0,3,101,0,0,0,0,3],
+            [1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1],
+            [101,3,3,101,0,0,101,1,1,101,0,0,101,2,2,101],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101,101],
+            [3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3],
+            [3,4,1,1,1,1,1,1,1],
+            [4,0,4,0,4,0,4,0,4,0,4],
+            [4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4],
+            [101,3,4,101,3,4,101,3,4,101,3,4,101,3,4,3,3,4,4,4,4,4],
+            [3,5,4,3,5,4,3,5,4,3,5,4],
+            [3,5,5,5,5,5,5,5,5,5,4,4,4,4],
+            [201,101,1,201,101,2,201,101,3,201,101,4,201,101,5],
+            [6,0,0,0,0,0,0,0,0,6],
+            [6,0,0,0,6,0,0,0,6,0,0,0,6],
+            [6,101,3,101,3,101,3,101,3,101],
+            [6,0,1,0,6,0,1,0,6,0,1,0,6],
+            [6,3,4,3,6,3,4,3,6,3,4,3,6],
+            [6,5,4,6,5,4,6,5,4,6,5,4],
+            [6,201,6,201,6,201,6,201],
+            [102,102,102,102,102,102,102],
+            [7,0,0,0,0,0,103,102,101,101,101],
+            [7,103,6,103,7],
+            [202,0,0,202,0,0,202,0,0,202,0,0,202],
+            [8,203,7,202,6,201,5,103,4,102,3,101,2,1],
+            [9,0,0,9,0,0,9,0,0,9],
+            [9,203,203,9,203,203,9,203,203,9],
+            [9,8,9,8,9,8,9,8,9,7,7],
+            [10,203,203,10,103,103,10,203,203,10,103,103,10],
+            [10,8,7,10,8,7,10,8,7,10,8,7,10,8,7,10,8,7],
+            [10,10,10,10,10,10,10],
+            [10,203,10,103,8,10,7,10,203,10,103,10,8,10,7],
+            [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,8,8,8,8,8]
+        ];
+        var wINFO=[
+            "Welcome to BBP Defense. Select towers by clicking the store. Place them by clicking a circle.",
+            "You can upgrade towers by clicking on them.",
+            "You can deploy different types of towers by clicking the small bage rectangles near the top of the store.",
+            "Fast enemies are coming.",
+            "Upgrading towers are often better than buying many towers.",
+            "Strong enemies are extremely slow.",
+            "If you allow a fast enemy to get through, you will lose two lives",
+            "Three is the magic number",
+            "A lot of strong enemies coming this time",
+            "Boats follow the river.",
+            "Some towers don't shoot at all enemies. You can see what the tower shoots at by looking at the icons of the soldier, boat, and plane at the bottom of the store",
+            "All the different enemies you met so far are coming.",
+            "A lot of enemies coming.",
+            "A lot of boats coming.",
+            "Which one's worse? The strong or the speedy?",
+            "Cars carry enemies.",
+            "A lot of cars coming this time.",
+            "You can sell towers at the top of its upgrade column for 70%",
+            "More boats are coming.",
+            "Normal enemies always travel in pairs.",
+            "Airplanes will be coming two rounds later.",
+            "Airplanes are coming.",
+            "Some cars hold strong enemies.",
+            "More strong cars are coming.",
+            "Boats!",
+            "More Strong Cars.",
+            "Both types of Cars.",
+            "All of the vehicles.",
+            "More airplanes.",
+            "Bigger boats are stronger.",
+            "Some Cars hold all of the enemies.",
+            "More cars and boats.",
+            "There are larger planes, as well.",
+            "The car-carrier carries all three different types of cars.",
+            "Tanks are extremely powerfull.",
+            "More large planes.",
+            "Tanks, carriers, and cars.",
+            "There are larger and stronger tanks.",
+            "Large tanks, carriers, and cars.",
+            "A lot of large tanks.",
+            "Large Tanks, Large Boats, Large Planes.",
+            "A lot of large tanks."
+        ];
+        var tINFO=[
+            ["Basic",100,"A basic shooter. It has decent range, but is weak, and slow.",true,true,true],
+            ["Multi",250,"This shoots in many directions, but is extremely slow, and has little range.",true,true,false],
+            ["Explode",600,"Projectile explodes on contact.",true,true,false],
+            ["Roller",500,"Projectile keeps rolling after it hits an enemies.",true,false,false],
+            ["Continuous",500,"Shoots a continuous jet of projectiles.",true,true,false],
+            ["Anti-aircraft",600,"Extremely strong, but only shoots flying enemies.",false,false,true],
+            ["Power",1750,"Extremely strong, but slow",true,true,false],
+            ["Super",2000,"Extremely fast, and aims at all enemies.",true,true,true]
+        ];
+        var tINFO2=[
+            [1.1,30,150,1,2,3],
+            [4,120,100,1,2,0],
+            [2,57,175,1,2,0],
+            [0.3,57,175,1,0,0],
+            [0.2,3,75,1,2,0],
+            [7,57,200,0,0,3],
+            [100,200,200,1,2,0],
+            [1.5,4,250,1,2,3]
+        ];
+        var tINFO3=[
+            [
+                [
+                    ["Super Pierce",75,"A stronger bullet. If there is a group of weak enemies,it will go through two."],
+                    ["Even More",75,"This stronger bullet could go through three."],
+                    ["Speed",50,"The tower will shoot faster"]
+                ],
+                [
+                    ["Range",75,"Greater range"],
+                    ["Super Range",75,"Even greater range"],
+                    ["Extreme Range",75,"Extremely large range"]
+                ]
+            ],
+            [
+                [
+                    ["Speed",100,"Faster Shooting"],
+                    ["Super Speed",100,"Even faster shooting"],
+                    ["Power",200,"Stronger bullets"]
+                ],
+                [
+                    ["Range",100,"Greater Range"],
+                    ["Big Range",100,"Even Greater Range"],
+                    ["Extreme Power",250,"Super Powered bullets"]
+                ]
+            ],
+            [
+                [
+                    ["Bigger Explosions",300,"Larger explosion radii"],
+                    ["Bigger Explosions",300,"even larger explosion radii."],
+                    ["Super Explosions",300,"Greater explosion radii."]
+                ],
+                [
+                    ["Range",200,"Greater Range"],
+                    ["Range",200,"Even Greater Range"],
+                    ["Power",500,"Stronger Explosions"]
+                ]
+            ],
+            [
+                [
+                    ["Faster Shooting",200,"Tower sends more projectiles in a certain time."],
+                    ["Super Speed",200,"Even faster shooting"],
+                    ["Power",500,"Stronger and larger projectiles"]
+                ],
+                [
+                    ["Range",250,"Greater range"],
+                    ["Super range",250,"Even larger shooting range"],
+                    ["Keeps Rollin'",500,"The projectile rolls for longer."]
+                ]
+            ],
+            [
+                [
+                    ["Power",400,"Shoots stronger projectiles"],
+                    ["Speed",400,"Faster at making projectiles"],
+                    ["Power",500,"Stronger projectiles"]
+                ],
+                [
+                    ["Range",250,"Bigger Range"],
+                    ["Super Range",350,"Bigger firing range"],
+                    ["Extreme Range",400,"Even greater range"]
+                ]
+            ],
+            [
+                [
+                    ["Stronger Bullets",300,"Stronger Bullets"],
+                    ["Faster Shooting",300,"Faster shooting"],
+                    ["Super Speed",400,"Even faster shooting"]
+                ],
+                [
+                    ["Greater Range",200,"Bigger shooting range"],
+                    ["Even greater range",200,"further increases the range of the tower's shooting"],
+                    ["Super range",200,"Even greater firing range"]
+                ]
+            ],
+            [
+                [
+                    ["Faster Shooting",1000,"Tower shoots faster"],
+                    ["Even faster",1000,"The tower shoots even faster"],
+                    ["Super Speed",2000,"The tower shoots extremely quickly."]
+                ],
+                [
+                    ["Greater Range",750,"Tower's firing range increases"],
+                    ["Even Greater Range",1000,"The tower's range increases even more"],
+                    ["Great Power",2000,"The tower's attack strength doubles"]
+                ]
+            ],
+            [
+                [
+                    ["Stronger",1500,"The tower shoots stronger bullets."],
+                    ["Even stronger",1500,"Even stronger bullets than before."],
+                    ["Faster Shooting",2000,"Faster at making projectiles."]
+                ],
+                [
+                    ["Bigger Range",1000,"Greater shooting range"],
+                    ["Even bigger range",1500,"Even greater shooting range"],
+                    ["The Best Range",2000,"Covers more hexagons than any other tower"]
+                ]
+            ],
+        ];
+        //} Variables
+        //{
+        var trails=function(){
+            if(width>600){
+                for(var i=0; i<floor(1200/65)-1; i++){
+                    spots.push([]);
+                    for(var c=0; c<floor(height/70); c++){
+                        spots[i].push(0);
+                    }
+                }
+                spots[0][3]=100;
+                spots[1][2]=100;
+                spots[2][2]=100;
+                spots[3][1]=100;
+                spots[3][0]=100;
+                spots[4][0]=100;
+                spots[5][0]=100;
+                spots[6][1]=100;
+                spots[6][2]=100;
+                spots[6][3]=100;
+                spots[5][3]=100;
+                spots[5][4]=100;
+                spots[4][5]=100;
+                spots[4][6]=100;
+                spots[3][6]=100;
+                spots[2][7]=100;
+                spots[2][8]=100;
+                spots[2][9]=100;
+                spots[3][9]=100;
+                spots[4][9]=100;
+                spots[5][9]=100;
+                spots[6][9]=100;
+                spots[7][8]=100;
+                spots[8][9]=100;
+                spots[9][8]=100;
+                spots[10][8]=100;
+                spots[11][8]=100;
+                spots[12][8]=100;
+                spots[12][7]=100;
+                spots[11][6]=100;
+                spots[10][6]=100;
+                spots[9][5]=100;
+                spots[8][6]=100;
+                spots[7][5]=100;
+                spots[7][4]=100;
+                spots[8][4]=100;
+                spots[9][3]=100;
+                spots[10][3]=100;
+                spots[11][3]=100;
+                spots[12][4]=100;
+                spots[13][4]=100;
+                spots[14][4]=100;
+                spots[15][3]=100;
+                spots[15][2]=100;
+                spots[15][1]=100;
+                spots[14][1]=100;
+                spots[13][0]=100;
+                spots[12][0]=100;
+                spots[11][0]=100;
+                spots[11][1]=100;
+                spots[12][2]=100;
+                spots[13][2]=100;
+                spots[13][3]=100;
+                spots[13][5]=100;
+                spots[14][6]=100;
+                spots[15][6]=100;
+                spots[16][7]=100;
+                
+                spots[0][4]=200;
+                spots[1][4]=200;
+                spots[2][5]=200;
+                spots[3][5]=200;
+                spots[5][6]=200;
+                spots[6][7]=200;
+                spots[7][7]=200;
+                spots[8][8]=200;
+                spots[10][9]=200;
+                spots[11][9]=200;
+                spots[12][9]=200;
+                spots[13][8]=200;
+                spots[14][8]=200;
+                spots[15][7]=200;
+            }else if(width>500){
+                for(var i=0; i<floor(width/65)-1; i++){
+                    spots.push([]);
+                    for(var c=0; c<floor(height/70); c++){
+                        spots[i].push(0);
+                    }
+                }
+                spots[0][3]=100;
+                spots[1][2]=100;
+                spots[2][2]=100;
+                spots[3][1]=100;
+                spots[3][0]=100;
+                spots[4][0]=100;
+                spots[5][0]=100;
+                spots[6][1]=100;
+                spots[6][2]=100;
+                spots[6][3]=100;
+                spots[5][3]=100;
+                spots[5][4]=100;
+                spots[4][5]=100;
+                spots[4][6]=100;
+                spots[5][6]=100;
+                spots[6][7]=100;
+                spots[7][6]=100;
+                
+                spots[0][4]=200;
+                spots[1][4]=200;
+                spots[2][5]=200;
+                spots[3][5]=200;
+                spots[7][7]=200;
+            }else{
+                for(var i=0; i<floor(width/65)-1; i++){
+                    spots.push([]);
+                    for(var c=0; c<floor(height/70); c++){
+                        spots[i].push(0);
+                    }
+                }
+            }
+        };
+        trails();
+        //} Wheres the trail?
+        //{
+        if(mode==="auto"){
+            if(m===10){
+                mode="Halloween";
+            }else if(m>=3&&m<=8){
+                mode="Spring/Summer";
+            }else if(m===9||m===11){
+                mode="Autumn";
+            }else{
+                mode="Winter";
+            }
+        }
+        if(mode==="Halloween"){
+            qq=color(0, 0, 0);
+            qqq=color(56, 0, 56);
+        }else if(mode==="Spring/Summer"){
+            qq=color(0, 209, 7);
+            qqq=color(101, 224, 130);
+        }else if(mode==="Autumn"){
+            qq=color(255, 132, 0);
+            qqq=color(201, 94, 0);
+        }else{
+            qq=color(255, 255, 255);
+            qqq=color(222, 245, 255);
+        }
+        var money=180;
+        var screens=0;
+        if(difficulty==="hard"){
+            var health=50;
+        }else{
+            var health=100;
+        }
+        //} What's the season?
+        //{
+        var buttons=function(){
+            strokeWeight(10);
+            fill(183, 0, 255);
+            stroke(111, 0, 255,100);
+            rect(width/2-width/6,height/2-height/12,width/3,height/6,100);
+            rect(width/4-width/10,height/1.4-height/15,width/5,height/7,100);
+            rect(width*3/4-width/10,height/1.4-height/15,width/5,height/7,100);
+            fill(117, 255, 221);
+            stroke(247, 255, 0, 120);
+            ellipse(75,50,75,75);
+            ellipse(60,60,10,20);
+            ellipse(65,50,10,10);
+            ellipse(80,40,10,10);
+            stroke(0, 0, 0);
+            fill(0, 0, 0);
+            strokeWeight(2);
+            ellipse(70,50,2,2);
+            ellipse(70,60,3,15);
+            triangle(70,44,69,47,71,47);
+            line(67,48,72,48);
+            line(63,60,80,65);
+            line(80,65,85,69);
+            line(80,65,85,63);
+            line(80,65,85,66);
+        };
+        var buttonsA=function(color,sColor){
+            strokeWeight(10);
+            fill(color);
+            stroke(sColor);
+            rect(width/2-width/6,height/2-height/12,width/3,height/6,100);
+            rect(width/4-width/10,height/1.4-height/15,width/5,height/7,100);
+            rect(width*3/4-width/10,height/1.4-height/15,width/5,height/7,100);
+        };
+            var HowTo=function(){
+                background(qq);
+                noFill();
+                rect((width-height)/2+height/2.65,height/1.23,height/5,height/8);
+                rect((width-height)/2+height/1.65,height/1.23,height/5,height/8);
+                if(mode!=="Halloween"){
+                    fill(0, 0, 0);
+                }else{
+                    fill(255, 255, 255);
+                }
+                textSize(height/10);
+                text("How To play",(width-height)/2+height/4,height/8);
+                textSize(height/35+2);
+                text("      Your goal in this game is to stop enemy attackers from reaching the right side of the screen, by placing and upgrading towers. You can place towers by first selecting them by clicking the store (On the right side), and then clicking a circle on the map. You can buy different types of towers by clicking the small bage rectangles on the top of the store. You can upgrade towers by clicking an already placed tower. This will turn the store into the tower's upgrade shop. You can deselect the tower by clicking anywhere else on the map. To start a level, click ''Start Wave'', near the top left of the screen. You can also pause the game by clicking the pause button next to the ''Start Wave''. There will be information about the coming wave, or tips on playing apearing on the bottom of the screen after each wave.",(width-height)/2+height/16,height/5.5,height*8/9,600);
+                textSize(height/10);
+                text("▷",width/2.3,height/1.1);
+                textSize(height/6);
+                text("≡",width/2+95,height/1.08);
+            };
+            var HighScore=function(){
+                background(qqq);
+                noFill();
+                rect((width-height)/2+height/2.65,height/1.23,height/5,height/8);
+                rect((width-height)/2+height/1.65,height/1.23,height/5,height/8);
+                if(mode!=="Halloween"){
+                    fill(0, 0, 0);
+                }else{
+                    fill(255, 255, 255);
+                }
+                textSize(height/10);
+                text("High Scores",(width-height)/2+height/4,height/8);
+                textSize(height/28);
+                text("The First Two People To Win On Difficulty Hard with  a canvas size of 600 x 600.",(width-height)/2+height/16,height/5.5,height*14/16,height);
+                text("      1.) Commander Cool",(width-height)/2+height/16,height/3);
+                text("      2.) ",(width-height)/2+height/16,height/2.4);
+                text("The First Two People To Win On Difficulty Hard",(width-height)/2+height/16,height/2,height*14/16,height);
+                text("      1.) Be the first to claim this spot",(width-height)/2+height/16,height/1.55);
+                text("      2.) Spin-off proof required",(width-height)/2+height/16,height/1.37);
+                textSize(height/10);
+                text("▷",width/2.3,height/1.1);
+                textSize(height/6);
+                text("≡",width/2+95,height/1.08);
+            };
+            var win=function(){
+                background(0,255,255);
+                mode="Spring/Summer";
+                for(var i=0; i<D1.length;i++){
+                    D1[i].display();
+                    D1[i].update();
+                    D1[i].update();
+                }
+                textSize(height/6+3);
+                fill(0, 0, 0,200);
+                text("YOU WIN!",width/9,height/2-3);
+                rect(width/9,height/1.9,width*7/9,height/4);
+                fill(0,150,100);
+                textSize(height/6);
+                text("YOU WIN!",width/8,height/2);
+                textSize(height/20);
+                text("Difficulty                    "+difficulty,width/8,height/1.7);
+                text("Health remaining     "+health,width/8,height/1.5);
+                text("Canvas size             "+width+" x "+height,width/8,height/1.34);
+            };
+            var lose=function(){
+                background(255,150,0);
+                textSize(height/7+3);
+                fill(0, 0, 0, 200);
+                text("YOU LOSE",width/9,height/2-3);
+                rect(width/9,height/1.9,width*7/9,height/4);
+                fill(255,50,0);
+                textSize(height/7);
+                text("YOU LOSE",width/8,height/2);
+                textSize(height/20);
+                text("Difficulty                    "+difficulty,width/8,height/1.7);
+                text("wave                         "+wave,width/8,height/1.5);
+                text("Canvas size             "+width+" x "+height,width/8,height/1.34);
+            };
+            var diffici=function(){
+                background(200,200,200);
+                fill(255, 0, 0);
+                textSize(height/20);
+                text("Error",width/8,height/6);
+                text("the difficulty wasn't set on a valid value. Please check line 7 to make sure that it says either         var difficulty=''easy''; or              var difficulty=''hard'';    Remember, capitalization matters! Click any where on this screen to continue playing the game on difficulty easy.",width/8,height/4,width*3/4,height);
+            };
+        var BBS=function(x,y,size,ccc,eee,rrrrrrr){
+            pushMatrix();
+            translate(x,y);
+            scale(size);
+            rotate(rrrrrrr);
+                stroke(0, 0, 0);
+                strokeWeight(5);
+                fill(255, 255, 255); 
+                ellipse(0,0,100,100);
+                stroke(ccc);
+                strokeWeight(20);
+                beginShape();
+                    vertex(-25,-12);
+                    vertex(-20,-8);
+                    vertex(-15,-12);
+                endShape();
+                if(eee){
+                    beginShape();
+                        vertex(25,-12);
+                        vertex(20,-8);
+                        vertex(15,-12);
+                    endShape();
+                }
+                beginShape();
+                    vertex(-49,-32);
+                    vertex(-71,-30);
+                    vertex(-102,-12);
+                endShape();
+                beginShape();
+                    vertex(49,-32);
+                    vertex(71,-30);
+                    vertex(102,-12);
+                endShape();
+                strokeWeight(10);
+                beginShape();
+                    vertex(-5,3);
+                    vertex(0,8);
+                    vertex(5,3);
+                endShape();
+                strokeWeight(5);
+                beginShape();
+                    vertex(-20,20);
+                    vertex(-15,25);
+                    vertex(-8,25);
+                    vertex(0,8);
+                    vertex(8,25);
+                    vertex(15,25);
+                    vertex(20,20);
+                endShape();
+                stroke(0, 0, 0);
+                strokeWeight(3);
+                fill(0, 0, 0);
+                ellipse(-20,-10,5,5);
+                ellipse(20,-10,5,5);
+            popMatrix();
+        };
+        var hedgehog=function(x,y,width,height,f){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            if(f===1){
+                stroke(0, 0, 0);
+                    strokeWeight(1);
+                    fill(194, 192, 173);
+                    ellipse(0,0,100,150);
+                    ellipse(30,60,40,30);
+                    ellipse(40,-30,30,20);
+                    ellipse(0,-90,90,90);
+                    beginShape();
+                        curveVertex(-171,-300);
+                        curveVertex(30,-120);
+                        curveVertex(77,-103);
+                        curveVertex(104,-110);
+                        curveVertex(104,-100);
+                        curveVertex(16,-47);
+                        curveVertex(16,-59);
+                    endShape();
+                    noStroke();
+                    fill(46, 33, 13);
+                    rect(-60,-100,50,180,200);
+                    rect(-10,-150,50,40,200);
+                    ellipse(-20,-115,60,60);
+                    stroke(0, 0, 0);
+                    fill(0,0,0);
+                    ellipse(104,-105,20,20);
+                    ellipse(30,-100,10,10);
+                    fill(130, 130, 130);
+                    triangle(105,-150,95,-170,115,-190);
+                    stroke(59, 44, 24);
+                    strokeWeight(4);
+                    line(0,90,100,-160);
+            }else if(f===3){
+                stroke(0, 0, 0);
+                strokeWeight(1);
+                fill(46, 33, 13);
+                rect(-60,-150,130,230,100);
+            } else{
+                scale(0.8,1);
+                stroke(0, 0, 0);
+                strokeWeight(1);
+                fill(194, 192, 173);
+                rect(-60,-150,130,230,100);
+                line(-60,-90,5,-40);
+                line(70,-90,5,-40);
+                ellipse(-45,-20,40,30);
+                ellipse(55,-20,40,30);
+                ellipse(-35,60,50,30);
+                ellipse(45,60,50,30);
+                fill(0, 0, 0);
+                ellipse(-25,-90,10,10);
+                ellipse(35,-90,10,10);
+                ellipse(5,-40,20,20);
+                fill(46, 33, 13);
+                arc(5,-119,120,59,-3.3,0.3);
+                fill(117, 117, 117);
+                triangle(105,-150,95,-170,115,-190);
+                stroke(59, 44, 24);
+                strokeWeight(4);
+                line(20,90,100,-160);
+            }
+            popMatrix();
+        };
+        var hedgehogCar=function(x,y,width,height,f){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            if(f===1){
+                stroke(0, 0, 0);
+                fill(0,0,0);
+                ellipse(75,30,30,30);
+                fill(255,255,255);
+                    strokeWeight(1);
+                    arc(0,0,70,200,-PI,0);
+                    arc(35,0,70,200,-PI,0);
+                    arc(70,0,70,200,-PI,0);
+                fill(66, 28, 2);
+                    rect(-35,0,140,30);
+                    ellipse(200,0,75,30);
+                    ellipse(230,-30,30,50);
+                fill(0,0,0);
+                    ellipse(-20,30,30,30);
+                    ellipse(25,30,30,30);
+                strokeWeight(10);
+                    line(40,-20,200,0);
+            }else if(f===3){
+                stroke(0, 0, 0);
+                strokeWeight(5);
+                fill(255, 255, 255);
+                    arc(0,-60,70,200,-PI,0);
+                    arc(0,-30,70,200,-PI,0);
+                    arc(0,0,70,200,-PI,0);
+                fill(66,28,2);
+                    rect(-35,0,70,30);
+                fill(0,0,0);
+                    ellipse(-50,0,10,50);
+                    ellipse(50,0,10,50);
+                    ellipse(-48,-80,8,30);
+                    ellipse(48,-80,8,30);
+            } else{
+                stroke(0, 0, 0);
+                strokeWeight(5);
+                fill(255, 255, 255);
+                    arc(0,-60,70,200,-PI,0);
+                    arc(0,-30,70,200,-PI,0);
+                    arc(0,0,70,200,-PI,0);
+                fill(66,28,2);
+                    rect(-35,0,70,30);
+                    ellipse(0,100,50,100);
+                fill(0,0,0);
+                    ellipse(-50,0,10,50);
+                    ellipse(50,0,10,50);
+                    ellipse(-48,-80,8,30);
+                    ellipse(48,-80,8,30);
+                    
+                    line(-40,-20,-20,90);
+                    line(40,-20,20,90);
+            }
+            popMatrix();
+        };
+        var lobsCar=function(x,y,width,height,fffff,c){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            fill(c);
+            if(fffff===1){
+                rect(0, 0, 100, 20);
+                rect(15, -22, 70, 40);
+                fill(0,0,0);
+                ellipse(25, 21, 24, 24);
+                ellipse(75, 21, 24, 24);
+            }else{
+                rect(32.5, -22, 35, 80);
+                fill(0,0,0);
+                ellipse(20, 36, 10, 30);
+                ellipse(80, 36, 10, 30);
+                ellipse(20, 0, 10, 30);
+                ellipse(80, 0, 10, 30);
+            }
+            popMatrix();
+        };
+        var tank=function(x,y,width,height,fffff,c){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            fill(c);
+            if(fffff===1){
+                rect(0, -30, 100, 48);
+                fill(0,0,0);
+                ellipse(25, 21, 24, 24);
+                ellipse(75, 21, 24, 24);
+            }else{
+                rect(32.5, -22, 35, 80);
+                fill(0,0,0);
+                ellipse(20, 36, 10, 30);
+                ellipse(80, 36, 10, 30);
+                ellipse(20, 0, 10, 30);
+                ellipse(80, 0, 10, 30);
+            }
+            popMatrix();
+        };
+        var brown=function(x,y,width,height,fffff){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            if(fffff===2){
+                pushMatrix();
+                rotate(1);
+                    fill(161, 150, 138);
+                    ellipse(-59,-10,80,20);
+                popMatrix();
+                pushMatrix();
+                rotate(-1);
+                    ellipse(59,-10,80,20);
+                popMatrix();
+                rect(-25,5,20,30,100);
+                rect(5,5,20,30,100);
+                fill(255, 255, 255);
+                ellipse(0,-30,80,100);
+                fill(161, 150, 138);
+                arc(0,-30,80,100,-PI/5,PI+PI/5);
+                fill(89, 74, 63);
+                ellipse(20,-20,15,15);
+                ellipse(-20,-20,15,15);
+                fill(0, 0, 0);
+                ellipse(20,-20,5,5);
+                ellipse(-20,-20,5,5);
+                fill(255, 255, 255);
+                noStroke();
+                quad(-10,0,10,0,30,-60,-30,-60);
+                ellipse(0,0,60,40);
+                fill(89, 74, 63);
+                ellipse(0,0,30,20);
+            }else if(fffff===3){
+                pushMatrix();
+                rotate(1);
+                    fill(161, 150, 138);
+                    ellipse(-59,-10,80,20);
+                popMatrix();
+                pushMatrix();
+                rotate(-1);
+                    ellipse(59,-10,80,20);
+                popMatrix();
+                rect(-25,5,20,30,100);
+                rect(5,5,20,30,100);
+                ellipse(0,-30,80,100);
+                rect(-30,-15,60,30,100);
+            }else{
+                fill(161, 150, 138);
+                rect(-40,0,50,65,50);
+                rotate(0.2*PI);
+                    rect(0,55,20,15,10);
+                    rect(30,40,20,15,10);
+                rotate(-0.1*PI);
+                    rect(-50,-40,100,80,50);
+                    fill(255,255,255);
+                    stroke(255,255,255);
+                    arc(20,0,80,80,-0.5*PI,0.5*PI);
+                    noFill();
+                    strokeWeight(15);
+                    arc(0,0,100,70,-0.8*PI,0);
+                    fill(89,74,63);
+                    noStroke();
+                    arc(-45,-15,80,30,0.4*PI,1.6*PI);
+                    arc(35,-15,40,40,-0.5*PI,0);
+                    arc(15,-25,50,50,0.5*PI,PI);
+                    fill(0,0,0);
+                    ellipse(10,-15,15,15);
+            }
+            popMatrix();
+        };
+        var brownCar=function(x,y,width,height,fffff){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            if(fffff===2){
+                scale(1.8);
+                fill(170,130,80);
+                ellipse(-25,-30,30,30);
+                fill(255,0,0);
+                quad(-30,30,-20,30,-5,-20,-45,-20);
+                fill(0,0,0);
+                ellipse(-45,15,5,20);
+                ellipse(-5,15,5,20);
+                ellipse(-45,-15,5,20);
+                ellipse(-5,-15,5,20);
+            }else if(fffff===1){
+                noStroke();
+                fill(170,130,80);
+                ellipse(-45,-10,30,30);
+                fill(255, 0, 0);
+                triangle(60,10,-30,10,-30,-20);
+                triangle(-100,10,-60,10,-60,-20);
+                rect(-100,10,160,10);
+                fill(0,0,0);
+                ellipse(-75,15,30,30);
+                ellipse(20,15,30,30);
+            }else{
+                scale(2);
+                fill(255, 0, 0);
+                quad(-30,-60,-20,-60,-5,-20,-45,-20);
+                fill(170,130,80);
+                ellipse(-25,-30,35,35);
+                fill(255,0,0);
+                rect(-45,-30,40,20);
+                fill(0,0,0);
+                ellipse(-45,-15,5,20);
+                ellipse(-5,-15,5,20);
+            }
+            popMatrix();
+        };
+        var lobs=function(x,y,width,height,fffff){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            stroke(0,0,0);
+            if(fffff===2){
+                fill(255, 255, 0);
+                quad(-10,-50,10,-50,50,0,-50,0);
+                fill(0,255,0);
+                rect(-25,-50,50,10);
+                strokeWeight(10);
+                point(-10,-20);
+                point( 10,-20);
+                strokeWeight(1);
+                fill(255,255,255);
+                quad(-10,0,10,0,30,40,-30,40);
+                line(15,15,-15,15);
+                line(15,25,-15,25);
+                line(15,35,-15,35);
+            }else if(fffff===1){
+                noStroke();
+                fill(255,255,0);
+                rect(0,-50,35,50);
+                quad(0,0,35,0,30,40,-30,30);
+                fill(0,255,0);
+                rect(-5,-50,45,10);
+            }else{
+                fill(255, 255, 0);
+                quad(-10,-50,10,-50,50,0,-50,0);
+                quad(-10,0,10,0,30,40,-30,40);
+                fill(0,255,0);
+                rect(-25,-50,50,10);    }
+            popMatrix();
+        };
+        var pumpkin=function(x,y,width,height,r){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            rotate(r);
+            translate(-130,-100);
+                fill(255, 140, 0);
+                strokeWeight(5);
+                stroke(122, 65, 0);
+                ellipse(110,55,20,30);
+                ellipse(130,50,20,30);
+                ellipse(150,55,20,30);
+                ellipse(160,100,25,100);
+                ellipse(100,100,25,100);
+                rect(105,40,25,115,100);
+                rect(130,44,25,110,100);
+                stroke(17, 110, 0);
+                noFill();
+                strokeWeight(10);
+                arc(155,40,50,100,PI,4);
+            popMatrix();
+        };
+        var candy=function(x,y,width,height,r){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            rotate(r);
+            translate(-55,-55);
+                stroke(255, 255, 255);
+                strokeWeight(10);
+                    point(42,38);
+                    point(50,25);
+                    point(60,22);
+                    point(70,25);
+                    point(78,38);
+                    point(81,54);
+                    point(81,74);
+                    point(81,94);
+                    point(65,23);
+                stroke(255, 0, 0);
+                    point(45,30);
+                    point(57,23);
+                    point(75,28);
+                    point(80,46);
+                    point(81,64);
+                    point(81,84);
+                    point(81,104);
+            popMatrix();
+        };
+        var leafm=function(x,y,width,height,r,color){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            rotate(r);
+            translate(-125,-120);
+            fill(color);
+            strokeWeight(1);
+            stroke(0, 0, 0);
+            beginShape();
+            vertex(100,100);
+            vertex(90,90);
+            vertex(90,105);
+            vertex(60,110);
+            vertex(80,140);
+            vertex(70,145);
+            vertex(100,160);
+            vertex(90,165);
+            vertex(160,165);
+            vertex(150,160);
+            vertex(180,145);
+            vertex(170,140);
+            vertex(190,110);
+            vertex(160,105);
+            vertex(160,90);
+            vertex(150,100);
+            vertex(155,60);
+            vertex(140,70);
+            vertex(125,40);
+            vertex(110,70);
+            vertex(90,60);
+            vertex(100,100);
+            endShape();
+            arc(125,160,10,100,0,1);
+            popMatrix();
+        };
+        var leafr=function(x,y,width,height,r,color){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            rotate(r);
+            translate(-100,-100);
+            stroke(0, 0, 0);
+            strokeWeight(1);
+            ellipse(100,100,50,100);
+            arc(100,140,10,100,0,1);
+            
+            popMatrix();
+        };
+        var HHH=function(){
+            background(61, 32, 66);
+            fill(0, 0, 0);
+            noStroke();
+            ellipse(width/2,height,width,height/4);
+
+
+            pumpkin(70,height-70,1.5,1.2);
+            buttons();
+        };
+        var AAA=function(){
+            background(186, 85, 7);
+            fill(97, 72, 51);
+            noStroke();
+            ellipse(width/2,height,width,height/4);
+            pumpkin(width-120,height-70,1.5,1.2);
+            pumpkin(width-180,height-40,1.1,0.7);
+            pumpkin(width-100,height-60,1,1);
+            buttonsA(color(255,20,20),color(79, 55, 29,100));
+        };
+        var SSS=function(){
+            fill(71, 197, 255,20);
+            rect(0,0,width,height);
+            fill(145, 255, 0,10);
+            noStroke();
+            ellipse(width/2,height,width,height/4);
+            hedgehog(width-70,height-100,-1,1,1);
+            hedgehog(70,height-100,1,1,1);
+            buttonsA(color(0, 255, 26),color(79, 55, 29,100));
+        };
+        var present=function(num,r,x,y,width,height){
+            if(num===1){
+                this.f=color(255, 0, 0);
+                this.str=color(0, 156, 49);
+            }else if(num===2){
+                this.f=color(0, 51, 255);
+                this.str=color(115, 105, 0);
+            }else{
+                this.f=color(0, 0, 0);
+                this.str=color(255, 255, 255);
+            }
+            pushMatrix();
+            translate(x,y);
+            rotate(r);
+            scale(width,height);
+            translate(-40,-30);
+            noStroke();
+            fill(this.f);
+            rect(20,20,30,30);
+            quad(20,20,50,20,60,10,30,10);
+            quad(50,20,50,50,60,40,60,10);
+            stroke(this.str);
+            strokeWeight(10);
+            line(35,25,35,45);
+            line(25,35,45,35);
+            line(37,18,43,13);
+            line(51,32,56,26);
+            noFill();
+            ellipse(32,8,10,10);
+            ellipse(48,8,10,10);
+            popMatrix();
+        };
+            var confetti=function(){
+            this.type=ceil(random(7));
+            this.x=random(width);
+            this.y=random(-100,height);
+            this.r=random(2*PI);
+            this.rr=random(-0.1,0.1);
+            this.speed=random(0.2,1.5);
+            this.size=random(0.1,0.4);
+            this.nn=ceil(random(3));
+            this.c1=ceil(random(100,255));
+            this.c2=random(255);
+            this.color=color(this.c1,this.c2,0);
+        };
+            confetti.prototype.display=function(){
+            if(mode==="Halloween"){
+                if(this.type===1){
+                pushMatrix();
+                translate(this.x,this.y);
+                rotate(this.r);
+                scale(this.size+0.7);
+                fill(156, 156, 156);
+                noStroke();
+                ellipse(0,0,30,35);
+                rect(-8,-5,15,30,50);
+                fill(0, 0, 0);
+                ellipse(-7,-2,10,10);
+                ellipse(7,-2,10,10);
+                rect(-4,+18,2,10);
+                rect(-1,18,2,10);
+                rect(+2,+18,2,10);
+                popMatrix();
+                }else if(this.type===2){
+                pushMatrix();
+                translate(this.x,this.y);
+                rotate(this.r);
+                scale(this.size+2);
+                translate(0,-10);
+                    noStroke();
+                    fill(255, 230, 0);
+                    triangle(0,0,7,20,-7,20);
+                    fill(255, 145, 0);
+                    triangle(0,0,4,13,-4,13);
+                    fill(255, 255, 255);
+                    triangle(0,0,1.75,5,-1.75,5);
+
+                popMatrix();
+                }else if(this.type===3){
+        pushMatrix();
+                translate(this.x,this.y);
+                rotate(this.r);
+                scale(this.size+0.7);
+                    noStroke();
+                    fill(0, 0, 0);
+                    triangle(0,-20,10,14,-10,14);
+                    rect(-15,14,30,7.5);
+                popMatrix();
+                }else{
+                pumpkin(60+this.x,40+this.y,this.size,this.size,this.r);
+            }
+            } else if(mode==="Winter"){
+                if(this.type<=2){
+                    candy(this.x,this.y,this.size,this.size,this.r);
+                }else if(this.type===3){
+                    present(this.nn,this.r,this.x,this.y,this.size+0.5,this.size+0.5);
+                } else{
+                fill(255, 255, 255);
+                noStroke();
+                ellipse(this.x,this.y,3+(this.size*15),3+(this.size*15));
+                ellipse(this.x+20,this.y-70,3+(this.size*15),3+(this.size*15));
+
+                }
+            } else if (mode==="Autumn"){
+                if(this.type<=2){
+                    leafr(this.x,this.y,this.size,this.width,this.r,this.color);
+                }else{
+                    leafm(this.x,this.y,this.size,this.width,this.r,this.color);
+                }
+            } else{
+                pushMatrix();
+                translate(this.x,this.y);
+                rotate(this.r);
+                strokeWeight(2);
+                if(this.type===1){
+                    fill(100+200*noise(this.y/150),100+200*noise(this.y/100),1000*abs(noise(this.y/500))-400,100);
+                } else{
+                    fill(this.c1+10*noise(this.y/150),this.c2+10*noise(this.y/100),1000*abs(noise(this.y/50))-400,100);
+                }
+                    rect(-this.size*50,-this.size*50,this.size*100,this.size*100);
+                popMatrix();
+            }
+        };
+            confetti.prototype.update=function(){
+            this.y+=this.speed;
+            this.r+=this.rr;
+            if(this.y>height+50){
+                this.y=-50;
+                this.type=ceil(random(7));
+                this.x=random(600);
+                this.size=random(0.1,0.4);
+                this.rr=random(-0.1,0.1);
+                this.speed=random(0.2,1.5);
+                this.nn=ceil(random(3));
+                this.c1=ceil(random(100,255));
+                this.c2=random(255);
+                this.color=color(this.c1,this.c2,0);
+
+            }
+        };
+        var CCC=function(){
+            background(143, 248, 255);
+            fill(255, 255, 255);
+            noStroke();
+            ellipse(width/2,height,width,height/4);
+            present(1,0,70,height-70,3.5,3.5);
+            stroke(0, 0, 0);
+            fill(255, 255, 255);
+            ellipse(width-50,height-50,100,100);
+            ellipse(width-50,height-140,90,90);
+            ellipse(width-50,height-220,80,80);
+            stroke(92, 74, 37);
+            line(width-94,height-150,width-180,height-180);
+            line(width-6,height-150,width,height-155);
+            point(width-65,height-230);
+            point(width-35,height-230);
+            buttonsA(color(20,255,28),color(0,199,20,100));
+        };
+        var button=function(position,radius){
+            if(dist(position.x,position.y,mouseX,mouseY)<radius){
+                return true;
+            } else{
+                return false;
+            }
+        };
+        var squareButton=function(position,size){
+            if(mouseX>position.x&&mouseX<position.x+size.x&&mouseY>position.y&&mouseY<position.y+size.y){
+                return true;
+            } else{
+                return false;
+            }
+        };
+        var hexagon=function(x,y){
+            beginShape();
+                vertex(17.5+x,-20+y);
+                vertex(34.83+x,10+y);
+                vertex(17.5+x,40+y);
+                vertex(-17.5+x,40+y);
+                vertex(-34.83+x,10+y);
+                vertex(-17.5+x,-20+y);
+                vertex(17.5+x,-20+y);
+            endShape();
+        };
+        var supported=function(value,type){
+            if(value===tINFO2[type-1][3]||value===tINFO2[type-1][4]||value===tINFO2[type-1][5]){
+                return true;
+            }else{
+                return false;
+            }
+        };
+        var whatTo=function(One,Two,Three,x,y,width,height){
+            pushMatrix();
+            translate(x,y);
+            scale(width,height);
+            if(One===1){
+                fill(9, 0, 255);
+                rect(66,0,70,40,25);
+            } else{
+                fill(255, 0, 0);
+                rect(66,0,70,40,25);
+            }
+            if(Two===2){
+                fill(9, 0, 255);
+                rect(150,0,70,40,25);
+            } else{
+                fill(255, 0, 0);
+                rect(150,0,70,40,25);
+            }
+            if(Three===3){
+                fill(9, 0, 255);
+                rect(234,0,70,40,25);
+            } else{
+                fill(255, 0, 0);
+                rect(234,0,70,40,25);
+            }
+            noStroke();
+            fill(255, 255, 255);
+            ellipse(100,10,10,10);
+            rect(100-3.5,15,7,15,50);
+            stroke(255, 255, 255);
+            strokeWeight(4);
+            line(99,30,92,40);
+            line(102,30,104,35);
+            line(104,35,103,40);
+            line(100,15,93,30);
+            line(100,15,105,25);
+            line(105,25,110,20);
+
+            quad(160,25,165,30,200,30,205,25);
+            line(165,13,168,22);
+            line(175,8,175,22);
+            line(180,8,180,22);
+            line(195,13,195,22);
+
+
+            line(274,10,264,30);
+            line(279,10,269,30);
+            ellipse(267,20,30,4);
+            line(249,13,252,20);
+            line(249,13,259,20);
+            
+            stroke(0, 0, 0);
+            if(One!==1){
+                fill(66, 66, 66,200);
+                rect(66,0,70,40,25);
+            }
+            if(Two!==2){
+                fill(66, 66, 66,200);
+                rect(150,0,70,40,25);
+            }
+            if(Three!==3){
+                fill(66, 66, 66,200);
+                rect(234,0,70,40,25);
+            }
+            
+            popMatrix();
+            
+            strokeWeight(1);
+        };
+            if(mode==="Halloween"){
+                var menuA=function(){
+                    HHH();if(money>180||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");
+                    }
+                };
+            } else if(mode==="Winter"){var menuA=function(){
+                    CCC();if(money>180||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");
+                    }
+                };
+            } else if(mode==="Autumn"){
+        var menuA=function(){
+        AAA();if(money>180||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");
+                    }
+        };} else{
+        var menuA=function(){SSS();if(money>180||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");}};}
+
+        var store=function(){
+            this.selected=0;
+        };
+        store.prototype.display=function(){
+            this.Mouse();
+            fill(255, 255, 255);
+            rect(0,0,width,60);
+            rect(width*435/600,0,width*165/600,height);
+            fill(252, 225, 189);
+            rect(width*469/600,85,width*32/600,35);
+            rect(width*501/600,85,width*32/600,35);
+            rect(width*533/600,85,width*32/600,35);
+            rect(width*565/600,120,width*32/600,35);
+            rect(width*469/600,120,width*32/600,35);
+            rect(width*501/600,120,width*32/600,35);
+            rect(width*533/600,120,width*32/600,35);
+            rect(width*565/600,85,width*32/600,35);
+            BBS(width*48.4/60,105,0.18,color(0, 110, 15),false,PI/4);
+            BBS(width*51.6/60,105,0.18,color(0, 242, 255),false,PI/4);
+            BBS(width*55/60,105,0.18,color(255, 0, 0),false,PI/4);
+            BBS(width*58/60,105,0.18,color(255,150,0),false,PI/4);
+            BBS(width*48.4/60,140,0.18,color(255, 242, 0),false,PI/4);
+            BBS(width*51.6/60,140,0.18,color(191, 0, 255),false,PI/4);
+            BBS(width*55/60,140,0.18,color(255, 79, 226),false,PI/4);
+            BBS(width*58/60,140,0.18,color(255, 0, 0),false,PI/4);
+            if(tINFO[this.selected][1]>money){
+                fill(255, 0, 0);
+            } else{
+                fill(0,255,0);
+            }
+            rect(width*469/600,height/3.7,width*128/600,height/2);
+            fill(0, 0, 0);
+            textSize(width/30);
+            text("Store",width*475/600,50);
+            text("Money:  $"+money,width/2,50);
+            text("Wave:   "+wave,width/4,25);
+            text("Health:  "+health,width/4,50);
+            textSize(width/60+10);
+            text(tINFO[this.selected][0],width*475/600,height/3.3);
+            text("$"+tINFO[this.selected][1],width*475/600,height/2.9);
+            textSize(17);
+            text(tINFO[this.selected][2],width*475/600,height/2.55,width/5,300);
+            whatTo(tINFO2[this.selected][3],tINFO2[this.selected][4],tINFO2[this.selected][5],width*430/600,height*51/60,width/1100,width/700);
+        };
+        store.prototype.clickedOn=function(){
+            this.work=true;
+            for(var i=0;i<Here.amount.length;i++){
+                if(Here.amount[i].open){
+                    this.work=false;
+                }
+            }
+            if(this.work){
+                if(squareButton(new PVector(width*425/600,0),new PVector(width*175/600,height))){
+                    //{
+                           if(squareButton(new PVector(width*469/600,85),new PVector(width*32/600,35))){
+                        this.selected=0;
+                    } else if(squareButton(new PVector(width*501/600,85),new PVector(width*32/600,35))){
+                        this.selected=1;
+                    } else if(squareButton(new PVector(width*533/600,85),new PVector(width*32/600,35))){
+                        this.selected=2;
+                    } else if(squareButton(new PVector(width*565/600,85),new PVector(width*32/600,35))){
+                        this.selected=3;
+                    } else if(squareButton(new PVector(width*469/600,120),new PVector(width*32/600,35))){
+                        this.selected=4;
+                    } else if(squareButton(new PVector(width*501/600,120),new PVector(width*32/600,35))){
+                        this.selected=5;
+                    } else if(squareButton(new PVector(width*533/600,120),new PVector(width*32/600,35))){
+                        this.selected=6;
+                    } else if(squareButton(new PVector(width*565/600,120),new PVector(width*32/600,35))){
+                        this.selected=7;
+                    }
+                    //}
+                    if(towerSelected!==this.selected+1){
+                        towerSelected=this.selected+1;
+                    } else{
+                        towerSelected=false;
+                    }
+                    
+                    
+                }
+            }
+        };
+        store.prototype.Mouse=function(){
+            if(towerSelected){
+                fill(255, 255, 255,50);
+                ellipse(mouseX,mouseY,2*tINFO2[this.selected][2],2*tINFO2[this.selected][2]);
+                fill(0,0,0);
+                ellipse(mouseX,mouseY,20,20);
+            }
+        };
+        store.prototype.UN=function(){
+            if(tINFO[towerSelected-1][1]>money){
+                towerSelected=false;
+            }
+        };
+
+        var enemy=function(x,y,h,active,type,what,time){
+            this.active=active;
+            this.time=time||0;
+            this.ctime=time||0;
+            this.position= new PVector(x,y);
+            this.type=type;
+            this.where=what;
+            this.width=15;
+            this.vel=new PVector(1,0);
+
+            if(this.where===1){
+                if(this.type===1){
+                    this.speed=2;
+                    this.health=13;
+                    this.totalhealth=13;
+                    this.worth=1;
+                    this.aStrength=1;
+                }else if(this.type===2){
+                    this.speed=2.5;
+                    this.health=10;
+                    this.totalhealth=10;
+                    this.worth=2;
+                    this.aStrength=2;
+                }else if(this.type===3){
+                    this.speed=0.7;
+                    this.health=40;
+                    this.totalhealth=40;
+                    this.worth=5;
+                    this.aStrength=1;
+                }else if(this.type===4){
+                    this.speed=2.7;
+                    this.health=24;
+                    this.totalhealth=24;
+                    this.worth=10;
+                    this.aStrength=1;
+                }else if(this.type===5){
+                    this.speed=2.25;
+                    this.health=30;
+                    this.totalhealth=30;
+                    this.worth=10;
+                    this.aStrength=1;
+                }else if(this.type===6){
+                    this.speed=0.8;
+                    this.health=80;
+                    this.totalhealth=80;
+                    this.worth=10;
+                    this.aStrength=1;
+                }else if(this.type===7){
+                    this.speed=1;
+                    this.health=50;
+                    this.totalhealth=50;
+                    this.worth=25;
+                    this.aStrength=2;
+                }else if(this.type===8){
+                    this.speed=0.6;
+                    this.health=50;
+                    this.totalhealth=50;
+                    this.worth=50;
+                    this.aStrength=2;
+                }else if(this.type===9){
+                    this.speed=0.8;
+                    this.health=150;
+                    this.totalhealth=150;
+                    this.worth=50;
+                    this.aStrength=3;
+                }else if(this.type===10){
+                    this.speed=0.8;
+                    this.health=250;
+                    this.totalhealth=250;
+                    this.worth=75;
+                    this.aStrength=3;
+                }
+            }else{
+                if(this.type===1){
+                    this.speed=1;
+                    this.health=10;
+                    this.totalhealth=10;
+                    this.worth=3;
+                    this.aStrength=1;
+                }else if(this.type===2){
+                    this.speed=1.1;
+                    this.health=30;
+                    this.totalhealth=30;
+                    this.width=22;
+                    this.worth=8;
+                    this.aStrength=2;
+                }else if(this.type===3){
+                    this.speed=1.2;
+                    this.health=60;
+                    this.totalhealth=60;
+                    this.width=30;
+                    this.worth=15;
+                    this.aStrength=3;
+                }
+            }
+            this.speed=this.speed*1.5;
+        };
+        enemy.prototype.display=function(){
+            if(this.where===2){
+                if((this.position.x<200||this.position.x>265)&&(this.position.x<450||this.position.x>525)&&this.position.x<805){
+                        fill(102, 83, 62);
+                        ellipse(this.position.x,this.position.y+this.width/2,this.width,this.width/2);
+                        fill(255, 255, 255);
+                        rect(this.position.x-this.width/4,this.position.y-this.width/2,this.width/3,this.width);
+                }
+            } else if(this.where===3){
+                noStroke();
+                fill(0, 0, 0,100);
+                rect(this.position.x-this.width/10-5,this.position.y-this.width/2+40,this.width/3,this.width);
+                ellipse(this.position.x-5,this.position.y+40,this.width,this.width/3);
+                
+                stroke(0, 0, 0);
+                fill(140, 140, 140);
+                rect(this.position.x-this.width/10,this.position.y-this.width/2,this.width/3,this.width);
+                ellipse(this.position.x,this.position.y,this.width,this.width/3);
+            }else{
+                if(this.vel.x>0){
+                    this.fffff=1;
+                    this.wwwww=1;
+                } else if(this.vel.x<0){
+                    this.fffff=1;
+                    this.wwwww=-1;
+                } else if(this.vel.y>0){
+                    this.fffff=2;
+                } else{
+                    this.fffff=3;
+                }
+                if(this.type===1){
+                    hedgehog(this.position.x,this.position.y,this.width/160*this.wwwww,this.width/160,this.fffff);
+                }else if(this.type===2){
+                    brown(this.position.x,this.position.y,this.width/80*this.wwwww,this.width/80,this.fffff);
+                }else if(this.type===3){
+                    lobs(this.position.x,this.position.y,(this.width/57)*this.wwwww,this.width/47,this.fffff);
+                }else if(this.type===4){
+                    brownCar(this.position.x,this.position.y,2*this.width/160*this.wwwww,2*this.width/160,this.fffff);
+                }else if(this.type===5){
+                    hedgehogCar(this.position.x,this.position.y,this.width/80*this.wwwww,this.width/80,this.fffff);
+                }else if(this.type===6){
+                    lobsCar(this.position.x,this.position.y,this.width/40*this.wwwww,this.width/40,this.fffff,color(0,0,0));
+                }else if(this.type===7){
+                    lobsCar(this.position.x,this.position.y,this.width/30*this.wwwww,this.width/30,this.fffff,color(0,0,0));
+                }else if(this.type===8){
+                    lobsCar(this.position.x,this.position.y,this.width/30*this.wwwww,this.width/30,this.fffff,color(100,100,100));
+                }else if(this.type===9){
+                    tank(this.position.x,this.position.y,this.width/30*this.wwwww,this.width/30,this.fffff,color(50,100,0));
+                }else if(this.type===10){
+                    tank(this.position.x,this.position.y,this.width/30*this.wwwww,this.width/20,this.fffff,color(110,150,70));
+                }
+            }
+            
+            
+            if(this.health!==this.totalhealth){
+                fill(255, 255, 255);
+                rect(this.position.x-0.5*this.width,this.position.y-1.2*this.width,this.width,5);
+                fill(255, 0, 0);
+                rect(this.position.x-0.5*this.width,this.position.y-1.2*this.width,this.width*this.health/this.totalhealth,5);
+            }
+            
+        };
+        if(width>600){enemy.prototype.update=function(){
+                if(this.where===1){
+                    if(this.time>1970){
+                        if(this.time>3200){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>3040){
+                            this.vel.set(0,1);
+                        } else if(this.time>2940){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>2880){
+                            this.vel.set(0,1);
+                        } else if(this.time>2800){
+                            this.vel.set(-2/sqf,1/sqf);
+                        } else if(this.time>2660){
+                            this.vel.set(-2/sqf,-1/sqf);
+                        } else if(this.time>2520){
+                            this.vel.set(0,-1);
+                        } else if(this.time>2400){
+                            this.vel.set(2/sqf,-1/sqf);
+                            } else if(this.time>2250){
+                                this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>2080){
+                                this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>2020){
+                            this.vel.set(0,-1);
+                        } else{
+                            this.vel.set(-2/sqf,-1/sqf);
+                        }
+                    } else if(this.time>1025){
+                        if(this.time>1920){
+                            this.vel.set(-2/sqf,1/sqf);
+                        } else if(this.time>1750){
+                            this.vel.set(-2/sqf,-1/sqf);
+                        } else if(this.time>1690){
+                            this.vel.set(0,-1);
+                        } else if(this.time>1630){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>1580){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>1550){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>1450){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>1400){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>1300){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>1250){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>1200){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>1150){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else{
+                            this.vel.set(0,1);
+                        }
+                    } else{
+                        if(this.time>900){
+                            this.vel.set(-2/sqf,1/sqf);
+                        } else if(this.time>850){
+                            this.vel.set(0,1);
+                        } else if(this.time>800){
+                            this.vel.set(-2/sqf,1/sqf);
+                        } else if(this.time>730){
+                            this.vel.set(0,1);
+                        } else if(this.time>680){
+                            this.vel.set(-2/sqf,1/sqf);
+                        } else if(this.time>535){
+                            this.vel.set(0,1);
+                        } else if(this.time>440){
+                            this.vel.set(2/sqf,1/sqf);
+                        } else if(this.time>370){
+                            this.vel.set(2/sqf,-1/sqf);
+                        } else if(this.time>300){
+                            this.vel.set(0,-1);
+                        } else if(this.time>130){
+                            this.vel.set(2/sqf,-1/sqf);
+                        }
+                    }
+                } else if(this.where===2){
+                    if(this.time>750){
+                        this.vel.set(2/sqf,-1/sqf+0.05);
+                    } else{
+                        this.vel.set(2/sqf,1/sqf+0.05);
+                    }
+                } else if(this.where===3){
+                        this.vel.set(1,0);
+                        this.position.set(this.position.x,1.2*sin(-this.position.x/150)+this.position.y);
+                }
+                this.vel.mult(this.speed,this.speed);
+                this.position.add(this.vel);
+                this.vel.div(this.speed,this.speed);
+                this.time+=this.speed;
+        };
+        }else if(width>400){enemy.prototype.update=function(){
+                if(this.where===1){
+                    if(this.time>1020){
+                        this.vel.set(2/sqf,-1/sqf);
+                    }else if(this.time>900){
+                        this.vel.set(2/sqf,1/sqf);
+                    } else if(this.time>850){
+                        this.vel.set(0,1);
+                    } else if(this.time>800){
+                        this.vel.set(-2/sqf,1/sqf);
+                    } else if(this.time>730){
+                        this.vel.set(0,1);
+                    } else if(this.time>680){
+                        this.vel.set(-2/sqf,1/sqf);
+                    } else if(this.time>535){
+                        this.vel.set(0,1);
+                    } else if(this.time>440){
+                        this.vel.set(2/sqf,1/sqf);
+                    } else if(this.time>370){
+                        this.vel.set(2/sqf,-1/sqf);
+                    } else if(this.time>300){
+                        this.vel.set(0,-1);
+                    } else if(this.time>130){
+                        this.vel.set(2/sqf,-1/sqf);
+                    }
+                } else if(this.where===2){
+                    if(this.time>750){
+                        this.vel.set(2/sqf,-1/sqf+0.05);
+                    } else{
+                        this.vel.set(2/sqf,1/sqf+0.05);
+                    }
+                } else if(this.where===3){
+                        this.vel.set(1,0);
+                        this.position.set(this.position.x,1.2*sin(-this.position.x/150)+this.position.y);
+                }
+                this.vel.mult(this.speed,this.speed);
+                this.position.add(this.vel);
+                this.vel.div(this.speed,this.speed);
+                this.time+=this.speed;
+        };}
+        enemy.prototype.die=function(){
+            if(this.health<=0&&this.active){
+                money+=this.worth;
+                return true;
+            } else if(this.position.x>=width*435/600){
+                health-=this.aStrength;
+                return true;
+            }else{
+                return false;
+            }
+        };
+        enemy.prototype.run=function(){
+            if(this.active){
+                this.display();
+                this.injury();
+                this.update();
+            }
+        };
+        enemy.prototype.injury=function(){
+            for(var i=Projectiles.amount.length-1; i>=0; i--){
+                if(this.ctime!==this.time&&dist(this.position.x,this.position.y,Projectiles.amount[i].position.x,Projectiles.amount[i].position.y)<=Projectiles.amount[i].width+this.width){
+                this.health-=Projectiles.amount[i].AH;
+                Projectiles.amount[i].health-=1;
+            }
+            }
+        };
+
+        var enemies=function(){
+            this.nnn=0;
+            this.amount=[];
+            this.amount.push(new enemy(-600,0,1,false));
+        };
+        enemies.prototype.run=function(){
+            for(var i=0; i<=this.amount.length-1; i++){
+                var p=this.amount[i];
+                p.run();
+                if (p.die()) {
+                    if(p.where===1){
+                        if(p.type===4){
+                            this.amount.push(new enemy(p.position.x,p.position.y,10,true,2,1,p.time));
+                        }else if(p.type===5){
+                            this.amount.push(new enemy(p.position.x-10,p.position.y,10,true,1,1,1+p.time));
+                            this.amount.push(new enemy(p.position.x+10,p.position.y,10,true,1,1,-1+p.time));
+                        }else if(p.type===6){
+                            this.amount.push(new enemy(p.position.x,p.position.y,10,true,3,1,p.time));
+                        }else if(p.type===7){
+                            this.amount.push(new enemy(p.position.x-10,p.position.y,10,true,1,1,p.time+2));
+                            this.amount.push(new enemy(p.position.x+10,p.position.y,10,true,1,1,p.time-2));
+                            this.amount.push(new enemy(p.position.x-2,p.position.y,10,true,2,1,p.time+1));
+                            this.amount.push(new enemy(p.position.x+2,p.position.y,10,true,3,1,p.time-1));
+                        }else if(p.type===8){
+                            this.amount.push(new enemy(p.position.x-10,p.position.y,10,true,4,1,p.time+1));
+                            this.amount.push(new enemy(p.position.x+10,p.position.y,10,true,5,1,p.time-1));
+                            this.amount.push(new enemy(p.position.x,p.position.y,10,true,6,1,p.time));
+                        }else if(p.type===9||p.type===10){
+                            this.amount.push(new enemy(p.position.x-10,p.position.y,10,true,2,1,p.time+1));
+                            this.amount.push(new enemy(p.position.x+10,p.position.y,10,true,3,1,p.time-1));
+                        }
+                    }
+                    this.amount.splice(i, 1);
+                    i--;
+                }
+            }
+        };
+        enemies.prototype.callWave=function(){
+            this.wh=waves[wave];
+            
+            
+            
+            if(frameCount%10===1){
+                this.selec=this.wh[this.nnn];
+                
+                if(this.nnn>=this.wh.length){
+                    this.selec=0;
+                }
+                if(this.selec!==0){
+                    if(this.selec<100){
+                        this.amount.push(new enemy(-100,270,10,true,this.selec,1));
+                    }else if(this.selec<200){
+                        this.amount.push(new enemy(-100,270,10,true,this.selec-100,2));
+                    }else if(this.selec<300){
+                        this.amount.push(new enemy(-100,270,10,true,this.selec-200,3));
+                    }
+                }
+                this.nnn++;
+            }
+            this.endWave();
+            
+        };
+        enemies.prototype.newWave=function(){
+            this.nnn=0;
+            waveOver=true;
+            if(wave<waves.length-1){
+                wave++;
+            }
+        };
+        enemies.prototype.endWave=function(){
+            if(waveOver&&this.amount.length<=1&&this.nnn>=this.wh.length){
+                waveOver=false;
+                money+=120;
+                window.alert(wINFO[wave]);
+                if(wave>=waves.length-1){
+                    mode="Spring/Summer";
+                    Here.amount=[];
+                    spots=[];
+                    trails();
+                    
+                    screens=4;
+                    D1=[];
+                    for(var i=0;i<ceil(width/11);i++){
+                        D1.push(new confetti());
+                    }
+                }
+            }
+        };
+
+        var bullet=function(s,exexex,position,target,type,A,health,range,velocity,DAAA){
+            this.working=A;
+            this.start=new PVector(position.x,position.y);
+            this.position=position;
+            this.target=target;
+            this.velocity=velocity || new PVector(0,0);
+            this.acceleration=new PVector(0,0);
+            this.time=0;
+            this.type=type;
+            this.exexex=exexex;
+            this.width=s;
+            this.t=0;
+            
+            
+            this.countTillDeath=false;
+            this.range=range;
+            this.health=health;
+            this.maxArea=range;
+            this.AH=DAAA;
+            
+        };
+        bullet.prototype.attack=function(){
+            if(this.type!==2){
+                if(this.time<=110){
+                    var dir = PVector.sub(this.target, this.position);
+                    dir.normalize();
+                    dir.mult(0.5);
+                    this.acceleration = dir;
+            
+                    this.velocity.add(this.acceleration);
+                    this.velocity.limit(4);
+                    this.position.add(this.velocity);
+                    this.position.add(this.velocity);
+                    if(this.type!==4){
+                        this.velocity.div(1.2);
+                    }
+                }
+                else if(this.time<=115){
+                    this.velocity.add(this.acceleration);
+                    this.velocity.div(1.2);
+                    this.position.add(this.velocity);
+                    this.position.add(this.velocity);
+                } else{
+                    this.position.add(this.velocity);
+                }
+                this.time++;
+            } else{
+                this.position.add(this.velocity);
+                this.position.add(this.velocity);
+            }
+            
+            if(this.type===4){
+                this.time+=4;
+            }
+        };
+        bullet.prototype.display=function(){
+            fill(0, 0, 0);
+            if(this.type===5){
+                noStroke();
+                fill(255, 81, 0,100);
+            }else if(this.countTillDeath){
+                fill(255, 0, 0);
+            }
+            ellipse(this.position.x,this.position.y,this.width*2,this.width*2);
+        };
+        bullet.prototype.die=function(){
+            if((this.type!==3&&this.health<=0)||this.time>250){
+                return true;
+            } else if(this.working && dist(this.position.x,this.position.y, this.start.x,this.start.y)>this.maxArea){
+                if(this.type!==3){
+                    return true;
+                } else if(!this.countTillDeath){
+                    return true;
+                }
+            } else if(this.type===3&&this.health<=0&&!this.countTillDeath){
+                this.countTillDeath=true;
+                this.countdown=1;
+            } else if(this.countdown<=0){
+                return true;
+            }else{
+                return false;
+            }
+            if(this.type===3&&this.countTillDeath){
+                if(this.countdown<=0){
+                    return true;
+                }
+                this.countdown--;
+                this.width=this.exexex;
+            }
+        };
+        bullet.prototype.run=function(){
+            if(this.working){
+                this.attack();
+                this.display();
+                this.searchh();
+            }
+        };
+        bullet.prototype.searchh=function(){
+            if(this.type!==2&&this.t===0||this.t>Walkers.amount.length-1||dist(this.start.x,this.start.y,Walkers.amount[this.t].position.x,Walkers.amount[this.t].position.y)>this.range){
+                this.t=0;
+                for(var i=0; i<Walkers.amount.length;i++){
+                    if(Walkers.amount[i].time>Walkers.amount[this.t].time&&dist(this.start.x,this.start.y,Walkers.amount[i].position.x,Walkers.amount[i].position.y)<this.range&&supported(Walkers.amount[i].where,this.type)){
+                        this.t=i;
+                    }
+                }
+            }
+            this.target.set(Walkers.amount[this.t].position);
+        };
+
+        var tower=function(position,type){
+            this.t=0;
+            this.start=new PVector(position.x,position.y);
+            this.position=position;
+            this.reload=10;
+            this.target=new PVector(0,0);
+            this.open=false;
+            this.dead=false;
+            this.UP1=0;
+            this.UP2=0;
+            this.ID=ID;
+            this.type=spots[ID[0]][ID[1]];
+            this.reloadTime=tINFO2[this.type-1][1];
+            this.AH=10;
+            this.range=tINFO2[this.type-1][2];
+            this.life=1;
+            this.ang=0;
+            this.damage=tINFO2[this.type-1][0];
+            this.exexex=70;
+            this.bulletsize=5;
+            this.totalPrice=tINFO[this.type-1][1];
+            if(this.type===1){
+                this.color=color(0, 110, 15);
+            }else if(this.type===2){
+                this.color=color(0, 242, 255);
+            }else if(this.type===3){
+                this.color=color(255, 0, 0);
+            }else if(this.type===4){
+                this.life=undefined;
+                this.bulletsize=10;
+                this.color=color(255,150,0);
+            }else if(this.type===5){
+                this.life=5;
+                this.bulletsize=10;
+                this.color=color(255, 242, 0);
+            }else if(this.type===6){
+                this.color=color(191, 0, 255);
+            }else if(this.type===7){
+                this.color=color(255, 79, 226);
+            }else{
+                this.color=color(255, 0, 0);
+            }
+            this.upgrade();
+        };
+        tower.prototype.upgrade=function(){
+            if(this.type===1){
+                if(this.UP1===1){
+                    this.life=2;
+                    this.damage=tINFO2[0][0]+0.2;
+                }else if(this.UP1===2){
+                    this.life=3;
+                    this.damage=tINFO2[0][0]+0.4;
+                }else if(this.UP1===3){
+                    this.life=3;
+                    this.damage=tINFO2[0][0]+0.4;
+                    this.reloadTime=tINFO2[0][1]/1.2;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[0][2]+25;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[0][2]+50;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[0][2]+100;
+                }
+            }else if(this.type===2){
+                if(this.UP1===1){
+                    this.reloadTime=tINFO2[1][1]/1.2;
+                }else if(this.UP1===2){
+                    this.reloadTime=tINFO2[1][1]/1.5;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[1][1]/1.5;
+                    this.damage=tINFO2[1][0]+1.5;
+                    this.bulletsize=8;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[1][2]+10;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[1][2]+25;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[1][2]+25;
+                    this.damage=tINFO2[1][0]+2;
+                    this.bulletsize=10;
+                    if(this.UP1===3){
+                        this.damage=tINFO2[1][0]+3.5;
+                        this.bulletsize=15;
+                    }
+                }
+            }else if(this.type===3){
+                if(this.UP1===1){
+                    this.exexex=90;
+                }else if(this.UP1===2){
+                    this.exexex=110;
+                }else if(this.UP1===3){
+                    this.exexex=140;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[2][2]+25;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[2][2]+50;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[2][2]+50;
+                    this.damage=tINFO2[1][0]+1.5;
+                }
+            }else if(this.type===4){
+                if(this.UP1===1){
+                    this.reloadTime=tINFO2[3][1]/1.2;
+                }else if(this.UP1===2){
+                    this.reloadTime=tINFO2[3][1]/1.5;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[3][1]/1.5;
+                    this.damage=tINFO2[3][0]+0.1;
+                    this.bulletsize=15;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[3][2]+25;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[3][2]+50;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[3][2]+100;
+                }
+            }else if(this.type===5){
+                if(this.UP1===1){
+                    this.damage=tINFO2[4][0]+0.1;
+                }else if(this.UP1===2){
+                    this.reloadTime=tINFO2[4][1]-1;
+                    this.damage=tINFO2[4][0]+0.1;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[4][1]-1;
+                    this.damage=tINFO2[4][0]+0.3;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[4][2]+10;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[4][2]+25;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[4][2]+50;
+                }
+            }else if(this.type===6){
+                if(this.UP1===1){
+                    this.damage=tINFO2[5][0]+1;
+                }else if(this.UP1===2){
+                    this.reloadTime=tINFO2[5][1]/1.4;
+                    this.damage=tINFO2[5][0]+1;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[5][1]/1.8;
+                    this.damage=tINFO2[5][0]+1;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[5][2]+25;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[5][2]+50;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[5][2]+100;
+                }
+            }else if(this.type===7){
+                if(this.UP1===1){
+                    this.reloadTime=tINFO2[6][1]/1.5;
+                }else if(this.UP1===2){
+                    this.reloadTime=tINFO2[6][1]/2;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[6][1]/5;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[6][2]+25;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[6][2]+50;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[6][2]+50;
+                    this.damage=tINFO2[6][0]*2;
+                }
+            }else if(this.type===8){
+                if(this.UP1===1){
+                    this.damage=tINFO2[7][0]+0.3;
+                }else if(this.UP1===2){
+                    this.damage=tINFO2[7][0]+0.7;
+                }else if(this.UP1===3){
+                    this.reloadTime=tINFO2[7][1]-1;
+                    this.damage=tINFO2[7][0]+0.7;
+                }
+                if(this.UP2===1){
+                    this.range=tINFO2[7][2]+50;
+                }else if(this.UP2===2){
+                    this.range=tINFO2[7][2]+100;
+                }else if(this.UP2===3){
+                    this.range=tINFO2[7][2]+200;
+                }
+            }
+            this.sellPrice=floor(0.7*this.totalPrice);
+        };
+        tower.prototype.display=function(){
+            BBS(this.start.x,this.start.y,0.3,this.color,false);
+            if(this.open){
+                fill(200, 255, 200,100);
+                ellipse(this.start.x,this.start.y,this.range*2,this.range*2);
+                fill(255, 255, 255);
+                rect(width*465/600,0,width-width*465/600,height);
+                fill(255, 140, 0);
+                rect(width*469/600,85,width*128/600,75);
+                if(this.cUpOne3<=money){
+                    fill(0, 255, 0);
+                }else{
+                    fill(255, 0, 0);
+                }
+                rect(width*469/600,height/3.7,width*128/600,height/3.6);
+                if(this.cUpTwo3<=money){
+                    fill(0, 255, 0);
+                }else{
+                    fill(255, 0, 0);
+                }        rect(width*469/600,height/1.81,width*128/600,height/3.6);
+                fill(0, 0, 0);
+                textSize(width/39+1);
+                text(tINFO[this.type-1][0]+" Tower",width*475/600,50);
+                textSize(width/60+10);
+                text("Sell Tower For",width*470/600,120);
+                text("$"+this.sellPrice,width*475/600,150);
+                text(this.cUpOne1,width*475/600,height/3.3);
+                text("$"+this.cUpOne3,width*475/600,height/2.9);
+                text(this.cUpTwo1,width*475/600,height/1.7);
+                text("$"+this.cUpTwo3,width*475/600,height/1.6);
+                textSize(15);
+                text(this.cUpOne2,width*475/600,height/2.8,width/5,300);
+                text(this.cUpTwo2,width*475/600,height/1.55,width/5,300);
+                whatTo(tINFO2[this.type-1][3],tINFO2[this.type-1][4],tINFO2[this.type-1][5],width*430/600,height*51/60,width/1100,width/700);
+
+            }
+        };
+        tower.prototype.makeB=function(){
+            if(this.reload<=0){
+                this.searchc();
+                if(dist(this.start.x,this.start.y,this.target.x,this.target.y)<this.range){
+                    if(this.type!==2){
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,undefined,this.damage));
+                    }else{
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(0,0.7),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(0.5,0.5),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(0.7,0),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(0,-0.7),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(-0.5,-0.5),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(-0.7,0),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(-0.5,0.5),this.damage));
+                        Projectiles.amount.push(new bullet(this.bulletsize, this.exexex, new PVector(this.start.x,this.start.y),new PVector(100,200),this.type,true,this.life,this.range,new PVector(0.5,-0.5),this.damage));
+                    }
+                    this.reload=this.reloadTime;
+                }
+            }
+            this.reload--;
+        };
+        tower.prototype.run=function(){
+            this.display();
+            this.makeB();
+        };
+        tower.prototype.searchc=function(){
+            if(dist(this.target.x,this.target.y,this.start.x,this.start.y)>this.range||this.t===0||this.t>Walkers.amount.length-1){
+                this.t=0;
+                this.tttt=false;
+                for(var i=0; i<Walkers.amount.length;i++){
+                    if(!this.tttt&&supported(Walkers.amount[i].where,this.type)&&dist(this.start.x,this.start.y,Walkers.amount[i].position.x,Walkers.amount[i].position.y)<this.range){
+                        this.t=i;
+                        this.tttt=true;
+                    }
+                }
+            }
+            this.target.set(Walkers.amount[this.t].position);
+        };
+        tower.prototype.die=function(){
+            if(this.dead){
+                spots[this.ID[0]][this.ID[1]]=0;
+                return true;
+            }else{
+                return false;
+            }
+        };
+        tower.prototype.clickedOn=function(){
+            if(button(this.start,25)){
+                this.open=true;
+                towerSelected=false;
+            }
+            if(this.open&&button(this.start,25)===false&&mouseX<width*465/600){
+                this.open=false;
+            }
+            if(this.open){
+                if(squareButton(new PVector(width*469/600,85),new PVector(width*128/600,75))){
+                    this.dead=true;
+                    money+=this.sellPrice;
+                }else if(money>=this.cUpOne3&&squareButton(new PVector(width*469/600,height/3.7),new PVector(width*128/600,height/3.6))){
+                    money-=this.cUpOne3;
+                    this.totalPrice+=this.cUpOne3;
+                    this.UP1++;
+                }else if(money>=this.cUpTwo3&&squareButton(new PVector(width*469/600,height/1.81),new PVector(width*128/600,height/3.6))){
+                    money-=this.cUpTwo3;
+                    this.totalPrice+=this.cUpTwo3;
+                    this.UP2++;
+                }
+            }
+            
+            if(this.UP1>=3){
+                this.cUpOne1="Purchased";
+                this.cUpOne2="Maxed Out";
+                this.cUpOne3="$$$$$$$$$";
+            }else{
+                this.cUpOne1=tINFO3[this.type-1][0][this.UP1][0];
+                this.cUpOne2=tINFO3[this.type-1][0][this.UP1][2];
+                this.cUpOne3=tINFO3[this.type-1][0][this.UP1][1];
+            }
+            if(this.UP2>=3){
+                this.cUpTwo1="Purchased";
+                this.cUpTwo2="Maxed Out";
+                this.cUpTwo3="$$$$$$$$$";
+            }else{
+                this.cUpTwo1=tINFO3[this.type-1][1][this.UP2][0];
+                this.cUpTwo2=tINFO3[this.type-1][1][this.UP2][2];
+                this.cUpTwo3=tINFO3[this.type-1][1][this.UP2][1];
+            }
+            
+            this.upgrade();
+        };
+
+        var bullets=function(){
+            this.amount=[];
+            this.amount.push(new bullet(1,1,new PVector(-500,0),new PVector(-500,0),1,false));
+        };
+        bullets.prototype.run=function(){
+            for(var i=this.amount.length-1; i>=0; i--){
+                var p=this.amount[i];
+                p.run();
+                if (p.die()) {
+                    this.amount.splice(i, 1);
+                }
+            }
+        };
+
+        var towers=function(){
+            this.amount=[];
+        };
+        towers.prototype.addd=function(){
+            this.amount.push(new tower(tAdd));
+        };
+        towers.prototype.run=function(){
+            for(var i=this.amount.length-1; i>=0; i--){
+                var p=this.amount[i];
+                p.run();
+                if (p.die()) {
+                    this.amount.splice(i, 1);
+                }
+            }
+        };
+        towers.prototype.clickedOn=function(){
+            for(var i=this.amount.length-1; i>=0; i--){
+                var p=this.amount[i];
+                p.clickedOn();
+            }
+        };
+
+        var gameM=function(){
+            this.open=false;
+            this.count=0;
+        };
+        gameM.prototype.clicked=function(){
+            if(button(new PVector(20,20),40)){
+                this.open=true;
+            }
+            if(this.open){
+                if(squareButton(new PVector(width/3.6,height/2.75),new PVector(width/8,width/8))){
+                    Walkers.amount=[];
+                    Walkers.amount.push(new enemy(-600,0,1,false));
+                    Projectiles.amount=[];
+                    Projectiles.amount.push(new bullet(1,1,new PVector(-500,0),new PVector(-500,0),1,false));
+                    Here.amount=[];
+                    this.open=false;
+                    waveOver=true;
+                    wave=0;
+                    spots=[];
+                    trails();
+                    money=180;
+                    health=100;
+                }else if(squareButton(new PVector(width/2.3,height/2.75),new PVector(width/8,width/8))){
+                    this.open=false;
+                }else if(squareButton(new PVector(width/1.68,height/2.75),new PVector(width/8,width/8))){
+                    Walkers.amount=[];
+                    Walkers.amount.push(new enemy(-600,0,1,false));
+                    Projectiles.amount=[];
+                    Projectiles.amount.push(new bullet(1,1,new PVector(-500,0),new PVector(-500,0),1,false));
+                    Here.amount=[];
+                    this.open=false;
+                    waveOver=true;
+                    wave=0;
+                    spots=[];
+                    trails();
+                    money=180;
+                    health=100;
+                    
+                    screens=0;
+                    background(0, 0, 255);
+                    D1=[];
+                    for(var i=0;i<ceil(width/11);i++){
+                        D1.push(new confetti());
+                    }
+                }
+            
+            }
+        };
+        {
+        }
+        gameM.prototype.display=function(){
+            if(this.open){
+                fill(0,0,0,200);
+                rect(0,0,width,height);
+                stroke(0,0,0);
+                strokeWeight(3);
+                fill(255,255,255);
+                rect(width/4,height/3,width/2,height/4);
+                rect(width/3.6,height/2.75,width/8,width/8);
+                rect(width/2.3,height/2.75,width/8,width/8);
+                rect(width/1.68,height/2.75,width/8,width/8);
+                textSize(height/6-50);
+                fill(0,0,0);
+                text("↻",width/3.4,height/2.2);
+                text("▷",width/2.2,height/2.2);
+                textSize(height/6-30);
+                text("≡",width/1.61,height/2.15);
+            }
+        };
+        {
+        }
+        gameM.prototype.update =function(){
+            if(this.open){
+                this.count=1;
+            }else{
+                this.count=0;
+            }
+        };
+        {
+        if(money>180||screens===4||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");}}
+        //} Game Essentials
+        //{
+        //Hack-ables
+        var GOLD=300;
+        var baseHealth=100;
+        if(difficulty==="hard"){
+            var baseHealth=50;
+        }
+
+
+        D1=[];
+        for(var i=0;i<ceil(width/11);i++){
+            D1.push(new confetti());
+        }
+
+        Walkers=new enemies();Projectiles=new bullets();MenuB=new gameM();var Store=new store();Here=new towers();textSize(15);if(width<700){print("To play full-screen, go to:");window.alert("https://www.khanacademy.org/computer-programming/bbp-defense/5243445988786176/embedded?editor=yesCode&&width=1200&&height=700");}{}if(money>180||screens===4||(difficulty==="hard"&&health>50)||health>100){screens=5;window.alert("NO CHEATING");window.alert("NO CHEATING");{}window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");{}{}{}{}window.alert("NO CHEATING");{}{}window.alert("NO CHEATING");window.alert("NO CHEATING");{}{}{}window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");window.alert("NO CHEATING");{}window.alert("NO CHEATING");{}{}{{{}}}}if(difficulty!=="hard"&&difficulty!=="easy"){screens=6;window.alert("Error");window.alert("the difficulty wasn't set on a valid value. Please check line 7 to make sure that it says either:");window.alert('var difficulty="easy";');window.alert('var difficulty="hard";');window.alert("Remember, capitalization matters! Click any where on this screen to continue playing the game on difficulty easy.");}
+        //} Defining undefined variables
+        //{
+        mouseClicked=function(){
+            if(screens===0){
+                if(squareButton(new PVector(width/2-width/6,height/2-height/12),new PVector(width/3,height/6,100))){
+                    screens=1;
+                    D1.splice(0,D1.length);
+                } else if(squareButton(new PVector(width/4-width/10,height/1.4-height/15),new PVector(width/5,height/7))){
+                    screens=2;
+                } else if(squareButton(new PVector(width*3/4-width/10,height/1.4-height/15),new PVector(width/5,height/7))){
+                    screens=3;
+                }
+            }else if(screens===1){
+                
+                
+                MenuB.clicked();
+                Here.clickedOn();
+                Store.clickedOn();
+                if(towerSelected){
+                    for(var i=0; i<floor(width/65)-1; i++){
+                        for(var c=0; c<floor(height/70); c++){
+                            if(spots[i][c]===0&&button(new PVector(50*i+35,60*(c+1)+30*abs(sin(i*PI/2))+32),25)){
+                                ID=[i,c];
+                                tAdd.set(50*i+35,60*(c+1)+30*abs(sin(i*PI/2))+32);
+                                spots[i][c]=towerSelected;
+                                money-=tINFO[towerSelected-1][1];
+                                Here.addd();
+                            } 
+                        }
+                    }
+                }
+                
+                if(!waveOver&&squareButton(new PVector(70,0),new PVector(width*7/60,height*4/60))){
+                    Walkers.newWave();
+                }
+            
+                Store.UN();
+            }else if(screens===5||screens===6){
+                if(screens===6){
+                    difficulty="easy";
+                }
+                
+                Walkers.amount=[];
+                Walkers.amount.push(new enemy(-600,0,1,false));
+                Projectiles.amount=[];
+                Projectiles.amount.push(new bullet(1,1,new PVector(-500,0),new PVector(-500,0),1,false));
+                Here.amount=[];
+                this.open=false;
+                waveOver=true;
+                wave=0;
+                spots=[];
+                trails();
+                money=180;
+                health=100;
+                
+                screens=0;
+                D1=[];
+                for(var i=0;i<ceil(width/11);i++){
+                    D1.push(new confetti());
+                }
+            }else if(screens===2||screens===3){
+                if(squareButton(new PVector((width-height)/2+height/2.65,height/1.23),new PVector(height/5,height/8))){
+                    D1.splice(0,D1.length);
+                    screens=1;
+                } else if(squareButton(new PVector((width-height)/2+height/1.65,height/1.23),new PVector(width/5,height/8))){
+                    screens=0;
+                    background(125, 197, 255);
+                }
+            }
+        };
+        draw=function(){
+            if(screens===1&&MenuB.count===0){
+                if(health<=0){
+                    screens=5;
+                }
+            
+                background(qq);
+            
+                noStroke();
+                Walkers.callWave();
+            
+                for(var i=0; i<floor(width/65)-1; i++){
+                    for(var c=0; c<floor(height/70); c++){
+                        if(spots[i][c]<=10){
+                            fill(qqq);
+                            ellipse(50*i+35,60*c+30*abs(sin(i*PI/2))+92,50,50);
+                        }else if(spots[i][c]===100){
+                            fill(112, 82, 56);
+                            hexagon(50*i+35,60*c+30*abs(sin(i*PI/2))+82);
+                        }else{
+                            fill(0, 179, 255);
+                            hexagon(50*i+35,60*c+30*abs(sin(i*PI/2))+82);
+                        }
+                    }
+                }
+            
+                stroke(0,0,0);
+                strokeWeight(1);
+                Store.display();
+                
+                
+                fill(0, 0, 0);
+                
+                Here.run();
+                Walkers.run();
+                Projectiles.run();
+                
+                
+                fill(255, 255, 255);
+                ellipse(20,20,80,80);
+                fill(0, 0, 0);
+                textSize(35);
+                text("||",15,35);
+                fill(0, 43, 255);
+                rect(70,0,width*7/60,height*4/60);
+                fill(255, 255, 255);
+                textSize(15);
+                text("Start Wave",70,25);
+                MenuB.display();
+            }else if(screens===0){
+                menuA();
+                textSize(height/7);
+                fill(0,0,0);
+                text("?",width/5,height/1.3);
+                text("▷",width/2.3,height/1.8);
+                textSize(height/11);
+                text("↑≡",width/1.52,height/1.3);
+                textSize(height/7);
+                textAlign(CENTER,TOP);
+                text("BBP Defense",(width-height)/2+100,10,height-200,height);
+                textAlign(LEFT,BASELINE);
+                for(var i=0; i<D1.length;i++){
+                    D1[i].display();
+                    D1[i].update();
+                }
+            }else if(screens===2){
+                HowTo();
+            }else if(screens===3){
+                HighScore();
+            }else if(screens===4){
+                win();
+            }else if(screens===5){
+                lose();
+            }else if(screens===6){
+                diffici();
+            }
+            MenuB.update();
+        };
+        //} Draw & MouseClicked
+      }
+    };
+
+    new Processing(document.getElementById("game"), sketchProc); 
+ </script>
+  </body>
+</html>

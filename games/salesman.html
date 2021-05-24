@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Traveling Salesman</title>
+    <meta charset="utf-8">
+    <base href="..">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/4850321074896896.png" />
+    <style>
+      .big{
+        font-size: 50px;
+        margin-left: 200px;
+        margin-top: 50px;
+      }.sub{
+        font-size: 30px;
+        margin-left: 250px;
+        color: #BBB;
+        text-decoration: none;
+      }.gap{
+        display: block;
+        height: 100px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  </head>
+  <body>
+    <canvas id="back"></canvas>
+    <a id="github" href="https://github.com/KY246/KY246.github.io">
+      <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      Fix, Contribute, Star
+    </a>
+    <script src="back.js"></script>
+    
+    <h1 class="big">
+      The Traveling Salesman
+    </h1>
+    
+    <canvas id="game"></canvas>
+    
+    <br/>
+    <br/>
+    <br/>
+    <a href="index.html" class="sub">
+      &raquo; Back Home
+    </a>
+    
+    <p class="gap"></p>
+    <footer>
+      &copy;2021 Kynan - Some rights reserved under the MIT License
+      <br/>
+      <a href="https://github.com/KY246" title="Github">
+        <img class="icon" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      </a>
+      <a href="https://www.khanacademy.org/profile/kyprogramming/projects" title="Khan Academy">
+        <img class="icon" src="https://avatars.githubusercontent.com/u/15455?s=280&v=4"/>
+      </a>
+      <a href="https://replit.com/@KY246" title="repl.it">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Repl.it_logo.svg/1024px-Repl.it_logo.svg.png"/>
+      </a>
+      <a href="https://stackoverflow.com/users/14630063/ky246" title="Stack Overflow">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"/>
+      </a>
+    </footer>
+    <noscript class="noscript">
+      Please Enable JavaScript In your browser.
+    </noscript>
+    
+    <script>
+    var sketchProc = function(pi) {
+      with (pi) {
+        size(600, 600);
+        
+        const sinD = deg => {
+          return sin(PI * deg / 180);
+        };
+        const cosD = deg => {
+          return cos(PI * deg / 180);
+        };
+        /**
+         * My 9th game!!
+         * Instructions on line 16.
+         * __________________________________________
+         * | IDEAS FOR FUTURE PROJECTS ARE WELCOME. |
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         * Based off of the mathematical puzzle,
+         * The Traveling Salesman Problem
+         * You can learn about it here:
+         * https://en.wikipedia.org/wiki/Travelling_salesman_problem
+         *
+         * IF YOU FLAG THIS PROJECT, PLEASE STATE YOUR REASON.
+         *
+         * Click on all of the houses that are on the canvas, in the order that you want your character (The hat) to travel. Your goal is to visit all of the houses faster than the AI does. This game is about finding and choosing the shortest paths. Your character starts at the factory in the center, and will come back to it after all of the houses have been visited. If your character comes back to the factory before the AI, it will earn bonus points. You win if you have collected more money (points) than the AI by the 30th level.
+         * __________________________________________
+         * | IDEAS FOR FUTURE PROJECTS ARE WELCOME. |
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         *
+         * Projects that I am working on (ordered by priority):
+         * * Battlefield (WWII)
+         * * Tanks II
+         * * Khan Script
+         *
+         * To see other projects made by me, go to either:
+        https://www.khanacademy.org/profile/KyProgramming/projects
+        OR:
+        https://www.khanacademy.org/computer-programming/subscribe-to-ky-programming/5895671072702464
+         *
+         * @DO_NOT_FORGET_TO_GIVE_IDEAS_FOR_FUTURE_PROJECTS_OR_GAMES
+         *
+         * To people trying to read the code:
+         * I'm sorry to say that despite all of my code in all of my projects being messy and hard to decipher, this is probably the worst one of them all.
+        **/
+        /**CODE*/
+        var positions=[
+            [300,300,0,0]
+        ];
+        var trail=[];
+        var buttons=[];
+        var ptrail=[0,0];
+        var level=1;
+        var miniM;
+        var scene='home';
+        var diff='hard';
+        var sTime=millis();
+        var start=false;
+        var started=false;
+        var pause=false;
+        var pm=0;
+        rectMode(CENTER);
+        textAlign(CENTER,CENTER);
+        textFont(createFont('serif'));
+        var INT=function(ax1,ay1,ax2,ay2,bx1,by1,bx2,by2){
+            var m1=(ay1-ay2)/(ax1-ax2);
+            var m2=(by1-by2)/(bx1-bx2);
+            if(m1===Infinity){
+                m1=100000000000;
+            }else if(m1===-Infinity){
+                m1=-100000000000;
+            }
+            if(m2===Infinity){
+                m2=100000000000;
+            }else if(m2===-Infinity){
+                m2=-100000000000;
+            }
+            var b1=ay1-m1*ax1;
+            var b2=by1-m2*bx1;
+            var intx=(b1-b2)/(m2-m1);
+            if(intx>min(ax1,ax2)+1&&intx<max(ax1,ax2)-1&&intx>min(bx1,bx2)+1&&intx<max(bx1,bx2)-1){
+                return true;
+            }
+        };
+        var house=function(x,y,s,c1,c2,a){
+            fill(c1);
+            rect(x,y,s,s);
+            fill(c2);
+            triangle(x-s/2,y-s/2,x+s/2,y-s/2,x,y-s);
+            rect(x+s/6,y+s/6,s/3,s*2/3);
+            fill(175,200,255);
+            if(a===1){
+                rect(x-s/4,y,s/3,s/3);
+            }else if(a===2){
+                ellipse(x-s/4,y,s/3,s/3);
+            }
+        };
+        var message=function(x,y,m,c){
+            this.m=m;
+            this.x=x;
+            this.y=y;
+            this.c=c;
+            this.o=255;
+            this.dead=false;
+            this.display=function(){
+                fill(this.c,this.o);
+                text(this.m,this.x,this.y);
+            };
+            this.run=function(){
+                this.display();
+                this.y-=0.4;
+                this.o-=3;
+                if(this.o<=0){
+                    this.dead=true;
+                }
+            };
+        };
+        var Message=function(){
+            this.amount=[];
+            this.run=function(){
+                for(var i=0;i<this.amount.length;i++){
+                    this.amount[i].run();
+                    if(this.amount[i].dead){
+                        this.amount.splice(i,1);
+                        i--;
+                    }
+                }
+            };
+        };
+        var character=function(x,y,t){
+            this.position=new PVector(x,y);
+            this.type=t;
+            this.building=1;
+            this.fin=false;
+            this.money=0;
+            this.display=function() {
+                switch(t){
+                    case 1:
+                        fill(0);
+                        rect(this.position.x,this.position.y,30,20,3);
+                        noFill();
+                        rect(this.position.x,this.position.y-10,10,10,3);
+                    break;
+                    default:
+                        fill(0);
+                        rect(this.position.x,this.position.y,20,25,3);
+                        rect(this.position.x,this.position.y+8,30,10,3);
+                    break;
+                }
+            };
+            if(this.type!==0){
+                this.run=function(){
+                    this.display();
+                    if(started){
+                        if(!this.fin){
+                        this.vel=PVector.sub(this.position,new PVector(positions[trail[this.building]][0],positions[trail[this.building]][1]));
+                        this.vel.mult(-2/dist(this.vel.x,this.vel.y,0,0));
+                        this.position.add(this.vel);
+                            if(dist(this.position.x,this.position.y,positions[trail[this.building]][0],positions[trail[this.building]][1])<3){
+                                this.money+=positions[trail[this.building]][3];
+                                miniM.amount.push(new message(this.position.x,this.position.y,'+'+positions[trail[this.building]][3],color(255,0,0)));
+                                positions[trail[this.building]][3]/=2;
+                                this.building++;
+                                if(this.building===trail.length){
+                                    this.fin=true;
+                                }
+                            }
+                        }else if(frameCount%25===0){
+                            this.money+=0.25;
+                            miniM.amount.push(new message(this.position.x,this.position.y,'+ 1/4',color(255,0,0)));
+                        }
+                    }
+                };
+            }else{
+                this.run=function(){
+                    this.display();
+                    if(started){
+                        if(!this.fin){
+                        this.vel=PVector.sub(this.position,new PVector(positions[ptrail[this.building]][0],positions[ptrail[this.building]][1]));
+                        this.vel.mult(-2/dist(this.vel.x,this.vel.y,0,0));
+                        this.position.add(this.vel);
+                            if(dist(this.position.x,this.position.y,positions[ptrail[this.building]][0],positions[ptrail[this.building]][1])<3){
+                                this.money+=positions[ptrail[this.building]][3];
+                                miniM.amount.push(new message(this.position.x,this.position.y,'+'+positions[ptrail[this.building]][3],color(255,255,0)));
+                                positions[ptrail[this.building]][3]/=2;
+                                this.building++;
+                                if(this.building===ptrail.length){
+                                    this.fin=true;
+                                }
+                            }
+                        }else if(frameCount%25===0){
+                            this.money+=0.25;
+                            miniM.amount.push(new message(this.position.x,this.position.y,'+ 1/4',color(255,255,0)));
+                        }
+                    }
+                };
+            }
+        };
+        var resetL=function(){
+            ptrail=[0,0];
+            positions=[
+            [300,300,0,0]
+            ];
+            for(var i=0;i<level+2;i++){
+                positions.push([random(150,550),random(50,550),floor(random(3)),6]);
+                for(var ȁ=0;ȁ<positions.length-1;ȁ++){
+                    if(dist(positions[i+1][0],positions[i+1][1],positions[ȁ][0],positions[ȁ][1])<50){
+                        positions.splice(i+1,1);
+                        i--;
+                    }
+                }
+            }
+           
+            trail=[0];
+            for(var ï=1;ï<positions.length;ï++){
+                for(var Γ1,Γ2=Infinity,Γ3=ï,i=1;i<positions.length;i++){
+                    Γ1=dist(positions[trail[trail.length-1]][0],positions[trail[trail.length-1]][1],positions[i][0],positions[i][1]);
+                    if(Γ1<Γ2&&trail.indexOf(i)===-1){
+                        Γ2=Γ1;
+                        Γ3=i;
+                    }
+                    if(i===positions.length-1){
+                        trail.push(Γ3);
+                    }
+                }
+            }
+            trail.push(0);
+            strokeWeight(1);
+            for(var ȿ=0;ȿ<4;ȿ++){
+                for(var i=0;i<trail.length-1;i++){
+                    for(var ẗ=i+1;ẗ<trail.length-1;ẗ++){
+                        if(INT(positions[trail[i]][0],positions[trail[i]][1],positions[trail[i+1]][0],positions[trail[i+1]][1],positions[trail[ẗ]][0],positions[trail[ẗ]][1],positions[trail[ẗ+1]][0],positions[trail[ẗ+1]][1])){
+                            for(var ẍ=0;ẍ<ceil((ẗ-i-1)/2);ẍ++){
+                                var REPL=trail[ẍ+i+1];
+                                trail[ẍ+i+1]=trail[ẗ-ẍ];
+                                trail[ẗ-ẍ]=REPL;
+                            }
+                        }
+                    }
+                }
+            }
+           
+            started=false;
+        };
+        var button=function(x,y,w,h,texta,textS,fc,sc,tc){
+            this.x=x;
+            this.y=y;
+            this.width=w;
+            this.height=h;
+            this.fillColor=fc||color(255);
+            this.strokeColor=sc||0;
+            this.textColor=tc||0;
+            this.textS=textS||1;
+            this.texta=texta;
+            this.display=function(){
+                fill(this.fillColor);
+                stroke(this.strokeColor);
+                rect(this.x+this.width/2,this.y+this.height/2,this.width,this.height);
+                fill(this.textColor);
+                textSize(15*this.textS);
+                text(this.texta,this.x+this.width/2,this.y+this.height/2);
+            };
+            this.clicked=function(){
+                if(mouseX>this.x&&mouseX<this.x+this.width&&mouseY>this.y&&mouseY<this.y+this.height){
+                    return true;
+                }
+            };
+        };
+
+        resetL();
+
+        buttons.push(new button(25,200,100,50,"Pause",2));
+        buttons.push(new button(200,190,200,100,"Resume",3));
+        buttons.push(new button(200,310,200,100,"Home",3));
+        buttons.push(new button(100,270,400,110,"Play",3,color(250,250,175)));
+        buttons.push(new button(100,390,400,100,"How the AI works",3,color(250,250,175)));
+        buttons.push(new button(100,270,400,105,"Easy",3,color(250,250,175)));
+        buttons.push(new button(100,390,400,105,"Hard",3,color(250,250,175)));
+        var AI=new character(300,300,1);
+        var player=new character(300,300,0);
+        miniM=new Message();
+         
+        draw= function() {
+            if(scene==='play'){
+                if(!pause){
+                    if(start){
+                        start=false;
+                        started=true;
+                    }
+                    if(AI.fin&&player.fin&&level<30){
+                        sTime=millis();
+                        level++;
+                        resetL();
+                        AI.position.set(positions[0][0],positions[0][1]);
+                        AI.building=1;
+                        AI.fin=false;
+                        player.position.set(positions[0][0],positions[0][1]);
+                        player.building=1;
+                        player.fin=false;
+                    }else if(AI.fin&&player.fin){
+                        scene='results';
+                    }
+                    background(0, 255, 0);
+                    strokeWeight(4);
+                    stroke(255, 0, 0);
+                    if(started){
+                        for(var i=0;i<trail.length-1;i++){
+                            line(positions[trail[i]][0],positions[trail[i]][1],positions[trail[i+1]][0],positions[trail[i+1]][1]);
+                        }
+                    }else{
+                        fill(255,255,0,180);
+                        noStroke();
+                        for(var i=1;i<ptrail.length-1;i++){
+                            ellipse(positions[ptrail[i]][0],positions[ptrail[i]][1],60,60);
+                        }
+                    }
+                    strokeWeight(2);
+                    stroke(255,255,0);
+                    for(var i=0;i<ptrail.length-1;i++){
+                        line(positions[ptrail[i]][0],positions[ptrail[i]][1],positions[ptrail[i+1]][0],positions[ptrail[i+1]][1]);
+                    }
+                    fill(200);
+                    stroke(0);
+                    strokeWeight(1);
+                    rect(positions[0][0],positions[0][1],30,50);
+                    rect(positions[0][0]+20,positions[0][1]+10,30,30);
+                    rect(positions[0][0]+25,positions[0][1]-25,10,40);
+                    for(var i=1;i<positions.length;i++){
+                        house(positions[i][0],positions[i][1],30,color(184, 177, 162),color(92, 72, 23),positions[i][2]);
+                    }
+                    player.run();
+                    AI.run();
+                    fill(99, 71, 31,100);
+                    rect(75,300,150,600);
+                    fill(0);
+                    textSize(25);
+                    text("Level: "+level+"/30",75,440);
+                    if(diff==='hard'){
+                        fill(97,71,31);
+                        ellipse(75,340,130,130);
+                        fill(200);
+                        ellipse(75,340,120,120);
+                        stroke(0);
+                        line(75,340,75,280);
+                        stroke(255,0,0);
+                        if(!started){
+                            if((sTime-millis())/(2.6*(level+7))>-360){
+                                line(75,340,75+50*sinD(180+(sTime-millis())/(2.6*(level+7))),340+50*cosD(180+(sTime-millis())/(2.6*(level+7))));
+                            }else if(frameCount%40===0){
+                                AI.money+=0.5;
+                                miniM.amount.push(new message(75,340,'+ 1/2',color(255,0,0)));
+                            }
+                        }
+                    }
+                    textSize(23);
+                    fill(200,0,0);
+                    text(floor(round(AI.money)/240)+' pounds\n'+floor(round(AI.money)/12)%20+' shillings\n'+round(AI.money)%12+' pence\n'+AI.money%1*4+' farthings',70,530);
+                    fill(200,200,0);
+                    text(floor(round(player.money)/240)+' pounds\n'+floor(round(player.money)/12)%20+' shillings\n'+round(player.money)%12+' pence\n'+player.money%1*4+' farthings',70,70);
+                    miniM.run();
+                    buttons[0].display();
+                    cursor(ARROW);
+                    for(var i=1;i<positions.length;i++){
+                        if(dist(positions[i][0],positions[i][1],mouseX,mouseY)<20){
+                            cursor(HAND);
+                        }
+                    }
+                    if(buttons[0].clicked()){
+                        cursor(HAND);
+                    }
+                }else{
+                    sTime+=millis()-pm;
+                    cursor(ARROW);
+                    for(var i=1;i<3;i++){
+                        buttons[i].display();
+                        if(buttons[i].clicked()){
+                            cursor(HAND);
+                        }
+                    }
+                }
+                pm=millis();
+            }else if(scene==='home'){
+                background(0,200,0);
+                for(var i=0;i<3;i++){
+                    house(i*160+140,230,60,color(184, 177, 162),color(92, 72, 23),i);
+                }
+                for(var i=0;i<4;i++){
+                    house(i*140+90,560,50,color(184, 177, 162),color(92, 72, 23),3-i);
+                }
+                fill(0);
+                textSize(55);
+                text("The Traveling Salesman",300,100);
+                cursor(ARROW);
+                for(var i=3;i<5;i++){
+                    buttons[i].display();
+                    if(buttons[i].clicked()){
+                        cursor(HAND);
+                    }
+                }
+            }else if(scene===0){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(30);
+                fill(69, 47, 17);
+                text("Instructions/Story:\nYou are a worker in 19th century\nLondon. Luckily for you, an old\nfamily friend is now part of the\nBourgeoise class through hard work,\nand decided to pay you handsomely\nfor delivering products for his\ncompany. Unfortunately, he has\ngranted an enemy of yours the\nsame favor, and you have decided that\nyou must work better and earn\nmore money than your enemy.\n(Click to continue)",300,300);
+            }else if(scene===1){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(30);
+                fill(69, 47, 17);
+                text("To earn money, you must travel house\nto house to deliver packages. Every\ntime you get to a house, you will\nearn half a shilling (6 pence). Each\ntime a house is visited, its worth\ndecreases in value, so it is ideal that\nyou get to a house before your\nenemy does. You can also earn\nextra money by getting back to\nthe factory before your enemy does.\n(Click to continue [2 slides left till game])",300,300);
+            }else if(scene===2){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(30);
+                fill(69, 47, 17);
+                text("To play, click all of the houses\non the screen in the order that you\nwant to travel them. Remember,\nthe shortest trails are the best!\nYou will start at the factory in\nthe center, and come back to it when\nyou are finished with your route.\nYou are represented by the little\nhat, and you enemy is represented\nby the brief case. Your goal\nis to have more money than\nyour enemy by 30 rounds.",300,300);
+            }else if(scene===3){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(30);
+                fill(69, 47, 17);
+                text("Your money is shown at the top\nleft corner of the screen. Your\nenemy's money is on the bottom.\nIf you are playing on difficulty hard,\nyou will be timed on making your\ntrail. If the timer runs out, your\nenemy will start getting 2 farthings\nevery 40 frames. Remember, there\nare 4 farthings in a penny, 12\npence in a shilling, and 20 shillings\nin a pound.",300,300);
+            }else if(scene==='pick'){
+                background(0,200,0);
+                for(var i=0;i<3;i++){
+                    house(i*160+140,230,60,color(184, 177, 162),color(92, 72, 23),i);
+                }
+                for(var i=0;i<4;i++){
+                    house(i*140+90,560,50,color(184, 177, 162),color(92, 72, 23),3-i);
+                }
+                fill(0);
+                textSize(55);
+                text("SELECT DIFFICULTY",300,100);
+                cursor(ARROW);
+                for(var i=5;i<7;i++){
+                    buttons[i].display();
+                    if(buttons[i].clicked()){
+                        cursor(HAND);
+                    }
+                }
+            }else if(scene==='AI'){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(25);
+                fill(69, 47, 17);
+                text("Although this AI is very basic, and\noften faulty, it has beat me sometimes\nat getting back to the factory faster.\nThe first step of the AI is to find the\nnearest house to the factory. It then\nfinds the house nearest to the house\nit first chose. It repeats this sequence\nuntil all of the houses have been used.\nThis creates a trail with the nearest\nhouses being traveled first. The AI\nthen seaches for any intersections in\n the trail, because they could ALWAYS\nbe simplified into a shorter trail. This\ncreates the trail that you see it traveling now.\n(Click to go back)",300,300);
+            }else if(scene==='results'){
+                cursor(ARROW);
+                background(0,200,0);
+                textSize(50);
+                fill(69, 47, 17);
+                if(player.money>=AI.money){
+                    text("YOU WIN!!",300,70);
+                }else{
+                    text("YOU LOSE",300,70);
+                }
+                textSize(25);
+                text("Your money:\n"+floor(round(player.money)/240)+' pounds\n'+floor(round(player.money)/12)%20+' shillings\n'+round(player.money)%12+' pence\n'+player.money%1*4+' farthings'+"\n\nenemy's money:\n"+floor(round(AI.money)/240)+' pounds\n'+floor(round(AI.money)/12)%20+' shillings\n'+round(AI.money)%12+' pence\n'+AI.money%1*4+' farthings\n(Click to restart)',300,350);
+            }
+        };
+        mouseClicked=function(){
+            if(scene==='play'){
+                if(!pause){
+                    if(!start){
+                        for(var i=1;i<positions.length;i++){
+                            if(ptrail.indexOf(i)<0&&dist(positions[i][0],positions[i][1],mouseX,mouseY)<20){
+                                ptrail[ptrail.length-1]=i;
+                                ptrail.push(0);
+                                if(ptrail.length===trail.length){
+                                    start=true;
+                                }
+                            }
+                        }
+                    }
+                    if(buttons[0].clicked()){
+                        pause=true;
+                    }
+                }else{
+                    if(buttons[1].clicked()){
+                        pause=false;
+                    }else if(buttons[2].clicked()){
+                        Program.restart();
+                    }
+                }
+            }else if(scene==='home'){
+                if(buttons[3].clicked()){
+                    scene=0;
+                }else if(buttons[4].clicked()){
+                    scene='AI';
+                }
+            }else if(scene<=2){
+                scene++;
+            }else if(scene===3){
+                scene='pick';
+            }else if(scene==='pick'){
+                if(buttons[5].clicked()){
+                    scene='play';
+                    diff='easy';
+                }else if(buttons[6].clicked()){
+                    scene='play';
+                    diff='hard';
+                    sTime=millis();
+                }
+            }else if(scene==='AI'){
+                scene='home';
+            }else if(scene==='results'){
+                Program.restart();
+            }
+        };
+        /**LESS THAN 500 LINES OF CODE!!*/
+      }
+    }
+
+    new Processing(document.getElementById("game"), sketchProc); 
+ </script>
+  </body>
+</html>

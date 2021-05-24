@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Battle Field</title>
+    <meta charset="utf-8">
+    <base href="..">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/4850321074896896.png" />
+    <style>
+      .big{
+        font-size: 50px;
+        margin-left: 200px;
+        margin-top: 50px;
+      }.sub{
+        font-size: 30px;
+        margin-left: 250px;
+        color: #BBB;
+        text-decoration: none;
+      }.gap{
+        display: block;
+        height: 100px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  </head>
+  <body>
+    <canvas id="back"></canvas>
+    <a id="github" href="https://github.com/KY246/KY246.github.io">
+      <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      Fix, Contribute, Star
+    </a>
+    <script src="back.js"></script>
+    
+    <h1 class="big">
+      Battle Field
+    </h1>
+    
+    <canvas id="game"></canvas>
+    
+    <br/>
+    <br/>
+    <br/>
+    <a href="index.html" class="sub">
+      &raquo; Back Home
+    </a>
+    
+    <p class="gap"></p>
+    <footer>
+      &copy;2021 Kynan - Some rights reserved under the MIT License
+      <br/>
+      <a href="https://github.com/KY246" title="Github">
+        <img class="icon" src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png"/>
+      </a>
+      <a href="https://www.khanacademy.org/profile/kyprogramming/projects" title="Khan Academy">
+        <img class="icon" src="https://avatars.githubusercontent.com/u/15455?s=280&v=4"/>
+      </a>
+      <a href="https://replit.com/@KY246" title="repl.it">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Repl.it_logo.svg/1024px-Repl.it_logo.svg.png"/>
+      </a>
+      <a href="https://stackoverflow.com/users/14630063/ky246" title="Stack Overflow">
+        <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"/>
+      </a>
+    </footer>
+    <noscript class="noscript">
+      Please Enable JavaScript In your browser.
+    </noscript>
+    
+    <script>
+    var sketchProc = function(pi) {
+      with (pi) {
+        size(600, 600);
+        
+        const rotateD = deg => {
+          rotate(PI * deg / 180);
+        };
+        const sinD = deg => {
+          return sin(PI * deg / 180);
+        };
+        const arcD = (x, y, rw, rh, s, e) => {
+          arc(x, y, rw, rh, PI * s / 180, PI * e / 180);
+        };
+        
+        let keyIsPressed = false;
+        keyPressed=()=>{
+          keyIsPressed = true;
+        }
+        keyReleased=()=>{
+          keyIsPressed = false;
+        }
+        
+        /*
+
+        All code original
+        IF YOU FLAG THIS PROJECT, PLEASE STATE YOUR REASON.
+
+        __________________________________________
+        | IDEAS FOR FUTURE PROJECTS ARE WELCOME. |
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+           Make soldiers by clicking the rectangular buttons at the bottom of the page. You can change your perspective by hovering above the little arrow buttons at the top, or clicking the arrow keys on your keyboard. To attack, click the "Attack" button near the bottom right corner of the screen. You can upgrade your income and your soldiers by clicking the "Upgrade" button underneath the "Attack" button. Although archers and wizards can harm enemies with minimal damage to themselves, other soldiers are recommended to force your soldiers forward. Witches usually shouldn't be bought in large groups, because they will start healing eachother, instead of the other soldiers. 
+           
+        For a full list of programs made by Ky, go to this link:
+
+        https://www.khanacademy.org/computer-programming/subscribe-to-ky-programming/5895671072702464
+
+        Or this link:
+
+        https://www.khanacademy.org/profile/KyProgramming/projects
+        */
+        frameRate(50);
+        textAlign(CENTER,CENTER);
+        var screens=0;
+        var where=1;
+        var ATTA, Projectiles, MenuB;
+        var health=250;
+        var ehealth=250;
+        var thealth=250;
+        var ethealth=250;
+        var upgradeO=false;
+        var income=4;
+        var money=250;
+        var damageU=1;
+        var healthU=1;
+        var r=255;
+        var wave=0;
+        var mode="defend";
+        var emode="defend";
+        var b=0;
+        var g=0;
+        var buttons=[];
+        var a=5;
+        var MMA=50;
+        var MMT=0;
+        var message="Battle\nField";
+
+        var creditToBobLyon=function(){
+            this[["KAInfiniteLoopCount"]]=-Infinity;
+        };
+        creditToBobLyon();
+
+        var prism=function(x,y,widthq,heightq,acolor,bcolor){
+            stroke(bcolor);
+            strokeWeight(1);
+            this.nodes=[
+                [x,y],
+                [x+widthq,y],
+                [x+widthq,y-heightq],
+                [x,y-heightq],
+                [x-widthq*(x-300)/1000,y+heightq*0.5],
+                [x+widthq-widthq*(x-300)/1000,y+heightq*0.5],
+                [x+widthq-widthq*(x-300)/1000,y-heightq*0.5],
+                [x-widthq*(x-300)/1000,y-heightq*0.5]
+            ];
+            fill(lerpColor(acolor,color(0,0,0),0.1));
+            beginShape();
+                vertex(this.nodes[2][0],this.nodes[2][1]);
+                vertex(this.nodes[1][0],this.nodes[1][1]);
+                vertex(this.nodes[5][0],this.nodes[5][1]);
+                vertex(this.nodes[6][0],this.nodes[6][1]);
+                vertex(this.nodes[2][0],this.nodes[2][1]);
+            endShape();
+            fill(lerpColor(acolor,color(0,0,0),0.25));
+            beginShape();
+                vertex(this.nodes[7][0],this.nodes[7][1]);
+                vertex(this.nodes[3][0],this.nodes[3][1]);
+                vertex(this.nodes[0][0],this.nodes[0][1]);
+                vertex(this.nodes[4][0],this.nodes[4][1]);
+                vertex(this.nodes[7][0],this.nodes[7][1]);
+            endShape();
+            fill(lerpColor(acolor,color(255,255,255),0.25));
+            beginShape();
+                vertex(this.nodes[3][0],this.nodes[3][1]);
+                vertex(this.nodes[2][0],this.nodes[2][1]);
+                vertex(this.nodes[1][0],this.nodes[1][1]);
+                vertex(this.nodes[0][0],this.nodes[0][1]);
+                vertex(this.nodes[3][0],this.nodes[3][1]);
+            endShape();
+            fill(acolor);
+            beginShape();
+                vertex(this.nodes[4][0],this.nodes[4][1]);
+                vertex(this.nodes[5][0],this.nodes[5][1]);
+                vertex(this.nodes[1][0],this.nodes[1][1]);
+                vertex(this.nodes[0][0],this.nodes[0][1]);
+                vertex(this.nodes[4][0],this.nodes[4][1]);
+            endShape();
+        };
+        var man= function(x,y,an,typeG,Ascale,side,anl) {
+            pushMatrix();
+            //Body+Head
+            translate(x,y);
+            scale(Ascale/3);
+            if(side===2){
+                scale(-1,1);
+            }
+                if(typeG<=5){
+                    if(typeG===4||typeG===5){
+                        fill(92, 67, 34);
+                            rect(-55,25,100,40,100);
+                        pushMatrix();
+                        rotateD(20);
+                            rect(30,-30,25,60,100);
+                            rect(30,-40,40,20,100);
+                        popMatrix();
+                    }
+                    noStroke();
+                    fill(255, 213, 176);
+                    ellipse(0,-40,20,35);
+                    fill(175,175,175);
+                    arcD(0,-40,25,36,90,320);
+                    rect(8,-52,3,13);
+                    rect(-13,-23,20,50,50);
+                    stroke(0,0,0);
+                    strokeWeight(3);
+                    point(5,-40);
+                }else{noStroke();
+                    fill(255,213,176);
+                    rect(-9,-45,15,30,50);
+                    if(typeG===7){
+                        fill(92, 0, 92);
+                        stroke(92,0,92);
+                    }else{
+                        fill(200, 0, 0);
+                        stroke(200, 0, 0);
+                    }
+                    triangle(-25,-65,-15,-25,5,-45);
+                    line(-20,-20,10,-50);
+                    rect(-13,-23,20,50,50);
+                    fill(200,200,200);
+                    stroke(0,0,0);
+                    strokeWeight(3);
+                    point(2,-35);
+                }
+            //Legs
+                if(typeG!==4&&typeG!==5){
+                    noStroke();
+                    fill(175,175,175);
+                    if(typeG===7){
+                        fill(82, 0, 82);
+                    }else if(typeG===6){
+                        fill(160, 0, 0);
+                    }
+                    pushMatrix();
+                    rotateD(10*sinD(2*anl));
+                        rect(-8,24,10,40,100);
+                        rect(-8,62,16,7,50);
+                    popMatrix();
+                    pushMatrix();
+                    rotateD(-10*sinD(2*anl));
+                        rect(-8,24,10,40,100);
+                        rect(-8,62,16,7,50);
+                    popMatrix();
+                }else{
+                    pushMatrix();
+                    translate(30,30);
+                    rotateD(10*sinD(2*anl));
+                        noStroke();
+                        fill(92, 67, 34);
+                        rect(-8,24,10,50,100);
+                    rotateD(-20*sinD(2*anl));
+                        rect(-8,24,10,50,100);
+                    popMatrix();
+                    pushMatrix();
+                    translate(-40,30);
+                    rotateD(10*sinD(2*anl));
+                        rect(-8,24,10,50,100);
+                    rotateD(-20*sinD(2*anl));
+                        rect(-8,24,10,50,100);
+                    popMatrix();
+                    noStroke();
+                    fill(175,175,175);
+                    rect(-8,24,10,40,100);
+                    rect(-8,62,16,7,50);
+                }
+            //Sword \n Spear
+                pushMatrix();
+                    if(typeG===1){
+                        translate(sinD(an)*20+10,+15);
+                        fill(225, 225, 225);
+                        noStroke();
+                        rect(0,0,40,7);
+                    }else if(typeG===2||typeG===4){
+                        translate(sinD(an)*20+10,+15);
+                        fill(105, 77, 35);
+                        noStroke();
+                        rect(-30,0,100,7);
+                    }else if(typeG===3||typeG===5){
+                        fill(175,175,175);
+                        noStroke();
+                        pushMatrix();
+                        rotateD(9);
+                            rect(0,-18,50,8);
+                        popMatrix();
+                        noFill();
+                        strokeWeight(5);
+                        stroke(117, 90, 58);
+                        arcD(0,-5,100,100,-30,30);
+                        if(an%360<90||an%360>270){
+                            translate(sinD(an)*20+42,-10);
+                            fill(105, 77, 35);
+                            noStroke();
+                            rect(-30,0,60,6);
+                        }
+                    }else if(typeG===6){
+                        noFill();
+                        strokeWeight(5);
+                        stroke(117, 90, 58);
+                        translate(60,-sinD(an)*20-65);
+                            fill(105, 77, 35);
+                            noStroke();
+                            rect(-30,0,6,120);
+                    }else if(typeG===7&&an%360<90||an%360>270){
+                        translate(-sinD(an)*5+50,sinD(an)*15+20);
+                            fill(0, 0, 255);
+                            noStroke();
+                            ellipse(-30,0,25,25);
+                    }
+                popMatrix();
+            //Arms
+                pushMatrix();
+                translate(0,-20);
+                if(typeG<6){
+                    rotateD(-30*sinD(an)+10);
+                    strokeWeight(1);
+                        stroke(0, 0, 0);
+                        fill(175,175,175);
+                        rect(-8,0,10,30,100);
+                        if(typeG<=2||typeG===4){
+                            translate(-10,30);
+                            rotateD(20*sinD(an)+300);
+                        }else if(typeG===3||typeG===5){
+                            translate(0,35);
+                            rotateD(20*sinD(an)+230);
+                        }
+                        rect(0,0,10,30,100);
+                }else if(typeG===6){
+                    rotateD(-20*sinD(an)-40);
+                    strokeWeight(1);
+                        stroke(0, 0, 0);
+                        fill(255, 0, 0);
+                        rect(-8,0,10,30,100);
+                            translate(-10,30);
+                            rotateD(-20*sinD(an)+300);
+                            rect(0,0,10,30,100);
+                }else if(typeG===7){
+                    rotateD(10*sinD(an)-10);
+                    strokeWeight(1);
+                        stroke(0, 0, 0);
+                        fill(83, 0, 135);
+                        rect(-8,0,10,30,100);
+                            translate(-10,30);
+                            rotateD(20*sinD(an)+330);
+                        rect(0,0,10,30,100);
+                }
+                popMatrix();
+            popMatrix();
+            
+            stroke(0,0,0);
+        };
+
+        var button=function(x,y,widthw,heightw,texta,textS,acolor,bcolor){
+            this.x=x;
+            this.y=y;
+            this.width=widthw;
+            this.height=heightw;
+            this.acolor=acolor;
+            this.bcolor=bcolor||color(0,0,0);
+            this.textS=textS||1;
+            this.texta=texta;
+        };
+        button.prototype.display=function(){
+            fill(this.acolor);
+            stroke(this.bcolor);
+            rect(this.x,this.y,this.width,this.height);
+            fill(0,0,0);
+            textSize(15*this.textS);
+            text(this.texta,this.x+this.width/2,this.y+this.height/2);
+        };
+        button.prototype.clicked=function(){
+            if(mouseX>this.x&&mouseX<this.x+this.width&&mouseY>this.y&&mouseY<this.y+this.height){
+                return true;
+            }
+        };
+
+        var bullet=function(position,target,power,A,type){
+            this.width=5;
+            this.working=A;
+            this.position=position;
+            this.target=target;
+            this.time=0;
+            this.velocity=new PVector(0,0);
+            this.t=0;
+            this.health=1;
+            this.life=4;
+            this.AH=power;
+            this.type=type;
+        };
+        bullet.prototype.attack=function(){
+            if(dist(this.position.x,this.position.y,this.target.x,this.target.y)>5){
+                this.velocity = PVector.sub(new PVector(this.target.x,this.target.y+1),this.position);
+                this.velocity.mult(4/sqrt(sq(this.velocity.x)+sq(this.velocity.y)));
+                this.position.add(new PVector(this.velocity.x,this.velocity.y-0.5));
+            }else if(this.time<600){
+                this.time=600;
+            }
+            this.time++;
+        };
+        bullet.prototype.display=function(){
+            if(this.type===3||this.type===5){
+                this.ang=this.velocity.heading();
+                noStroke();
+                fill(105, 79, 30);
+                pushMatrix();
+                translate(this.position.x,this.position.y);
+                rotateD(this.ang);
+                    rect(0,0,20,2);
+                    fill(255,255,255);
+                    rect(0,-1,3,3);
+                    fill(200,200,200);
+                    triangle(20,0,25,1.5,20,3);
+                popMatrix();
+                stroke(0,0,0);
+            }else if(this.type===6){
+                strokeWeight(15);
+                stroke(255, 150, 0,100);
+                fill(255, 150, 0, 100);
+                ellipse(this.position.x,this.position.y,15,15);
+                strokeWeight(1);
+            }else if(this.type===7){
+                fill(0,0,255);
+                ellipse(this.position.x,this.position.y,10,7);
+                rect(this.position.x-2,this.position.y-6,4,2);
+                noFill();
+                rect(this.position.x-2,this.position.y-11,4,7);
+            }
+        };
+        bullet.prototype.die=function(){
+            if(this.health<=0||this.life<=0||this.time>=610){
+                return true;
+            }
+        };
+        bullet.prototype.run=function(){
+            if(this.working){
+                this.display();
+                this.attack();
+            }
+        };
+
+        var attacker=function(x,y,side,type){
+            this.position=new PVector(x,y);
+            this.target=new PVector(500,250);
+            this.reload=0;
+            this.type=type;
+            this.side=side;
+            this.targetC=new PVector(random(-30,0),random(-40,20));
+            this.time=0;
+            
+            switch(this.type){
+                case 1:
+                    this.speed=0.7;
+                    this.range=25;
+                    this.AH=3;
+                    this.health=10;
+                    this.reloadTime=50;
+                break;
+                case 2:
+                    this.speed=0.8;
+                    this.range=50;
+                    this.AH=2.5;
+                    this.health=10;
+                    this.reloadTime=50;
+                break;
+                case 3:
+                    this.speed=0.5;
+                    this.range=250+random(-10,10);
+                    this.AH=1.7;
+                    this.health=8;
+                    this.reloadTime=200;
+                break;
+                case 4:
+                    this.speed=1.4;
+                    this.range=50;
+                    this.AH=4;
+                    this.health=15;
+                    this.reloadTime=75;
+                break;
+                case 5:
+                    this.speed=1.5;
+                    this.range=300+random(-10,10);
+                    this.AH=2;
+                    this.health=12;
+                    this.reloadTime=200;
+                break;
+                case 6:
+                    this.speed=0.6;
+                    this.range=275+random(-10,10);
+                    this.AH=5;
+                    this.health=15;
+                    this.reloadTime=250;
+                break;
+                case 7:
+                    this.speed=0.6;
+                    this.range=150;
+                    this.AH=-1;
+                    this.health=15;
+                    this.reloadTime=150;
+                break;
+                default:
+                    this.speed=0.7;
+                    this.range=25;
+                    this.AH=3;
+                    this.health=10;
+                    this.reloadTime=50;
+                break;    
+            }
+            
+            if(this.side===1){
+                this.AH=this.AH*damageU;
+                this.health=this.health*healthU;
+            }
+            this.thealth=this.health;
+        };
+        attacker.prototype.display=function() {
+            fill(0,0,0,100);
+            noStroke();
+            if(this.type!==4&&this.type!==5){
+                ellipse(this.position.x-15,this.position.y+18,30,10);
+            }else{
+                ellipse(this.position.x-10,this.position.y+32,50,20);
+            }
+            man(this.position.x,this.position.y,-90+360*this.reload/this.reloadTime,this.type,1,this.side,this.time*2);
+            fill(255,255,255);
+            rect(this.position.x-15,this.position.y-25,30,5);
+            if(this.health<=this.thealth){
+                fill(255,0,0);
+                rect(this.position.x-15,this.position.y-25,30*this.health/this.thealth,5);
+            }else if(this.health<=this.thealth*2){
+                fill(0,255,0);
+                rect(this.position.x-15,this.position.y-25,30*this.health/this.thealth-30,5);
+            }else{
+                fill(255-r, 255-g, 255-b);
+                rect(this.position.x-15,this.position.y-25,30,5);
+            }
+        };
+        attacker.prototype.attack=function(){
+            if(((mode==="attack"&&this.side===1)||(this.target.x<500&&this.side===1))||((emode==="attack"&&this.side===2)||(this.target.x>600&&this.side===2))){
+                this.velocity=PVector.sub(this.target,this.position);
+                if(dist(this.position.x,this.position.y,this.target.x,this.target.y)>this.range){
+                    this.velocity.mult(this.speed/sqrt(sq(this.velocity.x)+sq(this.velocity.y)));
+                    this.position.add(this.velocity);
+                    this.fight=false;
+                }else{
+                    if((this.type===3||this.type===7)&&dist(this.position.x,this.position.y,this.target.x,this.target.y)<this.range-4&&this.position.x>75){
+                        if(this.side===1&&this.position.x>200){
+                            this.position.x-=0.1;
+                        }else if(this.position.x<1050){
+                            this.position.x+=0.1;
+                        }
+                    }
+                    this.fight=true;
+                    this.makeB();
+                }
+            }else{
+                this.fight=false;
+                if(dist(this.position.x,this.position.y,this.target.x,this.target.y)<this.range){
+                    this.fight=true;
+                    this.makeB();
+                }
+                if(this.side===1&&(this.position.x>200||this.target.x<this.position.x)){
+                    this.position.x-=this.speed;
+                }else if(this.side===2&&this.position.x<1050){
+                    this.position.x+=this.speed;
+                }
+            }
+        };
+        attacker.prototype.run=function(){
+            this.attack();
+            this.display();
+            this.injury();
+            if(frameCount%2===1){
+                this.searchH();
+            }
+            this.time++;
+            if(this.position.y<=70){
+                this.position.y=72;
+            }else if(this.position.y>=480){
+                this.position.y=478;
+            }
+            if(this.position.x<=80){
+                this.position.x=82;
+            }else if(this.position.x>=1900){
+                this.position.x=1898;
+            }
+        };
+        attacker.prototype.makeB=function(){
+            if(this.reload<=0){
+                if(this.side===1){
+                    if(this.type!==7){
+                        Projectiles.gamount.push(new bullet(new PVector(this.position.x+10,this.position.y),new PVector(this.target.x,this.target.y),this.AH,true,this.type));
+                    }else{
+                        Projectiles.bamount.push(new bullet(new PVector(this.position.x+10,this.position.y),this.target,this.AH,true,this.type));
+                    }
+                }else if(this.side===2){
+                    if(this.type!==7){
+                        Projectiles.bamount.push(new bullet(new PVector(this.position.x+10,this.position.y),new PVector(this.target.x,this.target.y),this.AH,true,this.type));
+                    }else{
+                        Projectiles.gamount.push(new bullet(new PVector(this.position.x+10,this.position.y),this.target,this.AH,true,this.type));
+                    }
+                }
+                this.reload=this.reloadTime;
+            }
+            this.reload--;
+        };
+        attacker.prototype.die=function(){
+            if(this.health<=0){
+                return true;
+            }
+        };
+        attacker.prototype.injury=function(){
+            if(this.side===1&&Projectiles.bamount.length>0){
+                for(var i=0; i<Projectiles.bamount.length; i++){
+                    if(dist(Projectiles.bamount[i].position.x,Projectiles.bamount[i].position.y,this.position.x,this.position.y)<33&&Projectiles.bamount[i].time>20){
+                        this.health-=Projectiles.bamount[i].AH;
+                        Projectiles.bamount[i].health--;
+                    }
+                }
+            }else if(this.side===2&&Projectiles.gamount.length>0){
+                for(var i=0; i<Projectiles.gamount.length; i++){
+                    if(dist(Projectiles.gamount[i].position.x,Projectiles.gamount[i].position.y,this.position.x,this.position.y)<33&&Projectiles.gamount[i].time>20){
+                        this.health-=Projectiles.gamount[i].AH;
+                        Projectiles.gamount[i].health--;
+                    }
+                }
+            }
+        };
+        attacker.prototype.searchH=function(){
+            this.Q=0;
+            if(this.type!==7){
+                if(this.side===1){
+                    if(ATTA.bamount.length>0){
+                        for(var i=0; i<ATTA.bamount.length; i++){
+                            if(mode==="attack"&&ATTA.bamount[i].position.x>this.position.x&&dist(ATTA.bamount[i].position.x,ATTA.bamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.bamount[this.Q].position.x,ATTA.bamount[this.Q].position.y,this.position.x,this.position.y)){
+                                this.Q=i;
+                            }else if(mode==="defend"&&ATTA.bamount[i].position.x<ATTA.bamount[this.Q].position.x+100&&dist(ATTA.bamount[i].position.x,ATTA.bamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.bamount[this.Q].position.x,ATTA.bamount[this.Q].position.y,this.position.x,this.position.y)){
+                                this.Q=i;
+                            }
+                        }
+                        this.target.set(ATTA.bamount[this.Q].position);
+                        if(this.Q===0&&ATTA.bamount[0].position.x<this.position.x){
+                            this.target.set(PVector.add(new PVector(1069,275),this.targetC));
+                        }
+                    }else{
+                        this.target.set(PVector.add(new PVector(1100,275),this.targetC));
+                    }
+                }else{
+                    if(ATTA.gamount.length>0){
+                        for(var i=0; i<ATTA.gamount.length; i++){
+                            if(emode==="attack"&&ATTA.gamount[i].position.x<this.position.x&&dist(ATTA.gamount[i].position.x,ATTA.gamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.gamount[this.Q].position.x,ATTA.gamount[this.Q].position.y,this.position.x,this.position.y)){
+                                this.Q=i;
+                            }else if(emode==="defend"&&ATTA.gamount[i].position.x>ATTA.gamount[this.Q].position.x-100&&dist(ATTA.gamount[i].position.x,ATTA.gamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.gamount[this.Q].position.x,ATTA.gamount[this.Q].position.y,this.position.x,this.position.y)){
+                                this.Q=i;
+                            }
+                        }
+                        this.target.set(ATTA.gamount[this.Q].position);
+                        if(this.Q===0&&ATTA.gamount[0].position.x>this.position.x){
+                            this.target.set(PVector.add(new PVector(150,275),this.targetC));
+                        }
+                    }else{
+                        this.target.set(PVector.add(new PVector(150,275),this.targetC));
+                    }
+                }
+            }else{
+                if(this.side===2){
+                    for(var i=0; i<ATTA.bamount.length; i++){
+                        if(dist(ATTA.bamount[i].position.x,ATTA.bamount[i].position.y,this.position.x,this.position.y)>20){
+                            if(dist(ATTA.bamount[i].position.x,ATTA.bamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.bamount[this.Q].position.x,ATTA.bamount[this.Q].position.y,this.position.x,this.position.y)||dist(ATTA.bamount[this.Q].position.x,ATTA.bamount[this.Q].position.y,this.position.x,this.position.y)<20){
+                                this.Q=i;
+                            }
+                        }
+                    }
+                    this.target.set(ATTA.bamount[this.Q].position);
+                }else{
+                    for(var i=0; i<ATTA.gamount.length; i++){
+                        if(dist(ATTA.gamount[i].position.x,ATTA.gamount[i].position.y,this.position.x,this.position.y)>20){
+                            if(dist(ATTA.gamount[i].position.x,ATTA.gamount[i].position.y,this.position.x,this.position.y)<dist(ATTA.gamount[this.Q].position.x,ATTA.gamount[this.Q].position.y,this.position.x,this.position.y)||dist(ATTA.gamount[this.Q].position.x,ATTA.gamount[this.Q].position.y,this.position.x,this.position.y)<20){
+                                this.Q=i;
+                            }
+                        }
+                    }
+                    this.target.set(ATTA.gamount[this.Q].position);
+                }
+            }
+        };
+
+        var towers=function(){
+            this.gamount=[];
+            this.bamount=[];
+        };
+        towers.prototype.run1 =function(){
+            for(var i=this.gamount.length-1; i>=0; i--){
+                var p=this.gamount[i];
+                if(p.position.y<=150){
+                    p.run();
+                    if (p.die()) {
+                        this.gamount.splice(i, 1);
+                    }
+                }
+            }
+            for(var i=this.bamount.length-1; i>=0; i--){
+                var p=this.bamount[i];
+                if(p.position.y<=150){
+                    p.run();
+                    if (p.die()) {
+                        this.bamount.splice(i, 1);
+                    }
+                }
+            }
+        };
+        towers.prototype.run2 =function(){
+            for(var i=this.gamount.length-1; i>=0; i--){
+                var p=this.gamount[i];
+                if(p.position.y<=250&&p.position.y>150){
+                    p.run();
+                    if (p.die()) {
+                        this.gamount.splice(i, 1);
+                    }
+                }
+            }
+            for(var i=this.bamount.length-1; i>=0; i--){
+                var p=this.bamount[i];
+                if(p.position.y<=250&&p.position.y>150){
+                    p.run();
+                    if (p.die()) {
+                        this.bamount.splice(i, 1);
+                    }
+                }
+            }
+        };
+        towers.prototype.run3 =function(){
+            for(var i=this.gamount.length-1; i>=0; i--){
+                var p=this.gamount[i];
+                if(p.position.y<=350&&p.position.y>250){
+                    p.run();
+                    if (p.die()) {
+                        this.gamount.splice(i, 1);
+                    }
+                }
+            }
+            for(var i=this.bamount.length-1; i>=0; i--){
+                var p=this.bamount[i];
+                if(p.position.y<=350&&p.position.y>250){
+                    p.run();
+                    if (p.die()) {
+                        this.bamount.splice(i, 1);
+                    }
+                }
+            }
+        };
+        towers.prototype.run4 =function(){
+            for(var i=this.gamount.length-1; i>=0; i--){
+                var p=this.gamount[i];
+                if(p.position.y>350){
+                    p.run();
+                    if (p.die()) {
+                        this.gamount.splice(i, 1);
+                    }
+                }
+            }
+            for(var i=this.bamount.length-1; i>=0; i--){
+                var p=this.bamount[i];
+                if(p.position.y>350){
+                    p.run();
+                    if (p.die()) {
+                        this.bamount.splice(i, 1);
+                    }
+                }
+            }
+        };
+
+        var bullets=function(){
+            this.gamount=[];
+            this.bamount=[];
+        };
+        bullets.prototype.run=function(){
+            for(var i=this.gamount.length-1; i>=0; i--){
+                var p=this.gamount[i];
+                p.run();
+                if (p.die()) {
+                    this.gamount.splice(i, 1);
+                }
+            }
+            for(var i=this.bamount.length-1; i>=0; i--){
+                var p=this.bamount[i];
+                p.run();
+                if (p.die()) {
+                    this.bamount.splice(i, 1);
+                }
+            }
+        };
+
+        var autoSpawn=function(){
+            var chance;
+            if(wave>0){
+                chance=floor(random(-100,100));
+            }else{
+                chance=floor(random(-50000,100));
+                if((ATTA.bamount.length===0||wave<-2500)&&random(100)>99.5){
+                    wave=10;
+                }
+            }
+            if(ATTA.bamount.length>10){
+                emode="attack";
+            }else if(ATTA.bamount.length<8&&ATTA.gamount.length>10){
+                emode="defend";
+            }
+            wave--;
+            if(chance>=95){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,7));
+            }else if(chance>92){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,6));
+            }else if(chance>82){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,5));
+            }else if(chance>65){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,4));
+            }else if(chance>48){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,3));
+            }else if(chance>24){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,2));
+            }else if(chance>0){
+                ATTA.bamount.push(new attacker(random(900,1000),random(100,450),2,1));
+            }
+        };
+
+        var gameM=function(){
+            this.open=false;
+            this.count=0;
+        };
+        gameM.prototype.display=function(){
+            fill(0,0,0,200);
+            rect(0,0,width,height);
+            fill(255,255,255);
+            rect(100,150,400,200);
+            buttons[15].display();
+            buttons[16].display();
+            buttons[17].display();
+            cursor(ARROW);
+            for(var i=15; i<18; i++){
+                if(buttons[i].clicked()){
+                    cursor(HAND);
+                }
+            }
+        };
+        gameM.prototype.update =function(){
+            if(this.open){
+                this.count=1;
+            }else{
+                this.count=0;
+            }
+        };
+
+        ATTA=new towers();
+        Projectiles=new bullets();
+        MenuB=new gameM();
+        buttons.push(new button(10,515,50,70,"Sword\n$40"));
+        buttons.push(new button(70,515,50,70,"Spear\n$40"));
+        buttons.push(new button(130,515,50,70,"Arrow\n$60"));
+        buttons.push(new button(190,515,50,70,"Lance\n$80"));
+        buttons.push(new button(250,515,50,70,"Arrow\n$80"));
+        buttons.push(new button(310,515,50,70,"Witch\n$80"));
+        buttons.push(new button(370,515,50,70,"Wizard\n$100"));
+        buttons.push(new button(430,510,90,40));
+        buttons.push(new button(430,550,90,40,"Upgrade"));
+        buttons.push(new button(530,520,60,60,"▌▌"));
+        buttons.push(new button(400,300,150,60,"Income\n$50"));
+        buttons.push(new button(400,360,150,60,"Damage\n$50"));
+        buttons.push(new button(400,420,150,80,"Soldier Health\n$50"));
+        buttons.push(new button(5,5,40,40,"←"));
+        buttons.push(new button(555,5,40,40,"→"));
+        buttons.push(new button(125,200,80,80,"↻",2));
+        buttons.push(new button(260,200,80,80,"▷",2));
+        buttons.push(new button(395,200,80,80,"≡",2));
+        buttons.push(new button(50,140,500,55,"Tanks",2));
+        buttons.push(new button(50,195,500,55,"BBP Defense",2));
+        buttons.push(new button(50,250,500,55,"Algebraic Defense",2));
+        buttons.push(new button(50,305,500,55,"Mine Sweeper",2));
+        buttons.push(new button(50,410,500,55,"Full List of Programs",2));
+        // Unneeded button- Feel free to change
+        buttons.push(new button(3295,200,80,80));
+        //
+        ATTA.gamount.push(new attacker(300,300,1,1));
+        ATTA.gamount.push(new attacker(300,200,1,1));
+        ATTA.bamount.push(new attacker(900,300,2,1));
+        ATTA.bamount.push(new attacker(900,200,2,1));
+
+        mouseClicked=function(){
+            if(screens===1){
+                if(upgradeO){
+                    if(money>=50&&buttons[10].clicked()){
+                        income+=0.1;
+                        money-=50;
+                    }else if(money>=50&&buttons[11].clicked()){
+                        damageU+=0.01;
+                        money-=50;
+                    }else if(money>=50&&buttons[12].clicked()){
+                        healthU+=0.01;
+                        money-=50;
+                    }else{
+                        upgradeO=false;
+                    }
+                }else if(MenuB.open){
+                    if(buttons[15].clicked()){
+                        MenuB.open=false;
+                        health=250;
+                        ehealth=250;
+                        thealth=250;
+                        ethealth=250;
+                        upgradeO=false;
+                        income=4;
+                        money=250;
+                        damageU=1;
+                        healthU=1;
+                        where=1;
+                        wave=0;
+                        mode="defend";
+                        emode="defend";
+                        ATTA.gamount=[];
+                        ATTA.bamount=[];
+                        Projectiles.bamount=[];
+                        Projectiles.gamount=[];
+                        ATTA.gamount.push(new attacker(300,300,1,1));
+                        ATTA.gamount.push(new attacker(300,200,1,1));
+                        ATTA.bamount.push(new attacker(900,300,2,1));
+                        ATTA.bamount.push(new attacker(900,200,2,1));
+                    }else if(buttons[16].clicked()){
+                        MenuB.open=false;
+                    }else if(buttons[17].clicked()){
+                        MenuB.open=false;
+                        screens=0;
+                    }
+                }else if(money>=40&&buttons[0].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,1));
+                    money-=40;
+                }else if(money>=40&&buttons[1].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,2));
+                    money-=40;
+                }else if(money>=60&&buttons[2].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,3));
+                    money-=60;
+                }else if(money>=80&&buttons[3].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,4));
+                    money-=80;
+                }else if(money>=80&&buttons[4].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,5));
+                    money-=80;
+                }else if(money>=80&&buttons[5].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,7));
+                    money-=80;
+                }else if(money>=100&&buttons[6].clicked()){
+                    ATTA.gamount.push(new attacker(random(200,300),random(100,450),1,6));
+                    money-=100;
+                }else if(buttons[7].clicked()){
+                    if(mode==="attack"){
+                        mode="defend";
+                    }else{
+                        mode="attack";
+                    }
+                }else if(buttons[8].clicked()){
+                    upgradeO=true;
+                }else if(buttons[9].clicked()){
+                    MenuB.open=true;
+                }
+            }else if(screens===0){
+                if(dist(300,280,mouseX,mouseY)<100){
+                    screens=1;
+                }else if(dist(210,400,mouseX,mouseY)<75){
+                    screens=2;
+                }else if(dist(390,400,mouseX,mouseY)<75){
+                    screens=3;
+                }
+            }else{
+                if(dist(75,525,mouseX,mouseY)<50){
+                    screens=0;
+                }else if(dist(525,525,mouseX,mouseY)<50){
+                    screens=1;
+                }else if(screens===3){
+                    if(buttons[18].clicked()){
+                        window.alert("https://www.khanacademy.org/computer-programming/tanks/6005208622530560");
+                    }else if(buttons[19].clicked()){
+                        window.alert("https://www.khanacademy.org/computer-programming/bbp-defense/5243445988786176");
+                    }else if(buttons[20].clicked()){
+                        window.alert("https://www.khanacademy.org/computer-programming/algebraic-defense-game/4665956352622592");
+                    }else if(buttons[21].clicked()){
+                        window.alert("https://www.khanacademy.org/computer-programming/mine-sweeper/5590725626396672");
+                    }else if(buttons[22].clicked()){
+                        window.alert("https://www.khanacademy.org/computer-programming/subscribe-to-ky-programming/5895671072702464");
+                    }
+                }
+            }
+        };
+        draw= function() {
+            if(screens===1){
+                if(!MenuB.count){
+                    if(health<=0){
+                        MenuB.open=false;
+                        health=250;
+                        ehealth=250;
+                        thealth=250;
+                        ethealth=250;
+                        upgradeO=false;
+                        income=4;
+                        money=250;
+                        damageU=1;
+                        healthU=1;
+                        where=1;
+                        wave=0;
+                        mode="defend";
+                        emode="defend";
+                        ATTA.gamount=[];
+                        ATTA.bamount=[];
+                        Projectiles.bamount=[];
+                        Projectiles.gamount=[];
+                        ATTA.gamount.push(new attacker(300,300,1,1));
+                        ATTA.gamount.push(new attacker(300,200,1,1));
+                        ATTA.bamount.push(new attacker(900,300,2,1));
+                        ATTA.bamount.push(new attacker(900,200,2,1));
+                        screens=0;
+                        message="You\nLost";
+                    }else if(ehealth<=0){
+                        MenuB.open=false;
+                        health=250;
+                        ehealth=250;
+                        thealth=250;
+                        ethealth=250;
+                        upgradeO=false;
+                        income=4;
+                        money=250;
+                        damageU=1;
+                        healthU=1;
+                        where=1;
+                        wave=0;
+                        mode="defend";
+                        emode="defend";
+                        ATTA.gamount=[];
+                        ATTA.bamount=[];
+                        Projectiles.bamount=[];
+                        Projectiles.gamount=[];
+                        ATTA.gamount.push(new attacker(300,300,1,1));
+                        ATTA.gamount.push(new attacker(300,200,1,1));
+                        ATTA.bamount.push(new attacker(900,300,2,1));
+                        ATTA.bamount.push(new attacker(900,200,2,1));
+                        screens=0;
+                        message="You\nWin!!";
+                    }
+                    var VOIDQ=false;
+                    if((keyIsPressed&&keyCode===LEFT)){
+                        if(where<0){
+                            where+=2;
+                        }else{
+                            VOIDQ=true;
+                        }
+                    }else if(keyIsPressed&&keyCode===RIGHT){
+                        if(where>-541){
+                            where-=2;
+                        }else{
+                            VOIDQ=true;
+                        }
+                    }else if(buttons[13].clicked()){
+                        if(where<0){
+                            where+=2;
+                        }else{
+                            VOIDQ=true;
+                        }
+                    }else if(buttons[14].clicked()){
+                        if(where>-541){
+                            where-=2;
+                        }else{
+                            VOIDQ=true;
+                        }
+                    }
+                    for(var i=0; i<Projectiles.bamount.length; i++){
+                        if(dist(Projectiles.bamount[i].position.x,Projectiles.bamount[i].position.y,150,275)<50){
+                            health-=Projectiles.bamount[i].AH;
+                            Projectiles.bamount[i].health--;
+                        }
+                    }
+                    for(var i=0; i<Projectiles.gamount.length; i++){
+                        if(dist(Projectiles.gamount[i].position.x,Projectiles.gamount[i].position.y,1100,275)<50){
+                            ehealth-=Projectiles.gamount[i].AH;
+                            Projectiles.gamount[i].health--;
+                        }
+                    }
+                    background(0, 200, 0);
+                    for(var i=-2; i<5; i++){
+                        prism(where%60+60*i,50,60,60,color(55,55,55),color(0,0,0));
+                    }
+                    for(var i=11; i>=5; i--){
+                        prism(where%60+60*i,50,60,60,color(55,55,55),color(0,0,0));
+                    }
+                    
+                    fill(0,0,0,100);
+                    noStroke();
+                    rect(1.2*where+1139,80,50,500);
+                    rect(1.2*where+1000,245,70,59);
+                    rect(1.2*where+80,245,70,59);
+                    rect(1.2*where+120,245,60,10);
+                    rect(1.2*where+20,270,60,10);
+                    rect(1.2*where+980,270,20,10);
+                    
+                    prism(1.2*where+120,275,60,60,color(r, g, b),color(0,0,0));
+                    prism(1.2*where+1069,275,60,60,color(r, g, b),color(0,0,0));
+                    fill(0,0,0,100);
+                    noStroke();
+                    rect(1.2*where+120,240,60,10);
+                    rect(1.2*where+1070,240,60,10);
+                    stroke(0,0,0);
+                    fill(255, 255, 255);
+                    rect(1.2*where+100,225,95,10,50);
+                    rect(1.2*where+1049,225,95,10,50);
+                    fill(255,0,0);
+                    rect(1.2*where+100,225,95*health/thealth,10,50);
+                    rect(1.2*where+1049,225,95*ehealth/ethealth,10,50);
+                    
+                    for(var i=2; i<9; i++){
+                        prism(1.2*where,59*i-10,60,59,color(55,55,55),color(0,0,0));
+                    }
+                    for(var i=2; i<9; i++){
+                        prism(1.2*where+1189,59*i-10,60,59,color(55,55,55),color(0,0,0));
+                    }
+                    pushMatrix();
+                    translate(where*1.2,0);
+                    ATTA.run1();
+                    ATTA.run2();
+                    ATTA.run3();
+                    ATTA.run4();
+                    Projectiles.run();
+                    popMatrix();
+                    fill(100,100,100);
+                    stroke(0,0,0);
+                    
+                    autoSpawn();
+                    
+                    for(var i=-1;i<12;i++){
+                        rect(i*65+round(1.4*where)%65-5,461,65,39);
+                    }
+                    fill(255,255,255);
+                    rect(0,500,width,100);
+                    
+                    
+                    
+                    var cur=false;
+                    for(var i=0;i<buttons.length;i++){
+                        if(i===10&&!upgradeO){
+                            i=13;
+                        }else if(i===15){
+                            i=23;
+                        }
+                        buttons[i].display();
+                        if(buttons[i].clicked()){
+                            cur=true;
+                            if(i<=1&&money<40){
+                                VOIDQ=true;
+                            }else if(i===2&&money<60){
+                                VOIDQ=true;
+                            }else if(i>2&&i<=5&&money<80){
+                                VOIDQ=true;
+                            }else if(i===6&&money<100){
+                                VOIDQ=true;
+                            }else if(i>9&&i<=12&&money<50){
+                                VOIDQ=true;
+                            }
+                        }
+                    }
+                    textSize(15);
+                    if(mode==="attack"){
+                        text("Defend",buttons[7].x+buttons[7].width/2,buttons[7].y+buttons[7].height/2);
+                    }else{
+                        text("Attack",buttons[7].x+buttons[7].width/2,buttons[7].y+buttons[7].height/2);
+                    }
+                    
+                    fill(255,255,255);
+                    ellipse(300,20,130,40);
+                    if(money>=10000){
+                        ellipse(300,20,180,40);
+                    }else if(money>=1000){
+                        ellipse(300,20,150,40);
+                    }
+                    fill(0,0,0);
+                    text("Money: "+floor(money),300,20);
+                    
+                    if(frameCount%20===1){
+                        money+=income;
+                    }
+                    if(buttons[0].clicked()){
+                        fill(255,255,255);
+                        rect(0,400,200,100);
+                        triangle(10,500,60,500,35,515);
+                        fill(0,0,0);
+                        text("Infantry: Swordfighter\n$40\nStrong soldier with\n an extremely small range\n and fast attacking",100,450);
+                    }else if(buttons[1].clicked()){
+                        fill(255,255,255);
+                        rect(40,400,200,100);
+                        triangle(70,500,120,500,95,515);
+                        fill(0,0,0);
+                        text("Infantry: Spear-man\n$40\nA fast soldier with a small\n range and fast attacking",140,450);
+                    }else if(buttons[2].clicked()){
+                        fill(255,255,255);
+                        rect(80,400,200,100);
+                        triangle(130,500,180,500,155,515);
+                        fill(0,0,0);
+                        text("Infantry: Archer\n$60\nA weak soldier with\n a large range",180,450);
+                    }else if(buttons[3].clicked()){
+                        fill(255,255,255);
+                        rect(120,400,200,100);
+                        triangle(190,500,240,500,215,515);
+                        fill(0,0,0);
+                        text("Calvary: Lance\n$80\nExtremely strong and fast\n soldier with a small range",220,450);
+                    }else if(buttons[4].clicked()){
+                        fill(255,255,255);
+                        rect(160,400,200,100);
+                        triangle(250,500,300,500,275,515);
+                        fill(0,0,0);
+                        text("Calvary: Archer\n$80\nA fast soldier with a large\n firing range.",260,450);
+                    }else if(buttons[5].clicked()){
+                        fill(255,255,255);
+                        rect(200,400,200,100);
+                        triangle(310,500,360,500,335,515);
+                        fill(0,0,0);
+                        text("Magic: Witch\n$80\nA worker that heals\n your other soldiers",300,450);
+                    }else if(buttons[6].clicked()){
+                        fill(255,255,255);
+                        rect(230,400,200,100);
+                        triangle(370,500,420,500,395,515);
+                        fill(0,0,0);
+                        text("Magic: Wizard\n$100\nA strong soldier with a\n large firing range",330,450);
+                    }
+                    
+                    if(cur){
+                        cursor(HAND);
+                    }else{
+                        cursor(ARROW);
+                    }
+                    if(VOIDQ){
+                        noFill();
+                        stroke(255, 0, 0);
+                        strokeWeight(2);
+                        ellipse(mouseX+8,mouseY-3,10,10);
+                        line(mouseX+5,mouseY-6,mouseX+11,mouseY);
+                    }
+                }else{
+                    MenuB.display();
+                }
+                MenuB.update();
+            }else if(screens===0){
+                background(115, 115, 115);
+                man(230,530,MMA,1,3,1,MMT);
+                man(370,530,MMA,1,3,2,MMT);
+                man(500,470,MMA,2,3,2,MMT);
+                man(530,270,MMA,3,3,2,MMT);
+                man(100,70,MMA,5,3,1,MMT);
+                man(490,70,MMA,4,3,2,MMT);
+                man(70,270,MMA,6,3,1,MMT);
+                man(100,470,MMA,7,3,1,MMT);
+                noFill();
+                rect(135,180,330,290);
+                fill(162,162,162);
+                ellipse(390,400,150,150);
+                ellipse(210,400,150,150);
+                ellipse(300,280,200,200);
+                textSize(80);
+                fill(0,0,0);
+                text(message,300,90);
+                textSize(100);
+                text("▷",300,280);
+                text("?",210,400);
+                textSize(75);
+                text("KY",390,400);
+                if(dist(300,280,mouseX,mouseY)<100){
+                    cursor(HAND);
+                }else if(dist(210,400,mouseX,mouseY)<75){
+                    cursor(HAND);
+                }else if(dist(390,400,mouseX,mouseY)<75){
+                    cursor(HAND);
+                }else{
+                    cursor(ARROW);
+                }
+                MMT++;
+                MMA--;
+                if(MMA<=0){
+                    MMA=360;
+                }
+            }else{
+                background(lerpColor(color(r,g,b),color(115,115,115),0.5));
+                cursor(ARROW);
+                fill(255,255,255);
+                textSize(50);
+                if(screens===2){
+                    text("How To Play",300,60);
+                    textSize(19);
+                    textAlign(LEFT,TOP);
+                    text("   Make soldiers by clicking the rectangular buttons at the bottom of the page. You can change your perspective by hovering above the little arrow buttons at the top, or clicking the arrow keys on your keyboard. To attack, click the ''Attack'' button near the bottom right corner of the screen. You can upgrade your income and your soldiers by clicking the ''Upgrade'' button underneath the ''Attack'' button. Although archers and wizards can harm enemies with minimal damage to themselves, other soldiers are recommended to force your soldiers forward. Witches usually shouldn't be bought in large groups, because they will start healing eachother, instead of the other soldiers. ",25,100,550,500);
+                    textAlign(CENTER,CENTER);
+                }else{
+                    text("Other Programs made\n by KY PROGRAMMING",300,60);
+                    textSize(22.8);
+                    text("",25,100,550,500);
+                    for(var i=18; i<23; i++){
+                        buttons[i].display();
+                        if(buttons[i].clicked()){
+                            cursor(HAND);
+                        }
+                    }
+                    fill(255,255,255);
+                }
+                if(dist(75,525,mouseX,mouseY)<50||dist(525,525,mouseX,mouseY)<50){
+                    cursor(HAND);
+                }
+                ellipse(75,525,100,100);
+                ellipse(525,525,100,100);
+                fill(0,0,0);
+                textSize(70);
+                text("▷",525,525);
+                text("≡",75,525);
+            }
+            if(g===0&&b<255&&r===255){
+                        b++;
+                    }else if(g===0&&b===255&&r>0){
+                        r--;
+                    }else if(g<255&&b===255&&r===0){
+                        g++;
+                    }else if(g===255&&b>0&&r===0){
+                        b--;
+                    }else if(g===255&&b===0&&r<255){
+                        r++;
+                    }else if(g>0&&b===0&&r===255){
+                        g--;
+                    }
+        };
+        //Less than 1500 lines of code! (The smaller the amount, the less lag is created)
+      }
+    }
+
+    new Processing(document.getElementById("game"), sketchProc); 
+ </script>
+  </body>
+</html>
