@@ -60,7 +60,7 @@ window.addEventListener("load", () => {
   for(let g = 0; g < gears.length; g++){
     for(let i = 0; i < 1e3; i++){
       const rdmx = Math.random() * 1050 - 25;
-      const rdmy = ((0.2 + 0.2 * g) * (document.body.scrollHeight / canvas.clientHeight) + 1) * (Math.random() * 1050 - 25) * canvas.clientHeight / canvas.clientWidth;
+      const rdmy = ((0.2 + 0.2 * g) * (document.body.scrollHeight / canvas.clientHeight) + 1.5) * (Math.random() * 1050 - 25) * canvas.clientHeight / canvas.clientWidth;
       
       let closest = [0, Infinity];
       for(let j = 0; j < gears[g].length; j++){
