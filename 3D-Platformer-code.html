@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<!--
+The Cylinder's Adventure!
+A 3D Platformer
+My 16th Game!
+(My third 3D one, and the first one in which I used WebGL)
+
+If the buttons aren't working at the beginning, try restarting the project.
+
+Instructions on line 13
+
+In this project, I actually put effort into cleaning my code! That doesn't mean that it is completely commented, and there is still more to be desired in the HTML/CSS section, but the javascript section, I think, is extremely neat.
+
+Works best on Google Chrome. Also works on other modern Google search engines, and Microsoft Edge. Not sure about the other ones. Probably won't work on Mozilla Firefox.
+
+Credit to Mozilla for most of the Web GL (most of lines 1380-1639) excluding comments.
+https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial
+For a full credits list, go to line 37.
+
+To see more of my projects, visit my profile:
+https://www.khanacademy.org/profile/kaid_734655799699922356147662/projects
+
+I also made an organized list of projects in mu subpage.
+https://www.khanacademy.org/cs/-/5895671072702464
+
+I also wanted to share this WebGL (3D) graphic, which I might use in a future game. Do you think I should use it?
+https://www.khanacademy.org/cs/-/4967686416711680
+
+I <i>might</i> make <b>one</b> sequel to this game. If you want to see another one, (or you don't), please tell me down below in the "Tips & Thanks". 
+
+Most of the code is original.
+
+wasd to move.
+Left and Right keys to turn.
+e or Space to jump.
+z to change perspective
+t to read signs
+r to restart
+
+You can change the color of the character by clicking "SETTINGS".
+
+1: leaf
+2: wood
+3: portal
+4: spike
+5: sign
+6: dirt,
+7: dirt with grass
+8: stone
+9: trampoline
+
+A combination of:
+HTML: Sets up the canvas.
+CSS: Sets the size and positioning of the canvas and other objects.
+Javascript: Loads and updates the Web GL, as well as doing the collisions and other animations/ user interactions.
+Web GL: Displays the 3D, sets up the GLSL.
+GLSL: Allows WebGL to display and shade shapes.
+
+Credits*:
+(estimated)
+3D Library (line 209)
+    100% Brandon Jones
+3D Engine
+    85% Mozilla Developer
+    12% KY
+    3% webGL Fundamentals
+Character & block designs
+    97% KY
+    3% Mozilla Developer
+Level Design
+    100% KY
+Collisions
+    100% KY
+User Interactions
+    97% KY
+    2% Khan Academy
+    1% Mozilla Developers
+HTML/CSS
+    97% KY
+    2% Khan Academy
+    1% w3schools
+Overall**
+    87% KY
+    12% Mozilla Developer
+    1% Other
+Overall Including Comments**
+    93% KY
+    7% Mozilla Developer
+
+Special Thanks to:
+  Mozilla Developer for teaching me about WebGL and GLSL.
+  Khan Academy for teaching me the coding, and supplying an engine to run it on.
+  w3schools for helping me learn additional coding skills
+  webGL fundamentals for helping further my limited knowledge in WebGL and GLSL.
+
+*  Excluding comments
+** Excluding line 209
+
+HINTS:
+  "Think outside the box"
+  "Somtimes, spikes are helpful."
+  
+My code:
+(My CSS and HTML is unorganized)
+(My javascript WebGL, and GLSL are organized)
+
+If you have any questions about the code, feel free to ask!
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>3D Platformer</title>
+        <style>
+            @-webkit-keyframes hov{
+                /*button animation when hovering*/
+                from{background:rgb(0,150,255);}
+                to{background:green;}
+            }@-webkit-keyframes unhov{
+                /*button animation when not hovering*/
+                from{background:green;}
+                to{background:rgb(0,150,255);}
+            }body{
+                margin:0px;
+                overflow:hidden;
+                font-size:25px;
+                font-family:serif;
+            }h1{
+                text-align:center;
+                color:darkgreen;
+            }h2{
+                color:rgb(70,25,0);
+                text-align:center;
+                animation:unhov 2s;
+                padding:10px;
+            }h2:hover{
+                background:green;
+                animation:hov 2s;
+                cursor:pointer;
+            }h3{
+                text-align:center;
+                color:darkgreen;
+            }#HOME{
+                width:100%;
+                height:100%;
+                background-color:rgb(0,150,255);
+                z-index:3;
+                position:fixed;
+                left:0px;
+                top:0px;
+            }#SETTINGS{
+                width:100%;
+                height:100%;
+                background-color:rgb(0,150,255);
+                z-index:3;
+                position:fixed;
+                left:0px;
+                top:0px;
+                visibility:hidden;
+            }#HOW{
+                width:100%;
+                height:100%;
+                background-color:rgb(0,150,255);
+                z-index:3;
+                position:fixed;
+                left:0px;
+                top:0px;
+                visibility:hidden;
+            }#win{
+                width:100%;
+                height:100%;
+                background-color:rgb(100,255,100);
+                z-index:3;
+                position:fixed;
+                left:0px;
+                top:0px;
+                visibility:hidden;
+            }#hp{
+                position:fixed;
+                z-index:2;
+                top:5px;
+                height:25px;
+                background-color:red;
+                border:1px solid black;
+                border-radius:20px;
+                text-align:center;
+                font-size:20px;
+            }#sign1{
+                position:fixed;
+                z-index:2;
+                top:35px;
+                right:15px;
+                background:rgba(255,255,255,0.6);
+                padding:5px;
+            }#sign2{
+                position:fixed;
+                z-index:2;
+                top:20%;
+                left:15%;
+                background:rgba(255,200,100,0.9);
+                border:12px ridge brown;
+                padding:15px;
+                width:70%;
+                height:60%;
+                visibility:hidden;
+                font-size:35px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="PLAY" width="600"height="600">Reload page. Your Browser may not support webGL</canvas>
+        <div id="HOME">
+            <h1>The <span style="text-decoration:line-through red;">Cylinder's</span> <span style="color:red;font-family:cursive;font-size:0.8em;">Pentagonal Prism's</span> Adventure</h1>
+            <h3>A 3D PLATFORMER</h3>
+            <h2 class="button">PLAY</h2>
+            <h2 class="button">SETTINGS</h2>
+            <h2 class="button">HOW</h2>
+        </div>
+        <div id="SETTINGS">
+            <h1>Settings</h1>
+            <h3>
+                Character Color:
+                <select id='colorC' value='0' style="font-size:20px">
+                    <option value='0'>Red</option>
+                    <option value='1'>Yellow</option>
+                    <option value='2'>Green</option>
+                    <option value='3'>Blue</option>
+                    <option value='4'>Purple</option>
+                    <option value='5'>Green Blue</option>
+                    <option value='6'>White</option>
+                </select>
+            </h3>
+            <h2 class="button">HOME</h2>
+            <h2 class="button">PLAY</h2>
+        </div>
+        <div id="HOW">
+            <h1>How</h1>
+            <h3>wasd to move.
+            <br>Left and Right keys to turn.
+            <br>e or Space to jump.
+            <br>z to change perspective
+            <br>t to read signs
+            <br>r to restart</h3>
+            <h2 class="button">HOME</h2>
+            <h2 class="button">PLAY</h2>
+        </div>
+        <div id="win">
+            <h1>You Won!</h1>
+        </div>
+        <span id="hp"></span>
+        <span id="sign1">Press "t" to read sign.</span>
+        <span id="sign2"></span>
+        <script src='https://cdn.jsdelivr.net/npm/gl-matrix@3.0.0/gl-matrix-min.js'></script>
+        <script type="application/javascript">
+        //{Levels
+//the blocks in each level, and how they're organized.
+//var levels=[
+    //[y_bottom
+        //x0: "z0 z1",
+        //x1: "z0 z1"
+    //],
+    //[y top
+        //x0: "z0 z1",
+        //x1: "z0 z1"
+    //]
+//];
+var levels=[
+  [
+    [
+      "66777777",
+      "66777777",
+      "66777777",
+      "0000007777",
+      "0000007777",
+      "0000007777"
+    ],
+    [
+      "67",
+      "66",
+      "6605",
+      "",
+      "000000005"
+    ],
+    [
+      "6",
+      "67",
+      "66",
+    ],
+    [
+      "7",
+      "7",
+      "77",
+    ],
+    [
+      "3",
+      ""
+    ]
+  ],
+  [
+    [
+      "77777777777766",
+      "00000077777766"
+    ],
+    [
+      "00000000040077",
+      "00000005000477"
+    ],
+    [
+      "00000000000004",
+      "00000000000003"
+    ]
+  ],
+  [
+    [
+      "077777777",
+      "07677",
+      "706",
+      "706",
+      "076"
+    ],
+    [
+      "",
+      "0065",
+      "006",
+      "006",
+      "036"
+    ],
+    [
+      "",
+      "007",
+      "007",
+      "007",
+      "007"
+    ]
+  ],
+  [
+    [
+      "88888888",
+      "88888888",
+      "88888888",
+      "88888888",
+      "88888888",
+      "88888888",
+      "88888888",
+      "88888888"
+    ],
+    [
+      "00660003",
+      "60600600",
+      "60006666",
+      "60660000",
+      "00600606",
+      "60660606",
+      "606006",
+      "6000665"
+    ],
+    [
+      "77777700",
+      "77777700",
+      "77777777",
+      "77777777",
+      "77777777",
+      "77777777",
+      "777777",
+      "777777"
+    ]
+  ],
+  [
+    [
+      "77777",
+      "77777",
+      "777777",
+      "77777",
+      "77777"
+    ],
+    [
+      "",
+      "09",
+      "002",
+      "0005"
+    ],
+    [
+      "",
+      "",
+      "002"
+    ],
+    [
+      "",
+      "001",
+      "0111",
+      "001"
+    ],
+    [
+      "",
+      "",
+      "001"
+    ],
+    [
+      "",
+      "",
+      "003"
+    ]
+  ],
+  [
+    [
+      "00000000077777777",
+      "00000000070000077",
+      "7000000007",
+      "",
+      "7707070707"
+    ],
+    [
+      "",
+      "0000000000000005",
+      "3"
+    ]
+  ],
+  [
+    [
+      "00706070000070000",
+      "70006000707060700",
+      "70670760000060007"
+    ],
+    [
+      "00006",
+      "0000600000006",
+      "3060006000006"
+    ],
+    [
+      "00007",
+      "0000700000007",
+      "0070007000007"
+    ]
+  ],
+  [
+    [
+      "",
+      "0777",
+      "0777",
+      "0777"
+    ],
+    [
+      "0666",
+      "65006",
+      "60006",
+      "60006",
+      "0666"
+    ],
+    [
+      "0777",
+      "70007",
+      "60006",
+      "70007",
+      "0767"
+    ],
+    [
+      "",
+      "",
+      "60006",
+      "",
+      "006"
+    ],
+    [
+      "",
+      "8",
+      "70007777",
+      "",
+      "007"
+    ],
+    [
+      "",
+      "5",
+      "00000003"
+    ]
+  ],
+  [
+    [
+      "700070007007007077",
+      "000000000000000077"
+    ],
+    [
+      "3",
+      "00000000000000005"
+    ]
+  ],
+  [
+    [
+      "700007007007007077",
+      "700007000000000007",
+      "700000000000000007",
+      "700000000000000007",
+      "700000000000000007",
+      "744444444444444447"
+    ],
+    [
+      "3",
+      "000005"
+    ]
+  ],
+  [
+    [
+      "06666666",
+      "06460606",
+      "06666666",
+      "76764606",
+      "06666666",
+      "06760606",
+      "06666666"
+    ],
+    [
+      "06666666",
+      "06060606",
+      "06666666",
+      "36060606",
+      "06666666",
+      "06060606",
+      "06666666"
+    ],
+    [
+      "07777777",
+      "07070707",
+      "07777777",
+      "07070707",
+      "07777777",
+      "07070707",
+      "07777777"
+    ],
+    [
+      "05"
+    ]
+  ],
+  [
+    [
+      "77777",
+      "77777",
+      "77777",
+      "77777",
+      "77777"
+    ],
+    [
+      "",
+      "0909",
+      "0025",
+      "0909"
+    ],
+    [
+      "",
+      "",
+      "002"
+    ],
+    [
+      "",
+      "",
+      "002"
+    ],
+    [
+      "0101",
+      "19191",
+      "0121",
+      "19191",
+      "0101"
+    ],
+    [
+      "0101",
+      "10101",
+      "0121",
+      "13101",
+      "0101"
+    ],
+    [
+      "0101",
+      "10101",
+      "0121",
+      "10101",
+      "0101"
+    ],
+    [
+      "",
+      "0101",
+      "001",
+      "0101"
+    ]
+  ],
+  [
+    [
+      "0888",
+      "088888888",
+      "0888888888",
+      "0888888888",
+      "8888888888",
+      "888888888",
+      "888888888",
+      "088888888",
+      "088888888",
+      "00888"
+    ],
+    [
+      "",
+      "046066666",
+      "060060690",
+      "060640666",
+      "000600000",
+      "066604606",
+      "000006066",
+      "0604600",
+      "06060065",
+      "005"
+    ],
+    [
+      "",
+      "066666666",
+      "066666606",
+      "066666666",
+      "066666666",
+      "066666666",
+      "066666666",
+      "066666600",
+      "066666600"
+    ],
+    [
+      "",
+      "060006666",
+      "000400606",
+      "004660006",
+      "000066606",
+      "064000606",
+      "066066006",
+      "000060000",
+      "0906666"
+    ],
+    [
+      "",
+      "077777777",
+      "077777777",
+      "077777777",
+      "077737777",
+      "077777777",
+      "077777777",
+      "0007777",
+      "0007777"
+    ]
+  ],
+  [
+    [
+      "70070007770770770777077707770000700077",
+      "00000000000000000000000000000000000077"
+    ],
+    [
+      "300000004000000400440040004000009",
+      "0000000000000000000000000000000000005"
+    ]
+  ],
+  [
+    [
+      "776",
+    ],
+    [
+      "002",
+    ],
+    [
+      "2",
+    ],
+    [
+      "002",
+    ],
+    [
+      "2",
+    ],
+    [
+      "002",
+    ],
+    [
+      "003"
+    ]
+  ],
+  [
+    [
+      "700000007",
+      "","","","","","","",
+      "700000007"
+    ],
+    [
+      "000000003"
+    ],"","","","","","","","","","",
+    [
+      "","","","",
+      "0000777",
+      "0000777",
+      "0000777"
+    ],
+    [
+      "","","","",
+      "00005"
+    ]
+  ],
+  [
+    [
+      "007777844",
+      "007777844",
+      "006666844",
+      "007777844",
+      "007777844"
+    ],
+    [
+      "0000006",
+      "0000006",
+      "0066663",
+      "0000006",
+      "0000006"
+    ],
+    [
+      "77000077",
+      "77000077",
+      "66666677",
+      "77000077",
+      "77000077"
+    ],
+    [
+      "3000005",
+      "",
+      "666666",
+      "",
+      "3"
+    ],
+    [
+      "","",
+      "777777"
+    ],
+    [
+      "","",
+      "000003"
+    ]
+  ],
+  [
+    [
+      "7777"
+    ],
+    ["4"],
+    ["4"],
+    ["4"],
+    ["3"]
+  ],
+  [
+    [
+      "770000000000000000000000000000077"
+    ],
+    [
+      "30000009000000000000000000000009"
+    ],"","",
+    [
+      "000000000009000000000000000009"
+    ],"","",
+    [
+      "0000000000000000090000900009"
+    ]
+  ],
+  [
+    [
+      "744444444444444444444777004447"
+    ],
+    [
+      "400000000000000000000000000003"
+    ],
+    ["4"],["3"]
+  ],
+  [
+    ["7"],
+    ["007"],
+    ["00007"],
+    ["","","00007"],
+    ["","","","","00007"],
+    ["","","","","007"],
+    ["","","","","7"],
+    ["","","7"],
+    ["7"],
+    ["007"],
+    ["00007"],
+    ["00003"]
+  ]
+];
+//which level do you start? (0-20)
+var level=0;
+//how fast does your character move? (Will be set later)
+var speed;
+        //}Levels
+        //{Graphics
+//healthbar HTML element
+var hp=document.getElementById("hp");
+//the following variables will be added onto later.
+//the vertex positions of all 3D shapes
+var positions=[];
+//the colors corresponding to those positions
+var colors=[];
+//the normals (shading angles) to the positions
+var normals=[];
+//Tells the webGL which vertices are connected to form triangles.
+var indices=[];
+//where are the portals? (separate buffer)
+var portals=[];
+//the starting position of the character in each level
+var posits=[
+    [-16,-6,-53],
+    [0,-6,-20],
+    [0,-6,-52],
+    [-28,-6,-48],
+    [-8,-6,-40],
+    [0,-6,-82],
+    [-8,-6,-84],
+    [-8,-22,-20],
+    [0,-6,-88],
+    [0,-6,-88],
+    [0,-14,-40],
+    [-8,-6,-36],
+    [-28,-6,-48],
+    [0,-6,-168],
+    [0,-6,-20],
+    [-20,-54,-40],
+    [-8,-14,-48],
+    [0,-6,-32],
+    [0,-6,-148],
+    [0,-6,-108],
+    [0,-6,-20]
+];
+//what do the signs say?
+var signs1=[
+    [
+        "Press the spacebar or \"e\" to jump.",
+        "Use the \"wasd\" keys to move your character. The object of this game is to get to the purple crystal. Press \"x\" to exit this sign."
+    ],
+    [
+        "Avoid the spikes."
+    ],
+    [
+        "Arrow keys to turn."
+    ],
+    [
+        "Press \"z\" to change your perspective."
+    ],
+    [
+        "Trampolines! To get a maximal jump height, jump while you're on a trampoline."
+    ],
+    [
+        "Don't fall off the edge."
+    ],
+    [],
+    [
+        "Press \"r\" to restart the level.",
+        "Important message below! You will need to know it for future levels."
+    ],
+    [
+        "Press \"q\" to run.\nJump while running to jump large distaces."
+    ],
+    [
+        "Sometimes, spikes are helpfull."
+    ],
+    [
+        "It's getting dark! Where is the portal? For a hint, go to line 100 of the code."
+    ],
+    [
+        "Jumping up into the top of a trampoline will let you get onto it."
+    ],
+    [
+        "Maze time!",
+        "Hitting a spike with a ceiling above can almost immediately bring your health down to 0."
+    ],
+    [
+        "Night Time!"
+    ],
+    [],
+    [
+        "Look below!"
+    ],
+    [
+        "All of these portals will allow you to continue to the next level. For a hint, go to line 101 of the code."
+    ]
+];
+//how many times has your player died?
+var deaths=0;
+//where are the signs in the current level? (WIll be set later)
+var signs2=[];
+//time of day in each level (0:day,1:sunset/rise,2:night)
+var timeOD="00000000001112222222111111";
+//what is your perspective?
+var view=0;
+//Is thecharacter currently at a place where it can jump?
+var canJump=1;
+//What is the amount of health you have?
+var health=100;
+//The translate matrices
+var posit=[
+  [-16,-6,-53],
+  [0,-10,-20]
+];
+//the rotate matrices
+var rots=[
+  [view==1?0:0.5,0,0],
+  [0.5,Math.PI,0]
+];
+//upward velocity
+var upv=0;
+//current Color of character
+var currentC=0;
+//darkness for transitions: example win level
+var darkness=1;
+//darkness for transitions: example die
+var darknessb=0;
+//where are the vertices in a 1×1×1 cube?
+var blockShape=[
+  -1,-1,-1,
+  -1, 1,-1,
+  -1, 1, 1,
+  -1,-1, 1,
+   1,-1, 1,
+   1, 1, 1,
+   1, 1,-1,
+   1,-1,-1
+];
+//where are the vertices in a 1×1 square? (used for the square prism)
+var spikeShape=[
+  -1,-1,-1,
+  -1,-1, 1,
+   1,-1, 1,
+   1,-1,-1
+];
+//which of the vertices in blockShape should be connected to create a cube?
+var blockOrder=[
+  0,1,2,3,
+  4,5,6,7,
+  1,0,7,6,
+  3,2,5,4,
+  2,1,6,5,
+  0,3,4,7
+];
+//How should each of the sides in a cube be shaded?
+var blockNormal=[
+  -1, 0, 0,
+   1, 0, 0,
+   0, 0,-1,
+   0, 0, 1,
+   0, 1, 0,
+   0,-1, 0
+];
+//How should each of the sides in a square prism be shaded?
+var spikeNormal=[
+  -1,0.5, 0,
+   0,0.5, 1,
+   1,0.5, 0,
+   0,0.5,-1
+];
+//what are the possble colors for your character to be?  (rgba) (not 0-255:0-1)
+var characterColor=[
+  1.5,0,0,1,
+  1.5,1.5,0,1,
+  0,1.5,0,1,
+  0,0,1.5,1,
+  1.5,0,1.5,1,
+  0,1.5,1.5,1,
+  2,2,2,1
+];
+//How should the blocks be colored? (rgba) (not 0-255:0-1)
+var blockColor=[
+  [//dirt
+    0.5,0.2,0,1
+  ],
+  [//dirt with grass
+    0.5,0.2,0,1,
+     0 , 1 ,0,1,
+     0 , 1 ,0,1,
+    0.5,0.2,0,1,
+    0.5,0.2,0,1,
+     0 , 1 ,0,1,
+     0 , 1 ,0,1,
+    0.5,0.2,0,1
+  ],
+  [//stone
+    0.5,0.5,0.5,1
+  ],
+  [//trampoline
+    1.5,0.7,1.3,1
+  ],
+  [//leaf
+    0,0.7,0,1
+  ],
+  [//wood
+    0.3,0.1, 0 ,1,
+     1 , 1 ,0.7,1,
+    0.7,0.4, 0 ,1,
+     0 , 0 , 0 ,1
+  ],
+  [//portal
+    0.5,0,3,0.7
+  ],
+  [//spike
+    1,1,1,1
+  ],
+  [//sign
+    1.5,1,0.5,1,
+  ]
+];
+//background color: (rgb) (not 0-255:0-1)
+var backG=[
+    //day
+    [0,0.7,1],
+    //sunset
+    [1,0.5,0],
+    //night
+    [0,0,0.2]
+];
+//how should the blocks light up?
+var lightB=[
+    //day
+    [0.6,0.5,0.1],
+    //sunset
+    [0.4,0.3,0.03],
+    //night
+    [0.25,0.1,0]
+];
+//change the scenes (ie. Home, Play, ect.)
+function scene(sc){
+    //Hide all of the scenes
+    document.getElementById("HOME").style.visibility="hidden";
+    document.getElementById("PLAY").style.visibility="hidden";
+    document.getElementById("HOW").style.visibility="hidden";
+    document.getElementById("SETTINGS").style.visibility="hidden";
+    //show the one that I want to show
+    document.getElementById(sc).style.visibility="visible";
+}
+//create a block using the above information
+function block(x,y,z,w,h,d,t){
+  //is the type of block a greater than 5?
+  if(t>5){
+    //is the type of block a 9 (trampoline)?
+    if(t==9){
+      //compress the block so that its only 1/3 of its height
+      y-=h*2/3;
+      h/=3;
+    }
+    //for each side in a cube...
+    for(var i=0;i<blockOrder.length/4;i++){
+      //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+      var _=positions.length/3;
+      //For each vertice in a side...
+      for(var a=0;a<4;a++){
+        //add those vertices to the positions array. (x,y,z)
+        positions.push(blockShape[blockOrder[i*4+a]*3]*w+x,blockShape[blockOrder[i*4+a]*3+1]*h+y,blockShape[blockOrder[i*4+a]*3+2]*d+z);
+        //color the blocks (r,g,b,a)
+        if(blockColor[t-6].length>4){
+          colors.push(blockColor[t-6][blockOrder[i*4+a]*4],blockColor[t-6][blockOrder[i*4+a]*4+1],blockColor[t-6][blockOrder[i*4+a]*4+2],blockColor[t-6][blockOrder[i*4+a]*4+3]);
+        }else{
+          colors.push(blockColor[t-6][0],blockColor[t-6][1],blockColor[t-6][2],blockColor[t-6][3])
+        }
+        //add the normals to the normals array, which helps with the shading. (nx,ny,nz)
+        normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+      }
+      //write down which vertices should be connected to form the shape
+      indices.push(_+1,_,_+2,_+3,_+2,_);
+    }
+  }else if(t==1){
+    //if the type of block is 1 (leaf)
+    //for every side...
+    for(var i=0;i<blockOrder.length/4;i++){
+      //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+      var _=positions.length/3;
+      //add those vertices to the positions array.
+      positions.push(blockNormal[i*3]*w+x,blockNormal[i*3+1]*h+y,blockNormal[i*3+2]*d+z);
+      //color the vertex
+      colors.push(blockColor[4][0],blockColor[4][1],blockColor[4][2],blockColor[4][3])
+      //add the shading to the normals array
+      normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+      //for each vertice in a side...
+      for(var a=0;a<4;a++){
+        //add those vertices to the positions array.
+        positions.push(blockShape[blockOrder[i*4+a]*3]*w+x,blockShape[blockOrder[i*4+a]*3+1]*h+y,blockShape[blockOrder[i*4+a]*3+2]*d+z);
+        //attribute the colors to the vertices
+        colors.push(blockColor[4][0],blockColor[4][1],blockColor[4][2],blockColor[4][3])
+        //attribute the normals to the vertices
+        normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+      }
+      //write down which vertices should be connected to form the shape
+      indices.push(_,_+1,_+2,_,_+3,_+4,_+1,_,_+2,_+3,_,_+4);
+    }
+  }else if(t==2){
+    //if the type of block is 2 (wood)
+    //for every side...
+    for(var i=0;i<blockOrder.length/4;i++){
+      //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+      var _=positions.length/3;
+      //if the side is either the top or the bottom
+      if(blockNormal[i*3+1]){
+        //add the top/bottom center points (for) the gradient coloring
+        positions.push(blockNormal[i*3]*w+x,blockNormal[i*3+1]*h+y,blockNormal[i*3+2]*d+z);
+        //add the dark colors for those points
+        colors.push(blockColor[5][0],blockColor[5][1],blockColor[5][2],blockColor[5][3]);
+        //help the program shade the blocks
+        normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+        //for each of the four vertices
+        for(var a=0;a<4;a++){
+          //add the position of the vertex to the positions array
+          positions.push(blockShape[blockOrder[i*4+a]*3]*w+x,blockShape[blockOrder[i*4+a]*3+1]*h+y,blockShape[blockOrder[i*4+a]*3+2]*d+z);
+          //attribute a color to the vertex
+          colors.push(blockColor[5][4],blockColor[5][5],blockColor[5][6],blockColor[5][7]);
+          //attribute the shading value to the vertex
+          normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+        }
+        //write down which vertices should be connected to form the shape (including the top/bottom vertices
+        indices.push(_+1,_,_+2,_+3,_,_+4,_+2,_,_+3,_+4,_,_+1);
+      }else{
+        //if the face wasn't on the top or bottom
+        for(var a=0;a<4;a++){
+          // wobbling/alternating colors for trunk
+          var wob=Math.floor(a/2)*4+8;
+          //add the poitions of the vertices to the positions array
+          positions.push(blockShape[blockOrder[i*4+a]*3]*w+x,blockShape[blockOrder[i*4+a]*3+1]*h+y,blockShape[blockOrder[i*4+a]*3+2]*d+z);
+          //attribute colors to those verices
+          colors.push(blockColor[5][wob],blockColor[5][wob+1],blockColor[5][wob+2],blockColor[5][wob+3])
+          //attribute shading normals for those vertices
+          normals.push(blockNormal[i*3],blockNormal[i*3+1],blockNormal[i*3+2]);
+        }
+        //write down which vertices should be connected to form the shape (including the top/bottom vertices
+        indices.push(_+1,_,_+2,_+3,_+2,_);
+      }
+    }
+  }else if(t==3){
+    //if the type is 3 (portal)
+    //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+    var _=positions.length/3;
+    //add the top and bottom vertices
+    positions.push(x,-h+y,z,x,h+y,z);
+    //attribute colors to those positions
+    colors.push(blockColor[6][0],blockColor[6][1],blockColor[6][2],blockColor[6][3],blockColor[6][0],blockColor[6][1],blockColor[6][2],blockColor[6][3]);
+    //attribute the shading normals
+    normals.push(0,-1,0,0,1,0);
+    //for each of the middle edge vertices ...
+    for(var i=0;i<4;i++){
+      //add the positions
+      positions.push(x+Math.sin(i*Math.PI/2+Math.PI/4)*w,y,z+Math.cos(i*Math.PI/2+Math.PI/4)*d);
+      //attribute colours to them
+      colors.push(blockColor[6][0],blockColor[6][1],blockColor[6][2],blockColor[6][3]);
+      //Is anyone even reading these comments?
+      //attribute shading normals
+      normals.push(Math.sin(i*Math.PI/2+Math.PI/4),0,Math.cos(i*Math.PI/2+Math.PI/4));
+      //write down which vertices should be connected to form the shape (including the top/bottom vertices
+      indices.push(_+2+i,_,(i+1)%4+2+_,_+1,_+2+i,(i+1)%4+2+_);
+    }
+  }else if(t==4){
+    //if the type is equal to 4 (spike)
+    //for each of the bottom 4 vertices (side faces)
+    for(var i=0;i<4;i++){
+      //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+      var _=positions.length/3;
+      //add the positions
+      positions.push(x,h+y,z,spikeShape[i*3]*w+x,spikeShape[i*3+1]*h+y,spikeShape[i*3+2]*d+z,spikeShape[(i+1)%4*3]*w+x,spikeShape[(i+1)%4*3+1]*h+y,spikeShape[(i+1)%4*3+2]*d+z);
+      //attribute colours to them
+      colors.push(blockColor[7][0],blockColor[7][1],blockColor[7][2],blockColor[7][3],blockColor[7][0],blockColor[7][1],blockColor[7][2],blockColor[7][3],blockColor[7][0],blockColor[7][1],blockColor[7][2],blockColor[7][3]);
+      //attribute shading normals
+      normals.push(spikeNormal[i*3],spikeNormal[i*3+1],spikeNormal[i*3+2],spikeNormal[i*3],spikeNormal[i*3+1],spikeNormal[i*3+2],spikeNormal[i*3],spikeNormal[i*3+1],spikeNormal[i*3+2]);
+      //write down which vertices should be connected to form the shape (including the top/bottom vertices
+      indices.push(_,_+1,_+2);
+    }
+    //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+    var _=positions.length/3;
+    //for each of the bottom 4 vertices (bottom face) 
+    for(var i=0;i<4;i++){
+      //add the positions
+      positions.push(spikeShape[i*3]*w+x,spikeShape[i*3+1]*h+y,spikeShape[i*3+2]*d+z);
+      //attribute colors
+      colors.push(blockColor[7][0],blockColor[7][1],blockColor[7][2],blockColor[7][3]);
+      //attribute shading normals
+      normals.push(0,-1,0);
+      //notice how the comments are getting less descriptive? Is it because I expect you to know the repititive code by now, or is it because I don't want to write comments?
+    }
+    //write down which vertices should be connected to form the shape (including the top/bottom vertices
+    indices.push(_+1,_,_+2,_+2,_,_+3);
+  }else if(t==5){
+    //if the type is five (sign)
+    //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+    var _=positions.length/3;
+    //for each side (front/back)
+    for(var i=0;i<2;i++){
+      /**The sign post*/
+      //add positions
+      positions.push(x+0.1*w,y-h,z,x-0.1*w,y-h,z,x-0.1*w,y,z,x+0.1*w,y,z);
+      //attribute colours
+      colors.push(blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3]);
+      //attribute shading normals
+      normals.push(0,0,i*2-1,0,0,i*2-1,0,0,i*2-1,0,0,i*2-1);
+    }
+    //write down which vertices should be connected to form the shape (including the top/bottom vertices
+    indices.push(_,_+1,_+2,_,_+2,_+3,_+5,_+4,_+6,_+6,_+4,_+7);
+    //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+    _=positions.length/3;
+    //for each side (front/back) ...
+    for(var i=0;i<2;i++){
+      /**Reading part of sign*/
+      //add vertex positions
+      positions.push(x+w,y,z,x-w,y,z,x-w,y+h,z,x+w,y+h,z);
+      //attribute the colors
+      colors.push(blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3],blockColor[8][0],blockColor[8][1],blockColor[8][2],blockColor[8][3]);
+      //attribute shading normals.
+      normals.push(0,0,i*2-1,0,0,i*2-1,0,0,i*2-1,0,0,i*2-1);
+    }
+    //write down which vertices should be connected to form the shape (including the top/bottom vertices
+    indices.push(_,_+1,_+2,_,_+2,_+3,_+5,_+4,_+6,_+6,_+4,_+7);
+  }
+  positions.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  colors.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  normals.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+}
+//Sets up the level blocks/graphics
+function graphics(){
+  //What is the background color (for play scene) (r,g,b,a:1)
+  gl.clearColor(backG[+timeOD[level]][0],backG[+timeOD[level]][1],backG[+timeOD[level]][2],1);
+  //set the positions to the starting position of the level
+  //position x
+  posit[0][0]=posits[level][0];
+  //position y
+  posit[0][1]=posits[level][1];
+  //position z
+  posit[0][2]=posits[level][2];
+  //reset the drawing variables, so that the level's information can replace it
+  positions=[];
+  colors=[];
+  normals=[];
+  indices=[];
+  //where the signs are
+  signs2=[];
+  //where the portals are
+  portals=[];
+  //for every story (y blocks) ...
+  for(var y=0;y<levels[level].length;y++){
+    //for every blockin the x direction in the level
+    for(var x=0;x<levels[level][y].length;x++){
+      //for every blockin the z direction in the level
+      for(var z=0;z<levels[level][y][x].length;z++){
+        //if there is a block at the spot, and it isn't a portal
+        if(+levels[level][y][x][z]&&+levels[level][y][x][z]!=3){
+          //create the block
+          block(x*4,y*4-8,z*4,1.95,1.95,1.95,levels[level][y][x][z]);
+          //if the block was a sign
+          if(+levels[level][y][x][z]==5){
+            //add the positions to the sign positions array
+            signs2.push(y+""+x+""+z);
+          }
+        }else if(+levels[level][y][x][z]){
+          //if the block was a portal, create a portal
+          portals.push(x*4,y*4-8,z*4);
+          //Portals are separated from everything else, because they are transparent, and have been put in a special buffer (WebGL array thingy) to accommodate for that.
+        }
+      }
+    }
+  }
+  //move all of the information to a different variable, so that the old variables can hold the portal information
+  var positions2=[].concat(positions);
+  var colors2=[].concat(colors);
+  var normals2=[].concat(normals);
+  var indices2=[].concat(indices);
+  //empty the arrays, prepare for holding portal info
+  positions=[];
+  colors=[];
+  normals=[];
+  indices=[];
+  //for every portal in the level ...
+  for(var i=0;i<portals.length;i+=3){
+    //create the portal graphics
+    block(portals[i],portals[i+1],portals[i+2],1.95,1.95,1.95,3);
+  }
+  //return (ommit) all of the information about the graphics
+  return{
+    //world positions
+    position:positions2,
+    //world colours
+    color:colors2,
+    //world shading normals
+    normal:normals2,
+    //world indices
+    index:indices2,
+    //portal positions
+    position2:positions,
+    //portal colours
+    color2:colors,
+    //portal shading normals
+    normal2:normals,
+    //portal indices
+    index2:indices
+  }
+}
+//Creates the main character: the cylinder and the face.
+function cylinder(){
+  //reset the drawing variables, so that the cylinder's information can replace it
+  positions=[];
+  colors=[];
+  normals=[];
+  indices=[];
+  //because this is actually a pentagonal prism, for each of its vertical lines,
+  for(var i=0;i<5;i++){
+    //add positions of the vertices (2 up/down *5 sides=10 v)
+    positions.push(Math.sin(Math.PI/2.5*i)*1.2,-2,Math.cos(Math.PI/2.5*i)*1.2,Math.sin(Math.PI/2.5*i)*1.2,1.2,Math.cos(Math.PI/2.5*i)*1.2);
+    //attribute character colours
+    colors.push(characterColor[currentC*4],characterColor[currentC*4+1],characterColor[currentC*4+2],characterColor[currentC*4+3],characterColor[currentC*4],characterColor[currentC*4+1],characterColor[currentC*4+2],characterColor[currentC*4+3]);
+    //attribute the shading normals
+    normals.push(Math.sin(Math.PI/2.5*i),0,Math.cos(Math.PI/2.5*i),Math.sin(Math.PI/2.5*i),0,Math.cos(Math.PI/2.5*i));
+    //tell the webGL which dots to connect.
+    indices.push(2*i+1,2*i,2*((i+1)%5),2*((i+1)%5)+1,2*i+1,2*((i+1)%5));
+  }
+  //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+  var _=positions.length/3;
+  //add positions
+  positions.push(0,1.2,0);
+  //attribute colours
+  colors.push(characterColor[currentC*4],characterColor[currentC*4+1],characterColor[currentC*4+2],characterColor[currentC*4+3]);
+  //attribute the shading normals
+  normals.push(0,1,0);
+  //for each vertex on the top face...
+  for(var i=0;i<5;i++){
+    //add the positions
+    positions.push(Math.sin(Math.PI/2.5*i)*1.2,1.2,Math.cos(Math.PI/2.5*i)*1.2);
+    //attribute the colors
+    colors.push(characterColor[currentC*4],characterColor[currentC*4+1],characterColor[currentC*4+2],characterColor[currentC*4+3]);
+    //attribute the normals
+    normals.push(0,1,0);
+    //tells the WebGL which dots to connect.
+    indices.push(_,_+i+1,_+(i+1)%5+1);
+  }
+  //helps acknoledge that there may be some other prior positions (nescessary for graphics)
+  var _=positions.length/3;
+  //add the positions for the eyes and mouth
+  positions.push(-0.4,0.6,1,-1,0.6,1,-0.7,1,1,0.4,0.6,1,1,0.6,1,0.7,1,1,-0.6,0,1.2,0.6,0,1.2,0,-0.5,1.2);
+  //attribute the color white to them
+  colors.push(4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1,4,4,4,1);
+  //attribute the shading normals
+  normals.push(0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1);
+  //tells the WebGL which dots to connect.
+  indices.push(_+1,_,_+2,_+3,_+4,_+5,_+7,_+6,_+8);
+  //return (ommit) all of the information about the graphics
+  positions.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  colors.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  normals.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  return{
+    position:positions,
+    color:colors,
+    normal:normals,
+    index:indices
+  }
+}
+//what happens when you complete a level
+function complete(){
+  //add to the level
+  level++;
+  //if you haven't completed all of the levels
+  if(level<levels.length){
+    //make new level graphics
+    background=graphics();
+    //reset the rotations
+    rots[0]=[view==1?0:0.5,0,0];
+    //create a WebGL buffer which holds the level graphics
+    buffers[0]=initB(background.position,background.color,background.normal,background.index,0);
+    //and one that holds the portal graphics
+    buffers[2]=initB(background.position2,background.color2,background.normal2,background.index2,2);
+  }else{
+    //if you have won all of the levels
+    //show the win scene
+    scene("win");
+    //take off all filters
+    document.body.style.webkitFilter="";
+    //update the text displaying death count
+    document.getElementById("win").innerHTML+="<h3>Deaths : "+deaths+"</h3>";
+  }
+}
+//what happens when you die
+function die(){
+  //add to the death count
+  deaths++;
+  //reset health to 100
+  health=100;
+  //reset the positions
+  //x
+  posit[0][0]=posits[level][0];
+  //y
+  posit[0][1]=posits[level][1];
+  //z
+  posit[0][2]=posits[level][2];
+  //reset the rotations
+  rots[0]=[view==1?0:0.5,0,0];
+}
+        //}Graphics
+        //{WebGL Credit to Mozilla for 𝑚𝑜𝑠𝑡 of the code.
+//define mat4 (matrix creater)
+var mat4=glMatrix.mat4;
+//index count: how many indicess in a buffer count
+var i_c=[0,0,0];
+//find the canvas to display the stuff.
+var canvas=document.getElementById("PLAY");
+//unlock the webGL contexts for the canvas (with multiple backups for different browsers)
+var gl=canvas.getContext("webgl")||canvas.getContext("experimental-webgl")||canvas.getContext('moz-webkit');
+//set the clear colour for the first level
+gl.clearColor(backG[2][0],backG[2][1],backG[2][2],1);
+//set the clear depth
+gl.clearDepth(1.0);
+//GLSL
+/**GLSL variable types for the shaders
+ * attribute: a variable that is set with java script, and an be different between different vertices. The attribute can be used only in the vertex shader.
+ * uniform: a variable that is set with javascript, and is uniform throughout all vertices in the buffer. This is used nly in the vertex shader.
+ * varying: a variable that can't be set with javascript. varying variables are created in the vertex shader, but can be accessed in the fragment shader.
+ * vec2: 2 dimensional floating vector
+ * vec3: 3 dimensional floating vector (also used for holding rgb values)
+ * vec4: 4 dimensional floating vector (also used for holding rgba values)
+ * lowp: low precision variable
+ * mediump: medium precision variable
+ * highp: high precision variable
+ * mat4: matrix variable (the matrices do the fast 3D translating / rotating)
+*/
+//vertex shader
+var vtxs=
+//javascript-set positions variable
+'attribute vec4 avtx_pos;'+
+//variable for the normals
+'attribute vec3 avtx_norm;'+
+//(rgba) color variable
+'attribute vec4 avtx_color;'+
+//which angle is the light coming from?
+'uniform vec3 u_lightPos;'+
+//where are you viewing from
+'uniform vec3 u_viewPos;'+
+//how lighting brightness (directional,point,ambient)
+'uniform vec3 u_lighting;'+
+//matrix (rotates & translates world)
+'uniform mat4 umtrx;'+
+//color variable that gets sent to fragment shader
+'varying lowp vec4 vColor;'+
+//angle from surface of shape to light source
+'varying vec3 v_surfaceToLight;'+
+//angle from surface of shape to camera
+'varying vec3 v_surfaceToView;'+
+//shading normals after accounting for rotations
+'varying vec3 transformedNormal;'+
+//same as u_lighting, but it goes to the fragment shader
+'varying vec3 v_lighting;'+
+//function where everything gets defined in GLSL
+'void main(){'+
+  //one of the predefined GLSL variables for drawing
+  'gl_Position = umtrx * avtx_pos;'+
+  //define all the varying variables!
+  'vColor = avtx_color;'+
+  'transformedNormal=mat3(umtrx)*avtx_norm;'+
+  'vec3 surfaceWorldPosition=vec3(umtrx*avtx_pos);'+
+  'v_surfaceToLight=u_lightPos-surfaceWorldPosition;'+
+  'v_surfaceToView=u_viewPos-surfaceWorldPosition;'+
+  'v_lighting = u_lighting;'+
+'}';
+//fragment shader
+var frgs=
+//access the variables from the void main(){} function above.
+'varying lowp vec4 vColor;'+
+'varying lowp vec3 v_lighting;'+
+'varying mediump vec3 transformedNormal;'+
+'varying mediump vec3 v_surfaceToLight;'+
+'varying mediump vec3 v_surfaceToView;'+
+//function where everything gets defined in GLSL fragment shader
+'void main() {'+
+  //another one of the predefined GLSL variables for drawing
+  //do I need to explain this? pow() refused to work
+  'gl_FragColor=vec4(vColor.rgb*(v_lighting.r*dot(normalize(transformedNormal),normalize(v_surfaceToLight)))+vColor.rgb*v_lighting.g*dot(normalize(transformedNormal),normalize(normalize(v_surfaceToLight)+normalize(v_surfaceToView)))*dot(normalize(transformedNormal),normalize(normalize(v_surfaceToLight)+normalize(v_surfaceToView)))*dot(normalize(transformedNormal),normalize(normalize(v_surfaceToLight)+normalize(v_surfaceToView)))+vColor.rgb*v_lighting.b,vColor.a);'+
+'}';
+//allows javascript access the shaders
+function loadshdr(type,source){
+  //create the shader
+  var shader=gl.createShader(type);
+  //link it with the GLSL code.
+  gl.shaderSource(shader,source);
+  //get it ready for drawing
+  gl.compileShader(shader);
+  //ommit it.
+  return shader;
+}
+//load the vertex shader
+var vtxShdr=loadshdr(gl.VERTEX_SHADER,vtxs);
+//load the fragment shader
+var frgShdr=loadshdr(gl.FRAGMENT_SHADER,frgs);
+//create the webGL program
+var program=gl.createProgram();
+//attach the shaders to the program
+gl.attachShader(program,vtxShdr);
+gl.attachShader(program,frgShdr);
+//links the program to the webGL interface
+gl.linkProgram(program);
+//the info on where the variable are
+var pInfo={
+  //attrib type variables
+  aPlaces:{
+    vtx_pos:gl.getAttribLocation(program,'avtx_pos'),
+    vtx_norm:gl.getAttribLocation(program,'avtx_norm'),
+    vtx_color:gl.getAttribLocation(program,'avtx_color')
+  },
+  //uniform type variables
+  uPlaces:{
+    mtrx:gl.getUniformLocation(program,'umtrx'),
+    lightP:gl.getUniformLocation(program,"u_lightPos"),
+    viewPos:gl.getUniformLocation(program,"u_viewPos"),
+    lightB:gl.getUniformLocation(program,"u_lighting")
+  }
+};
+//initiate the buffer : turn the graphics info into buffers, which the GLSL can use
+function initB(position,color,normal,index,w){
+  //create the buffer for the positions
+  var positBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,positBuffer);
+  //set the vertices 
+  i_c[w]=index.length;
+  //add the positions array data to the positions buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(position),gl.STATIC_DRAW);
+  //create the buffer for the colors
+  var colorBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,colorBuffer);
+  //add the colors array data to the colors buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(color),gl.STATIC_DRAW);
+  //create the buffer for the indices
+  var indexBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+  //add the indices array data to the indices buffer.
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(index), gl.STATIC_DRAW);
+  //create the buffer for the normals
+  var normBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,normBuffer);
+  //add the normals array data to the normals buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(normal),gl.STATIC_DRAW);
+  return{
+    position:positBuffer,
+    normal:normBuffer,
+    color:colorBuffer,
+    indices:indexBuffer
+  };
+}
+//there are 3 buffers (background, cylinder, portal). This array stores them.
+var buffers=[];
+//allows WebGL to use and access the gl program
+gl.useProgram(program);
+//allows WebGL to test for z positions, and makes closer things draw above further things
+gl.enable(gl.DEPTH_TEST);
+//even better, stops the things in the back from drawing at all.
+gl.enable(gl.CULL_FACE);
+//defines what is closer. (values: gl.CCW or gl.CW) (counterclockwise or clockwise)
+gl.frontFace(gl.CCW);
+//do I want to cut the back, or the front of a shape?
+gl.cullFace(gl.BACK);
+//With all this preparation, why not actually display the great 3D?
+function draw(){
+  //sets the background color, and deletes any old canvas drawing data, speeding up the webGL.
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  //field of view: how many degrees can your character see?
+  var fov=70*Math.PI/180;
+  //aspect: width/height ratio
+  var aspct=gl.canvas.clientWidth/gl.canvas.clientHeight;
+  //z_near: If an object is closer than this, it won't show
+  var zn=0.01;
+  //z_far: If an object is further than this, it won't show
+  var zf=100;
+  //make a new position variable which is translated to keep the main character in the center.
+  var newposit=[
+    //for background buffer
+    view==1 ? [posit[0][0]-posit[1][0],posit[0][1]-posit[1][1],posit[0][2]-posit[1][2]] : [posit[0][0],posit[0][1],posit[0][2]],
+    //for cylinder buffer
+    [posit[1][0],posit[1][1],posit[1][2]],
+    //for portal buffer
+    view==1 ? [posit[0][0]-posit[1][0],posit[0][1]-posit[1][1],posit[0][2]-posit[1][2]] : [posit[0][0],posit[0][1],posit[0][2]]
+  ];
+  //remake the rotations variable, just to make it easier to access.
+  var newrots=[rots[0],rots[1],rots[0]];
+  //for each of the 3 buffers...
+  for(var i=0;i<buffers.length;i++){
+    //if the player had clicked "z", and the cylinder shouldn't be showing, and "i" is set to the cylinder buffer, add to i, and skip to the next buffer
+    if(view==1&&i==1){
+      i++;
+    }
+    //if working with the portal buffer,
+    if(i==2){
+      //enable color blending
+      gl.enable(gl.BLEND)
+      //set blending to create transparency
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    }else{
+      //for the other buffers, disable the blending, because that can slow things down.
+      gl.disable(gl.BLEND);
+    }
+    //make the js form of the matrix.
+    var mtrx=mat4.create();
+    //set the projection perspectives
+    mat4.perspective(mtrx,fov,aspct,zn,zf);
+    //if working on the cylinder buffer
+    if(i==1){
+      //apply y-axis background rotations for synchronization
+      mat4.rotate(mtrx,mtrx,newrots[0][0],[1,0,0]);
+      //translate the little guy
+      mat4.translate(mtrx,mtrx,[newposit[1][0],newposit[1][1],newposit[1][2]]);
+    }else{
+      //if the buffer is on the portal or the background
+      //rotate y-axis
+      mat4.rotate(mtrx,mtrx,newrots[0][0],[1,0,0]);
+      //translate 3D
+      mat4.translate(mtrx,mtrx,[newposit[0][0],newposit[0][1],newposit[0][2]]);
+    }
+    //rotate x-axis
+    mat4.rotate(mtrx,mtrx,newrots[i][1],[0,1,0]);
+    //get the buffers with all of the graphics info on them ready for drawing.
+    //indices
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,buffers[i].indices);
+    //bind positions buffer to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER,buffers[i].position);
+    //send those positions to the vertex shader.
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_pos,3,gl.FLOAT,false,0,0);
+    //enable those positions
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_pos);
+    //bind positions normals to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].normal);
+    //send those normals to the vertex shader.
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_norm,3,gl.FLOAT,false,0,0);
+    //enable those normals
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_norm);
+    //bind positions colors to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].color)
+    //send those colors to the vertex shader.;
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_color,4,gl.FLOAT,false,0,0);
+    //enable those colors
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_color);
+    //send the matrix to the vertex shader
+    gl.uniformMatrix4fv(pInfo.uPlaces.mtrx,false,mtrx);
+    //send the light position info to the vertex shader
+    gl.uniform3fv(pInfo.uPlaces.lightP,[0,5,2]);
+    //send the view position info to the vertex shader
+    gl.uniform3fv(pInfo.uPlaces.viewPos,[0,0,0]);
+    //if working on the background buffer
+    if(i==0){
+      //send in the appropriate brightness of the light to the vertex shader
+      gl.uniform3fv(pInfo.uPlaces.lightB,lightB[+timeOD[level]]);
+    }else{
+      //for portals and the cylinder:
+      //send in the brightness as if it were day to the vertex shader, because the portal and character should be easy to spot, even in night.
+      gl.uniform3fv(pInfo.uPlaces.lightB,lightB[0]);
+    }
+    //Draw, Draw, Draw! Finally!
+    gl.drawElements(gl.TRIANGLES,i_c[i],gl.UNSIGNED_SHORT,0);
+  }
+}
+//}WebGL:Credit to Mozilla for 𝑚𝑜𝑠𝑡 of the code.
+        //{Draw
+//which keys are being pressed?
+var keys=[];
+//frameCount
+var fc=0;
+//called every frame:
+function render(){
+  //if scene is "play", and the loading is finished
+  if(fc>=2&&document.getElementById("PLAY").style.visibility=="visible"){
+    //make darkness (0 is black, 1 is regular) lessen
+    darkness+=0.1;
+    //keep the darkness at a max of 1
+    darkness=Math.min(darkness,1);
+    //make darknessb (1 is black, 0 is regular) lessen
+    darknessb-=0.1;
+    //keep the darkness at a min of 0
+    darknessb=Math.max(darknessb,0);
+    //hide the sign that says, "click t to read, bla, bla"
+    document.getElementById("sign1").style.visibility="hidden";
+    /**movement*/
+    //can the cylinder jump?
+    var jump=0;
+    //if holding sprint key
+    if(keys["q"]){
+        //set the traveling speed to 0.5 (2.5x)
+        speed=0.5;
+    }else{
+        //if not running
+        //set the speed to 0.2.
+        speed=0.2;
+    }
+    //if the left arrow is pressed
+    if(keys["ArrowLeft"]){
+        //rotate!
+        rots[0][1]-=0.08;
+        //do the math to rotate the translations, too.
+        var x=posit[0][0],z=posit[0][2]+20;
+        posit[0][0]=x*Math.cos(0.08)-z*Math.sin(0.08);
+        posit[0][2]=z*Math.cos(0.08)+x*Math.sin(0.08)-20;
+        //also rotate the character
+        rots[1][1]-=0.08;
+    }
+    if(keys["ArrowRight"]){
+        //if the right arrow is pressed
+        //rotate!
+        rots[0][1]+=0.08;
+        //do the math to rotate the translations, too.
+        var x=posit[0][0],z=posit[0][2]+20;
+        posit[0][0]=x*Math.cos(-0.08)-z*Math.sin(-0.08);
+        posit[0][2]=z*Math.cos(-0.08)+x*Math.sin(-0.08)-20;
+        //also rotate the character
+        rots[1][1]+=0.08;
+    }
+    //if the player clicked "z"
+    if(view==1){
+        //if the player is clicking the up arrow
+        if(keys["ArrowUp"]){
+            //look up
+            rots[0][0]-=0.08;
+        }
+        //if the player is clicking the down arrow
+        if(keys["ArrowDown"]){
+            //look down
+            rots[0][0]+=0.08;
+        }
+    }
+    //regulate the rotations keep them within 0 < 2pi
+    rots[0][1]%=Math.PI*2;
+    rots[1][1]%=Math.PI*2;
+    rots[0][1]=rots[0][1]<0?rots[0][1]+Math.PI*2:rots[0][1];
+    rots[1][1]=rots[1][1]<0?rots[1][1]+Math.PI*2:rots[1][1];
+    //if player is holding "a"
+    if(keys["a"]){
+        //add to the translations
+        posit[0][0]+=speed;
+        //rotate the character so that he'll face the way he's going
+        if(rots[1][1]<Math.PI*3/2-0.1&&rots[1][1]>Math.PI/2){
+            rots[1][1]+=0.1;
+        }else if(rots[1][1]>Math.PI*3/2+0.1||rots[1][1]<=Math.PI/2){
+            rots[1][1]-=0.1;
+        }
+    }
+    if(keys["d"]){
+        //if player is holding "d"
+        //add to the translations
+        posit[0][0]-=speed;
+        //rotate the character so that he'll face the way he's going
+        if(rots[1][1]<Math.PI/2-0.1||rots[1][1]>Math.PI*3/2){
+            rots[1][1]+=0.1;
+        }else if(rots[1][1]>Math.PI/2+0.1){
+            rots[1][1]-=0.1;
+        }
+    }
+    if(keys["w"]){
+        //if player is holding "w"
+        //add to the translations
+        posit[0][2]+=speed;
+        //rotate the character so that he'll face the way he's going
+        if(rots[1][1]<Math.PI-0.1){
+            rots[1][1]+=0.1;
+        }else if(rots[1][1]>Math.PI+0.1){
+            rots[1][1]-=0.1;
+        }
+    }
+    if(keys["s"]){
+        //if player is holding "s"
+        //add to the translations
+        posit[0][2]-=speed;
+        //rotate the character so that he'll face the way he's going
+        if(rots[1][1]<Math.PI&&rots[1][1]>0.1){
+            rots[1][1]-=0.1;
+        }else if(rots[1][1]>=Math.PI&&rots[1][1]<Math.PI*2-0.1){
+            rots[1][1]+=0.1;
+        }
+    }
+    /**collisions*/
+    //Welcome to THE messiest part of the code! In case you want to skip this, I will tell you that I didn't use any advanced coding terms/tecniques here. The next neat section will start line 2016
+    //basically the same as posit, except the math has calculated out all of the rotations.
+    var abs=[
+        posit[0][0]*Math.cos(rots[0][1])-(posit[0][2]+20)*Math.sin(rots[0][1]),
+        (posit[0][2]+20)*Math.cos(rots[0][1])+posit[0][0]*Math.sin(rots[0][1])-20
+    ];
+   //left collisions
+    //Any blocks slightly above the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-1.3)]){
+        //Is there a block on the left upper back side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)]){
+            //what type of block is it?
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)];
+            //if it is a block that collides
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                //make the character get repelled by it, keep it out.
+                abs[0]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        //Is there a block on the left upper front side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+    //Any blocks slightly below the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-0.8)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+   //right collisions
+    //Any blocks slightly above the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-1.3)]){
+        //Is there a block on the right upper back side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        //Is there a block on the right upper front side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+    //Any blocks slightly below the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-0.8)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[0]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+   //front collisions
+    //Any blocks slightly above the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-1.3)]){
+        //Is there a block on the right upper front side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)][Math.floor(-abs[1]/4-4.8)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)][Math.floor(-abs[1]/4-4.8)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        //Is there a block on the left upper front side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)][Math.floor(-abs[1]/4-4.8)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)][Math.floor(-abs[1]/4-4.8)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+    //Any blocks slightly below the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-0.8)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)][Math.floor(-abs[1]/4-4.8)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)][Math.floor(-abs[1]/4-4.8)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)][Math.floor(-abs[1]/4-4.8)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)][Math.floor(-abs[1]/4-4.8)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]-=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+   //back collisions
+    //Any blocks slightly above the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-1.3)]){
+        //Is there a block on the right upper back side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)][Math.ceil(-abs[1]/4-5.2)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.3)][Math.ceil(-abs[1]/4-5.2)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        //Is there a block on the left upper back side of the cylinder?
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)][Math.ceil(-abs[1]/4-5.2)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.3)][Math.ceil(-abs[0]/4-0.7)][Math.ceil(-abs[1]/4-5.2)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+    //Any blocks slightly below the center of the cylinder?
+    if(levels[level][Math.ceil(-posit[0][1]/4-0.8)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)][Math.ceil(-abs[1]/4-5.2)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.3)][Math.ceil(-abs[1]/4-5.2)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)][Math.ceil(-abs[1]/4-5.2)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.8)][Math.ceil(-abs[0]/4-0.7)][Math.ceil(-abs[1]/4-5.2)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                abs[1]+=speed;
+                posit[0][0]=(abs[0])*Math.cos(-rots[0][1])-(abs[1]+20)*Math.sin(-rots[0][1]);
+                posit[0][2]=(abs[1]+20)*Math.cos(-rots[0][1])+(abs[0])*Math.sin(-rots[0][1])-20;
+            }
+        }
+    }
+   //top collisions
+    if(levels[level][Math.ceil(-posit[0][1]/4-1.5)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+6;
+                jump=1;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+6;
+                jump=1;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+6;
+                jump=1;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-1.5)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+6;
+                jump=1;
+            }
+        }
+    }
+   //bottom collisions
+    if(levels[level][Math.ceil(-posit[0][1]/4-0.6)]){
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+10;
+                upv=0;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.8)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+10;
+                upv=0;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)][Math.ceil(-abs[1]/4-5.3)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+10;
+                upv=0;
+            }
+        }
+        if(levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)]&&+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)]){
+            var block=+levels[level][Math.ceil(-posit[0][1]/4-0.6)][Math.ceil(-abs[0]/4-0.2)][Math.floor(-abs[1]/4-4.7)];
+            if(block!=3&&block!=4&&block!=5&&block!=9){
+                posit[0][1]=4*Math.floor(posit[0][1]/4-1.5)+10;
+                upv=0;
+            }
+        }
+    }
+   //Is character inside a block
+    if(levels[level][Math.round(-posit[0][1]/4-0.5)]){
+        if(levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)]&&+levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)][Math.round(-abs[1]/4-5)]){
+            if(+levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)][Math.round(-abs[1]/4-5)]==9){
+                upv=-0.7;
+                if(keys[" "]||keys["e"]){
+                    upv=-1.2;
+                }
+                posit[0][1]+=upv;
+            }else if(+levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)][Math.round(-abs[1]/4-5)]==4){
+                upv=-0.7;
+                posit[0][1]+=upv;
+                health-=13;
+            }else if(+levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)][Math.round(-abs[1]/4-5)]==5){
+                document.getElementById("sign1").style.visibility="visible";
+                if(keys["t"]){
+                    document.getElementById("sign2").innerText=signs1[level][signs2.indexOf(Math.round(-posit[0][1]/4-0.5)+""+Math.round(-abs[0]/4)+""+Math.round(-abs[1]/4-5))];
+                    document.getElementById("sign2").style.visibility="visible";
+                }
+            }else if(+levels[level][Math.round(-posit[0][1]/4-0.5)][Math.round(-abs[0]/4)][Math.round(-abs[1]/4-5)]==3){
+                darkness-=0.2;
+            }
+        }
+    }
+    //if the darkness, created by going on a portal is to a total black state
+    if(darkness<=0){
+        //complete the level, load the next (or win).
+        complete();
+    }else if(health<=0){
+        //if the health is less than or equal to 0
+        //start making it dark
+        darknessb+=0.2;
+        //if the bad darkness, from losing health is to a total black state
+        if(darknessb>=1){
+            //does this term need explaining???
+            die();
+        }
+    }
+    //jump
+    //if the character is on a block
+    if(jump){
+        //if iether e or space is being pressed
+        if(keys[" "]||keys["e"]){
+            //upward velocity is -0.8
+            upv=-0.8;
+            //make the position add the upward velocity
+            posit[0][1]+=upv;
+        }
+    }else{
+        //if the player isn't on a block
+        //upward velocity++, (falling!)
+        upv+=0.06;
+        //don't let upv get too high, or the cylinder will go into a block upon landing.
+        if(upv>1.1){
+            upv=1.1;
+        }
+        //make the position add the upward velocity
+        posit[0][1]+=upv;
+    }
+    //if the y position is far below the floating islands,
+    if(posit[0][1]>=15){
+        //lose some health
+        health-=10;
+    }
+    //draw the WebGL!!
+    draw();
+    // update the health bar
+    //width
+    hp.style.width=4*health+"px";
+    //left (to keep it in the middle)
+    hp.style.left=(300-2*health)+"px";
+    //text
+    hp.innerHTML=health;
+    //make the document dark, if you are either at 0 health, or if you are in a portal
+    document.body.style.webkitFilter="brightness("+(darkness-darknessb)+")";
+  }else if(fc==0){
+    //if still loading
+    //add to frameCount
+    fc++;
+    //Holds all of the points info about the character graphics
+    var character=cylinder();
+    //makes the character info turn into a webGL buffer, and push it to the buffers array.
+    buffers[1]=initB(character.position,character.color,character.normal,character.index,1);
+  }else if(fc==1){
+    //Holds all of the points info about the graphics
+    var background=graphics();
+    fc++;
+    //set the background buffer
+    buffers[0]=initB(background.position,background.color,background.normal,background.index,0);
+    //set the portal buffer
+    buffers[2]=initB(background.position2,background.color2,background.normal2,background.index2,2);
+  }
+}
+//call the render function every 40 milliseconds
+setInterval(render,40);
+//when player preeses key
+function down(e){
+    //prevent scrolling when arrow keys/space is pressed
+    e.preventDefault();
+    //add the key to the array
+    keys[e.key]=1;
+    //hide the sign messages
+    document.getElementById("sign2").style.visibility="hidden";
+    //if this is the key for perspective, toggle the view.
+    if(e.key=="z"){
+      view=1-view;
+      //reset rotations along x-axis
+      rots[0][0]=view==1?0:0.5;
+    }else if(e.key=="r"){
+        //if the player pressed "r" (restart), set health to 0
+      health=0;
+    }
+}
+//when player releases key
+function up(e){
+    //take the key out of the array
+    delete keys[e.key];
+}
+//when player clicks screen
+function click(e){
+    //if the player clicked a button
+    if(e.target.className=="button"){
+        //change the scene
+        scene(e.target.innerText);
+    }else if(document.getElementById("SETTINGS").style.visibility=="visible"){
+        //if the settings scene is open
+        //update the color of the character
+        currentC=+document.getElementById("colorC").value;
+        //redefine the character buffer
+        var character=cylinder();
+        buffers[1]=initB(character.position,character.color,character.normal,character.index,1);
+    }
+}
+//event listeners
+document.body.addEventListener('keydown',down);
+document.body.addEventListener('keyup',up);
+document.body.addEventListener('click',click);
+//}Draw
+        //{The End
+            /**
+             * Over 2100 lines of code!
+             * Thank you for viewing my project, and reading my code. 
+            */
+        //}The End
+        </script>
+    </body>
+</html>
+<!--Still here? The <i>real</i> code finishes line 2128-->

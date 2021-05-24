@@ -1,0 +1,62 @@
+body{
+  overflow-x: hidden;
+  color: white;
+  padding: 0px;
+  margin: 0px;
+}footer{
+  background-color: #0008;
+  width: 100vw;
+  min-height: 100px;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 30px;
+}footer > a{
+  text-decoration: none;
+}footer > a > .icon{
+  width: 50px;
+  height: 50px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}noscript{
+  z-index: 100;
+  background-color: #FAA;
+  color: #F00;
+  font-size: 60px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 30vh;
+  text-align: center;
+}#back{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: -100;
+}#github{
+  position: absolute;
+  background: black;
+  color: white;
+  font-size: 15px;
+  height: 30px;
+  line-height: 30px;
+  padding: 5px 150px 5px 150px;
+  white-space: nowrap;
+  transform: rotate(45deg);
+  top: 60px;
+  right: -140px;
+  text-decoration: underline 2px transparent;
+  transition: text-decoration 0.5s;
+}#github:hover{
+  text-decoration: underline 2px;
+}#github > img{
+  height: 100%;
+  float: left;
+  margin-right: 5%;
+}#game{
+  margin: auto;
+  display: block;
+}

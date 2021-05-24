@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<!--
+Another tasteless and generic platformer.
+This is exactly the type of project that I didn't want to make when I first started programming, but I wanted to build a 3D platformer, and I decided that it will be easier to do if I had made a basic platformer first.
+
+I made this within 90 minutes, so there might be some glitches.
+
+WASD keys to move.
+Avoid monsters and spikes.
+Get to the purple orb to proceed.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>HTML Platformer</title>
+        <style>
+            body{
+                overflow:hidden;
+            }
+            div{
+                position:fixed;
+                border:1px solid;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='back'style="width:600px;height:400px;top:-1px;left:-1px;visibility:hidden;"><div id="all"></div></div>
+        <div id="cover" style="width:600px;height:400px;top:-1px;left:-1px;background-color:white;visibility:hidden;"></div>
+        <div id="del"onclick="document.body.removeChild(document.getElementById('del'));document.getElementById('back').style.visibility='visible';document.getElementById('cover').style.visibility='visible';nextLevel();"style="text-align:center;margin:-10px;margin-top:-55px;padding:30px;padding-left:0px;padding-bottom:70px;width:600px;height:600px;background-color:lightblue;"><h1 style="font-size:4em;">HTML Platformer</h1><p style="font-size:3em;padding:40px;padding-top:90px;padding-bottom:80px;border:2px solid black;margin:50px;margin-left:180px;margin-right:180px;border-radius:120px;">Play</p></div>
+        <script>
+            var alld=document.getElementById('all')
+            var levels=[
+                [
+                    "222222222222222",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "000001110000000",
+                    "001112320000009",
+                    "112223321111111"
+                ],
+                [
+                    "222222222222222",
+                    "000000000000000",
+                    "000000005550000",
+                    "000000005550000",
+                    "000000000550000",
+                    "000000010400000",
+                    "000000120400000",
+                    "000001226460009",
+                    "111112221211111"
+                ],
+                [
+                    "222222222222222",
+                    "000000000000000",
+                    "000000000000000",
+                    "000011110000009",
+                    "008100000111011",
+                    "008000000000000",
+                    "008000000000000",
+                    "008666666666666",
+                    "111333333333333"
+                ],
+                [
+                    "222222222222222",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "005500000000000",
+                    "055533330000000",
+                    "054500000000000",
+                    "004007000700070",
+                    "304700070007000",
+                    "004667000000079",
+                    "112111111111111"
+                ],
+                [
+                    "222222222222222",
+                    "000000000000000",
+                    "000000005500000",
+                    "005000055500000",
+                    "005500005550000",
+                    "855550055555000",
+                    "854500000400000",
+                    "804000000400000",
+                    "004000000400000",
+                    "004666666466669",
+                    "112111111111111"
+                ],
+                [
+                    "222222222222222222",
+                    "000070000000070000",
+                    "700000007000000000",
+                    "000000000000070000",
+                    "000010070000070000",
+                    "000126070000070000",
+                    "001221070000570009",
+                    "112222116611111111"
+                ],
+                [
+                    "22222222222",
+                    "00000000000",
+                    "90000000000",
+                    "40000404000",
+                    "00000000000",
+                    "00400000000",
+                    "00040000004",
+                    "00000000000",
+                    "00000000500",
+                    "00000005550",
+                    "00040055555",
+                    "00000005450",
+                    "40000005400",
+                    "00000000450",
+                    "00011000400",
+                    "00122600400",
+                    "01222166400",
+                    "12222211211"
+                ],
+                [
+                    "222222222222222222",
+                    "000000000000000000",
+                    "000001001000000110",
+                    "000002112161616220",
+                    "000013333333333220",
+                    "000133700000003000",
+                    "001239700000000011",
+                    "112233333636333222"
+                ],
+                [
+                    "22222222222222222222222222",
+                    "00000000000000000000000009",
+                    "00000000000000000000000004",
+                    "00000000000000000000000400",
+                    "00000000000000000404000000",
+                    "36633363366366366666636666"
+                ],
+                [
+                    "22222222222222222222222222",
+                    "00000000000070000000000006",
+                    "00000047000000000000000004",
+                    "00004000404000000000000400",
+                    "00000000000040000404000000",
+                    "90006666666666446666630004",
+                    "22222222222222222222000000",
+                    "00000000000070000020005000",
+                    "00000000070000000020005500",
+                    "70000000000000001020054500",
+                    "00000110000110102622004000",
+                    "00011226101220200000004666",
+                    "11122222262226222222222111"
+                ],
+                [
+                    "22222222222",
+                    "00000000000",
+                    "00444000000",
+                    "40000404000",
+                    "00000004006",
+                    "00060004004",
+                    "04040004000",
+                    "00070004000",
+                    "00060004470",
+                    "88440004000",
+                    "88000004907",
+                    "00000004444",
+                    "00000000000",
+                    "40007000500",
+                    "00040005550",
+                    "00000055555",
+                    "60000005450",
+                    "40000005400",
+                    "00001000450",
+                    "00012700800",
+                    "00123040400",
+                    "01233666466",
+                    "12333333211"
+                ],
+                [
+                    "22222222222"+"22222222222",
+                    "00000000000"+"00000600000",
+                    "00404400000"+"00000400000",
+                    "00000000000"+"00000000000",
+                    "40000000005"+"00000444004",
+                    "00000000055"+"05000000000",
+                    "00460000555"+"05550000440",
+                    "00040005555"+"05500700400",
+                    "00600000554"+"65066666004",
+                    "40400000004"+"55033333000",
+                    "00000000004"+"40000000440",
+                    "00046640004"+"46000000000",
+                    "04004434054"+"41100010001",
+                    "60000000004"+"90201020102",
+                    "40000000004"+"40202020202",
+                    "00000000554"+"40262620262",
+                    "00000000004"+"40000000000",
+                    "13663631162"+"21111111116"
+                ]
+            ];
+            var dmode="000001111222";
+            var curr=-1,monsam;
+           
+            var chrt=document.createElement('div');
+            chrt.style="width:50px;height:50px;border:none;border-radius:15px;background-image:radial-gradient(yellow,red);";
+            chrt.id="hello";
+            alld.appendChild(chrt);
+            var lef=0,alt=105,j=0,ju=0,jmt=0,timer=50,atp=0,ld=0;
+            var vel=[0,0],cmp=[-200,0];
+            var night=0;
+           
+            var light=document.createElement('div');
+            light.style='width:1000px;height:1000px;background-image:radial-gradient(rgba(255,255,0,0.1),black 25%);z-index:2;';
+            light.id='flash';
+            alld.appendChild(light);
+           
+            function nextLevel(){
+                if(curr<levels.length-1){
+                    curr++;
+                    monsam=0;timer=50,night=0;
+                    lef=0;alt=55;vel=[0,0];cmp=[-200,0];
+                    var chrt=document.getElementById('hello');
+                    var light=document.getElementById('flash');
+                    alld.innerHTML='';
+                    alld.appendChild(chrt);
+                    alld.appendChild(light);
+                    light.style.visibility="hidden";
+                    for(var i=0;i<levels[curr].length;i++){
+                        for(var x=0;x<levels[curr][i].length;x++){
+                            if(levels[curr][i][x]!=='0'){
+                                var block=document.createElement('div');
+                                block.style="width:50px;height:50px;";
+                                block.style.top=(i*50-50*levels[curr].length+400)+"px";
+                                block.style.left=50*x+"px";
+                                switch(+levels[curr][i][x]){
+                                    case 1:
+                                        block.style.backgroundImage="linear-gradient(green,brown 50%)"
+                                    break;
+                                    case 2:
+                                        block.style.backgroundColor="brown"
+                                    break;
+                                    case 3:
+                                        block.style.backgroundImage="radial-gradient(lightgray,rgb(50,50,50))"
+                                    break;
+                                    case 4:
+                                        block.style.backgroundImage="repeating-linear-gradient(to right,black,brown 22%,black 33%)"
+                                    break;
+                                    case 5:
+                                        block.style.backgroundImage="repeating-linear-gradient(green,rgba(0,0,0,0) 22%,green 33%)"
+                                    break;
+                                    case 6:
+                                        block.style.width="0px";block.style.height="0px"
+                                        block.style.borderWidth="25px";
+                                        block.style.borderTopWidth="0px";
+                                        block.style.borderBottomWidth="50px";
+                                        block.style.borderColor="rgba(0,0,0,0)";
+                                        block.style.borderBottomColor="grey";
+                                    break;
+                                    case 7:
+                                        block.style.borderRadius="15px"
+                                        block.style.backgroundImage="radial-gradient(black,white 25%, green 60%)"
+                                        block.id=monsam;
+                                        monsam++;
+                                    break;
+                                    case 8:
+                                        block.style.backgroundImage="repeating-linear-gradient(brown,rgba(0,0,0,0) 22%,brown 33%)"
+                                        block.style.borderColor="brown";
+                                        block.style.borderWidth="6px";
+                                        block.style.borderTopWidth="3px";
+                                        block.style.borderBottomWidth="3px";
+                                        block.style.width='38px';
+                                        block.style.height='46px';
+                                    break;
+                                    case 9:
+                                        block.style.backgroundImage="radial-gradient(purple,rgba(0,0,0,0) 80%)";
+                                        block.style.border="none"
+                                    break;
+                                }
+                                alld.appendChild(block);
+                            }
+                        }
+                    }
+                    var wall=document.createElement('div');
+                    wall.style="width:50px;height:"+levels[curr].length*50+"px;background-color:brown;left:-50px;bottom:-400px";
+                    alld.appendChild(wall);
+                    var wall=document.createElement('div');
+                    wall.style="width:50px;height:"+levels[curr].length*50+"px;background-color:brown;left:"+levels[curr][0].length*50+"px;bottom:-400px";
+                    alld.appendChild(wall);
+                    if(dmode[curr]==='0'){
+                        document.getElementById('back').style.backgroundImage="linear-gradient(lightblue,blue)";
+                    }else if(dmode[curr]==='1'){
+                        document.getElementById('back').style.backgroundImage="linear-gradient(blue,orange)";
+                    }else{
+                        document.getElementById('back').style.backgroundColor="black";
+                        document.getElementById('back').style.backgroundImage="none";
+                        light.style.visibility="visible";
+                        night=1;
+                    }
+                }else{
+                    document.body.style=style="width:600px;height:400px;top:-1px;left:-1px;background-image:linear-gradient(blue,orange);font-size:5em;text-align:center;";
+                    document.body.innerHTML="<p><p></p></p>You Win!";
+                }
+            }
+           
+            function dist(x1,y1,x2,y2){
+                return Math.sqrt(Math.pow(Math.abs(x2-x1),2)+Math.pow(Math.abs(y2-y1),2));
+            }
+           
+            function draw(){
+                var chrt=document.getElementById('hello');
+                var light=document.getElementById('flash');
+                if(atp){
+                    timer--;
+                    document.getElementById('cover').style.opacity=1-timer/50;
+                    if(timer<0){
+                        nextLevel();
+                    }
+                }else{
+                    timer=50;
+                    document.getElementById('cover').style.opacity=0;
+                }
+                lef+=vel[0];
+                if(!ld){
+                    if(j&&ju&&jmt<=0){
+                        vel[1]=17;
+                        jmt=5;
+                    }else if(!ju){
+                        vel[1]--;
+                    }
+                }else{
+                    if(j){
+                        alt+=3;
+                        vel[1]=0;
+                    }else{
+                        alt-=3;
+                        vel[1]=0;
+                    }
+                }
+                alt+=vel[1];
+                ju=0;atp=0;ld=0;jmt--;
+                var upV=[+levels[curr][levels[curr].length-Math.ceil((alt)/50)][Math.floor((lef+6)/50)],+levels[curr][levels[curr].length-Math.ceil((alt)/50)][Math.floor((lef+41)/50)]];
+                for(var i=0;i<2;i++){
+                    switch(upV[i]){
+                        case 0:break;
+                        case 6:break;
+                        case 7:break;
+                        case 8:break;
+                        case 9:break;
+                        default:
+                            alt-=vel[1];
+                            vel[1]=0;
+                            i=2;
+                        break;
+                    }
+                }
+                var leftV=+levels[curr][levels[curr].length-Math.floor((alt+45)/50)][Math.floor((lef+47)/50)];
+                switch(leftV){
+                    case 0:break;
+                    case 6:
+                        lef=0;alt=100;
+                        cmp=[-200,0];
+                    break;
+                    case 7:break;
+                    case 8:break;
+                    case 9:break;
+                    default:
+                        lef=Math.floor(lef/50)*50;
+                    break;
+                }
+                var rightV=+levels[curr][levels[curr].length-Math.floor((alt+45)/50)][Math.floor((lef)/50)];
+                switch(rightV){
+                    case 0:break;
+                    case 6:
+                        lef=0;alt=100;
+                        cmp=[-200,0];
+                    break;
+                    case 7:break;
+                    case 8:break;
+                    case 9:break;
+                    default:
+                        lef=Math.ceil(lef/50)*50;
+                    break;
+                }
+                if(vel[1]<=0){
+                    var downV=[+levels[curr][levels[curr].length-Math.ceil((alt-50)/50)][Math.floor((lef+3)/50)],+levels[curr][levels[curr].length-Math.ceil((alt-50)/50)][Math.floor((lef+44)/50)]];
+                    var dead=0;
+                    for(var i=0;i<2;i++){
+                        switch(downV[i]){
+                            case 0:break;
+                            case 6:
+                                dead=1;
+                            break;
+                            case 7:break;
+                            case 8:
+                                ld=1;
+                            break;
+                            case 9:break;
+                            default:
+                                alt=Math.ceil(alt/50)*50;
+                                vel[1]=0;
+                                i=2;
+                                ju=1;
+                                ld=0;
+                                dead=0;
+                            break;
+                        }
+                    }
+                    if(dead){
+                        lef=0;alt=100;
+                        cmp=[-200,0];
+                    }
+                }
+                if(levels[curr][levels[curr].length-Math.floor((alt+45)/50)][Math.floor((lef+25)/50)]==='9'){
+                    atp=1;
+                }
+                if(lef-cmp[0]>400){
+                    cmp[0]+=3;
+                }else if(lef-cmp[0]<200){
+                    cmp[0]-=3;
+                }
+                if(alt-cmp[1]>250){
+                    cmp[1]+=3;
+                }else if(alt-cmp[1]<200&&cmp[1]>0){
+                    cmp[1]-=5;
+                }
+               
+                let tempo=monsam;
+                for(var i=0,delet=0;i<tempo;i++){
+                    var mon=document.getElementById(i);
+                    mon.id-=delet;
+                    if(mon.innerHTML===''){
+                        mon.style.left=(+mon.style.left.slice(0,mon.style.left.length-2)+3)+'px';
+                        var leftV=+levels[curr][levels[curr].length-Math.floor((445-+mon.style.top.slice(0,+mon.style.top.length-2))/50)][Math.floor((+mon.style.left.slice(0,+mon.style.left.length-2)+50)/50)];
+                        if(leftV!==0&&leftV!==7){
+                            mon.innerHTML='.';
+                        }
+                    }else{
+                        mon.style.left=(+mon.style.left.slice(0,mon.style.left.length-2)-3)+'px';
+                        var rightV=+levels[curr][levels[curr].length-Math.floor((445-mon.style.top.slice(0,mon.style.top.length-2))/50)][Math.floor(mon.style.left.slice(0,mon.style.left.length-2)/50)];
+                        if(rightV!==0&&rightV!==7){
+                            mon.innerHTML='';
+                        }
+                    }
+                    if(dist(+mon.style.left.slice(0,mon.style.left.length-2),400-mon.style.top.slice(0,mon.style.top.length-2),lef,alt)<50){
+                        if(alt>430-mon.style.top.slice(0,mon.style.top.length-2)||vel[1]<-10){
+                            delet++;monsam--;vel[1]=10;
+                            alld.removeChild(mon);
+                        }else{
+                            lef=0;alt=100;
+                            cmp=[-200,0];
+                        }
+                    }
+                }
+               
+                alld.style.transform="translate("+-cmp[0]+'px,'+cmp[1]+'px)';
+                chrt.style.left=lef+'px';
+                chrt.style.top=(400-alt)+'px';
+                light.style.left=lef-475+'px';
+                light.style.top=(-80-alt)+'px';
+            }
+            setInterval(draw,25);
+            function down(event){
+                if(event.key==='w'){
+                    j=1;
+                }else if(event.key==='a'){
+                    vel[0]=-3;
+                }else if(event.key==='d'){
+                    vel[0]=3;
+                }
+            }
+            function up(event){
+                if(event.key==='w'){
+                    j=0;
+                }else if(event.key==='a'){
+                    vel[0]=0;
+                }else if(event.key==='d'){
+                    vel[0]=0;
+                }
+            }
+            document.body.addEventListener('keydown',down);
+            document.body.addEventListener('keyup',up);
+        </script>
+    </body>
+</html>
+<!--Less than 500 lines of code!-->

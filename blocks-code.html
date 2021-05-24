@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<!--
+BLOCKS!!
+
+
+OOP AND HTML in one project!
+
+
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BLOCKS</title>
+        <style>
+            @keyframes turn{
+                from {transform:rotate(0deg);}
+                50% {transform:rotate(180deg);}
+                to {transform:rotate(360deg);}
+            }@keyframes fadein{
+                from {background-color:rgb(0,100,0);}
+                to {background-color:green;}
+            }@keyframes fadeout{
+                from {background-color:green;}
+                to {background-color:rgb(0,100,0);}
+            }
+            body{
+                background:green;
+                margin:0px;
+            }td{
+                width:150px;
+                background-color:rgba(255,255,255,0.3);
+            }td:hover{
+                cursor:pointer;
+            }table{
+                width:750px;
+            }.turnF{
+                animation-name: turn;
+                animation-duration: 2s;
+                animation-iteration-count:infinite;
+            }.turnS{
+                animation-name: turn;
+                animation-duration: 3s;
+                animation-iteration-count:infinite;
+            }.still{
+                text-align:center;
+                line-height:30px;
+                position:fixed;
+                width:8%;
+                height:5%;
+                border-radius:5px;
+                bottom:2%;
+            }.button{
+                background-color:green;
+                animation-name: fadein;
+                animation-duration: 2s;
+                animation-iteration-count:1;
+            }.button:hover{
+                animation-name: fadeout;
+                animation-duration: 2s;
+                animation-iteration-count:1;
+                background-color:rgb(0,100,0);
+                cursor:pointer;
+            }#left{
+                background-image:linear-gradient(90deg,green,brown 90%);
+                position:fixed;
+                height:100%;
+                width:20%;
+            }#right{
+                background-image:linear-gradient(270deg,green,brown 90%);
+                position:fixed;
+                height:100%;
+                width:20%;
+                left:80%;
+            }#bottom{
+                background-image:linear-gradient(green,brown 90%);
+                position:fixed;
+                height:15%;
+                width:60%;
+                left:20%;
+                bottom:0px;
+            }#HOME{
+                top:0px;
+                position:fixed;
+                text-align:center;
+                width:100%;
+                background-color:green;
+                z-index:2;
+                font-size:1.5em;
+                height:100%;
+            }#HOW{
+                position:fixed;
+                text-align:center;
+                width:100%;
+                background-color:green;
+                z-index:2;
+                font-size:1.5em;
+                height:100%;
+                overflow-y:auto;
+                top:0px;
+                visibility:hidden;
+            }#SHOP{
+                position:fixed;
+                text-align:center;
+                width:70%;
+                left:15%;
+                background-color:rgba(0,0,0,0.5);
+                z-index:2;
+                font-size:1.5em;
+                overflow-x:auto;
+                top:15%;
+                visibility:hidden;
+            }#DEAD{
+                position:fixed;
+                text-align:center;
+                width:70%;
+                left:15%;
+                background-color:rgba(0,0,0,0.5);
+                z-index:2;
+                font-size:1.5em;
+                overflow-x:auto;
+                top:25%;
+                visibility:hidden;
+            }#close{
+                position:fixed;
+                background-color:red;
+                padding:8px;
+                border-radius:5px;
+                left:77%;
+                top:18%;
+            }#close:hover{
+                cursor:pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="left"></div>
+        <div id="right"></div>
+        <div id="bottom"></div>
+        <div class="aim"></div>
+        <div class="aim"></div>
+        <div class="aim"></div>
+        <div class="still"></div>
+        <div class="still"></div>
+        <div class="still"></div>
+        <div class="still"></div>
+        <div class="still"></div>
+        <div class="still"></div>
+        <div id="level"></div>
+        <div id="money"></div>
+        <div id="HOME">
+            <h1>BLOCKS</h1>
+            <h2 class="button">PLAY</h2>
+            <h2 class="button">HOW</h2>
+            <h2 class="button">SHOP</h2>
+            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-seed.png" style="width:10%">
+            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-seedling.png" style="width:12%">
+            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-sapling.png" style="width:14%">
+            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-tree.png" style="width:17%">
+            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-ultimate.png" style="width:20%">
+        </div>
+        <div id="HOW">
+            <h1>HOW</h1>
+            <p style="text-indent:50px;text-align:left;padding:10px">To play, click on the screen. This will make bullets shoot out of the picture at the bottom. The object of this game is to ensure that no blocks get to the bottom of the screen by destroying them. There are six types of bullets, which will be fired in a random order:</p>
+            <ul style="text-align:left;text-indent:30px;padding-right:10px;">
+                <li>One time shot: Gets destroyed when it hits a target.</li>
+                <li>One time shot strong: Gets destroyed when it hits a target. Has the strength of 5 One time shots.</li>
+                <li>Bounce: bounces off of targets after damaging them.</li>
+                <li>Split: When this hits a target, it splits into 6 One time shots.</li>
+                <li>Bomb: Explodes when it hits a target.</li>
+                <li>Bounce Strong: turns into a regular bounce bullet when it hits a target, but inflicts triple damage.</li>
+            </ul>
+            <p style="text-indent:50px;text-align:left;padding:10px">There are also 11 types of Blocks.</p>
+            <ul style="text-align:left;text-indent:30px;padding-right:10px;">
+                <li>Regular</li>
+                <li>Makes one time shots when destroyed.</li>
+                <li>Makes one time shot strongs when destroyed.</li>
+                <li>Makes bounce bullets when destroyed.</li>
+                <li>Makes Split bullets when destroyed.</li>
+                <li>Makes bombs when destroyed.</li>
+                <li>Makes bounce strong bullets when destroyed.</li>
+                <li>Splits into 6 One time shots when destroyed.</li>
+                <li>Explodes when destroyed.</li>
+                <li>Gold: gives you $1 when destroyed.</li>
+                <li>Silver: This block sometimes destroy bounce bullets when they hit them.</li>
+            </ul>
+                <p style="text-indent:50px;text-align:left;padding:10px">Blocks with square corners will gain health at the end of every round.</p>
+            <h2 class="button">PLAY</h2>
+            <h2 class="button">HOME</h2>
+        </div>
+        <div id="SHOP">
+            <span id="close">X</span>
+            <h1 style="background-color:rgba(255,255,255,0.3);">Shop</h1>
+            <h2 style="background-color:rgba(255,255,255,0.3);" id="sMon"></h2>
+            <div style="width:100%;overflow-x:auto;">
+                <table>
+                    <tbody>
+                        <td id="seed">
+                            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-seed.png" style="width:50%">
+                            <p class="s">Equipped</p>
+                            <h5>Basic</h5>
+                        </td>
+                        <td id="seedling">
+                            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-seedling.png" style="width:50%">
+                            <p class="s">$5</p>
+                            <h5>Accurracy++</h5>
+                        </td>
+                        <td id="sapling">
+                            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-sapling.png" style="width:50%">
+                            <p class="s">$10 (and previous)</p>
+                            <h5>Shot gun!</h5>
+                        </td>
+                        <td id="tree">
+                            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-tree.png" style="width:50%">
+                            <p class="s">$20 (and previous)</p>
+                            <h5>A lot of free bullets?</h5>
+                        </td>
+                        <td id="ultimate">
+                            <img src="https://www.kasandbox.org/programming-images/avatars/leafers-ultimate.png" style="width:50%">
+                            <p class="s">$25 (and previous)</p>
+                            <h5>Even more free bullets!</h5>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="DEAD">
+            <h1>You Lost</h1>
+            <h2 class="button">PLAY</h2>
+            <h2 class="button">SHOP</h2>
+            <h2 class="button">HOME</h2>
+        </div>
+        <script>
+            var lines=document.getElementsByClassName("aim");
+            for(var i=0;i<3;i++){
+                lines[i].style="position:fixed;width:30%;height:1%;bottom:60px;left:45%;background-color:rgba(200,100,0,0.5);";
+            }
+            var b=document.getElementsByClassName('still');
+            b[0].style="background-color:blue;color:white;left:21%;";
+            b[1].style="background-color:rgb(0,200,0);color:white;left:31%;";
+            b[2].style="background-color:brown;color:rgb(0,200,0);left:41%;";
+            b[3].style="background-color:white;color:blue;left:51%;";
+            b[4].style="background-color:black;color:orange;left:61%;";
+            b[5].style="background-color:grey;bottom:2%;left:71%;";
+            var levelB=document.getElementById("level");
+            var moneyB=document.getElementById("money");
+            levelB.className="still";
+            moneyB.className="still";
+            levelB.style="left:3%;border:2px solid;top:5%;width:12%";
+            moneyB.style="left:84%;border:2px solid;top:5%;width:12%";
+            var bullet,explode,angle,angle2,chrt;
+            var frameC=0,money=0,move=0,next=1,round=0,dead=0;;
+            var Blocks=[];
+            var Bullet=[];
+            var exps=[];
+            var storage=[0,0,1,0,0,0];
+            var fire=[];
+            var accuracies=[0.3,0.1,0.4,0.6,0.2];
+            var fireRate=[10,7,25,3,7];
+            var unlocked=[-1,5,10,20,25];
+            var page="HOME";
+            var current=0;
+            var shoot=1;
+            var Arbor={
+                seed:"leafers-seed",
+                seedling:"leafers-seedling",
+                sapling:"leafers-sapling",
+                tree:"leafers-tree",
+                ultimate:"leafers-ultimate"
+            };
+            function upShop(){
+                var things=document.getElementsByClassName("s");
+                for(var i=0;i<5;i++){
+                    if(unlocked[i]==-1){
+                        things[i].innerHTML="Equipped";
+                    }else if(unlocked[i]==0){
+                        things[i].innerHTML="Bought";
+                    }else if(unlocked[i-1]<=0){
+                        things[i].innerHTML="$"+unlocked[i];
+                    }else{
+                        things[i].innerHTML="$"+unlocked[i]+" (and previous)";
+                    }
+                }
+            }
+            function randomly(){
+                return Math.random()-0.5;
+            }
+            function arbor(){
+                this.display=document.createElement("img");
+                this.display.src="https://www.kasandbox.org/programming-images/avatars/"+Arbor.seed+".png";
+                this.display.style="position:fixed;width:10%;left:45%;bottom:5%;z-index:1;";
+                document.body.appendChild(this.display);
+                this.update=function(pic,size){
+                    this.display.src="https://www.kasandbox.org/programming-images/avatars/"+pic+".png";
+                    this.display.style="position:fixed;width:"+size+"%;left:"+(100-size)/2+"%;bottom:5%";
+                }
+            }
+            function blockD(object,type,health){
+                switch(type){
+                    case 0:
+                        var colour=health<150 ? [-255*Math.cos(health/50),255*Math.sin(health/50),255*Math.cos(health/50)] : [255,0,0];
+                        object.style.backgroundColor="rgb("+colour[0]+","+colour[1]+","+colour[2]+")";
+                    break;
+                    case 1:
+                        object.style.backgroundColor="blue";
+                        object.style.color="white";
+                    break;
+                    case 2:
+                        object.style.backgroundColor="rgb(0,200,0)";
+                        object.style.color="white";
+                    break;
+                    case 3:
+                        object.style.backgroundColor="brown";
+                        object.style.color="rgb(0,200,0)";
+                    break;
+                    case 5: case 7:
+                        object.style.backgroundColor="black";
+                        object.style.color="orange";
+                    break;
+                    case 4: case 8:
+                        object.style.backgroundColor="white";
+                        object.style.color="blue";
+                    break;
+                    case 6:
+                        object.style.backgroundColor="grey";
+                    break;
+                    case 9:
+                        object.style.backgroundImage="repeating-linear-gradient(-45deg,rgb(150,150,150),rgb(80,80,80),rgb(150,150,150) 30%)";
+                    break;
+                    case 10:
+                        object.style.backgroundImage="repeating-linear-gradient(-45deg,rgb(255,255,190),rgb(150,150,0),rgb(255,255,190) 30%)";
+                    break;
+                }
+            }
+            function bulletD(objt){
+                var object=objt.display;
+                switch(objt.t){
+                    case 0:
+                        objt.w=2;
+                        objt.h=2;
+                        objt.s=1.8;
+                        object.style.backgroundColor="white";
+                        object.style.borderRadius="20px";
+                    break;
+                    case 1:
+                        objt.w=3;
+                        objt.h=3;
+                        objt.s=1.4;
+                        object.style.backgroundColor="black";
+                        object.style.borderRadius="20px";
+                    break;
+                    case 2:
+                        objt.w=3;
+                        objt.h=1.5;
+                        objt.s=2.5;
+                        object.style.backgroundColor="white";
+                        object.style.borderRadius="20px";
+                    break;
+                    case 3:
+                        objt.w=2;
+                        objt.h=2;
+                        objt.s=1.6;
+                        object.style.backgroundColor="white";
+                        object.className="turnF";
+                    break;
+                    case 4:
+                        objt.w=4;
+                        objt.h=4;
+                        objt.s=1.5;
+                        object.className="turnS change";
+                    break;
+                    case 5:
+                        objt.w=4;
+                        objt.h=2;
+                        objt.s=1.2;
+                        object.style.backgroundColor="black";
+                        object.style.borderRadius="20px";
+                    break;
+                }
+            }
+            function randB(){
+                var chances=Math.min(Math.random()*100+round/5,105);
+                var numeral;
+                if(chances<50){
+                    numeral=0;
+                }else if(chances<56){
+                    numeral=1;
+                }else if(chances<59){
+                    numeral=2;
+                }else if(chances<69){
+                    numeral=3;
+                }else if(chances<74){
+                    numeral=4;
+                }else if(chances<79){
+                    numeral=5;
+                }else if(chances<81){
+                    numeral=6;
+                }else if(chances<87){
+                    numeral=7;
+                }else if(chances<92){
+                    numeral=8;
+                }else if(chances<100){
+                    numeral=10;
+                }else{
+                    numeral=9;
+                }
+                return numeral;
+            }
+            function collide(object1,object2){
+                var t1=object1.t;
+                var t2=object2.t;
+                switch(t1){
+                    case 0:
+                        object1.dead=1;
+                        object2.health--;
+                    break;
+                    case 1:
+                        object1.dead=1;
+                        object2.health-=5;
+                    break;
+                    case 2:
+                        object2.health--;
+                        if(object2.t==9&&Math.random()<0.3){
+                            object1.dead=1;
+                        }
+                    break;
+                    case 3:
+                        object1.dead=1;
+                        object2.health--;
+                        Bullet.push(new bullet(object1.x,object1.y,0,2,1));
+                        Bullet.push(new bullet(object1.x,object1.y,0,2,-1));
+                        Bullet.push(new bullet(object1.x,object1.y,0,-2,1));
+                        Bullet.push(new bullet(object1.x,object1.y,0,-2,-1));
+                        Bullet.push(new bullet(object1.x,object1.y,0,0.1,1));
+                        Bullet.push(new bullet(object1.x,object1.y,0,0.1,-1));
+                    break;
+                    case 4:
+                        object1.dead=1;
+                        object2.health--;
+                        exps.push(new explode(object1.x,object1.y,15));
+                    break;
+                    case 5:
+                        object1.dead=1;
+                        object2.health-=3;
+                        Bullet.push(new bullet(object1.x,object1.y,2,object1.vx,object1.vy));
+                    break;
+                }
+            }
+            function die(object){
+                switch(object.t){
+                    case 0:case 9:
+                        money+=0.01;
+                    break;
+                    case 7:
+                        exps.push(new explode(object.x+5,object.y+5,20));
+                    break;
+                    case 8:
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,2,1));
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,2,-1));
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,-2,1));
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,-2,-1));
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,0.1,1));
+                        Bullet.push(new bullet(object.x+5,object.y+5,0,0.1,-1));
+                    break;
+                    case 10:
+                        money+=1;
+                    break;
+                    default:
+                        storage[object.t-1]+=1;
+                    break;
+                }
+            }
+            function explode(x,y,total){
+                this.display=document.createElement("div");
+                this.tw=total;
+                this.x=x;
+                this.y=y;
+                this.w=0;
+                this.display.style="position:fixed;border-radius:100px;border:5px solid orange;";
+                this.display.style.left=(20+this.x-this.w/2)+"%";
+                this.display.style.top=(this.y-this.w/2)+"%";
+                this.display.style.width=this.w+"%";
+                this.display.style.height=this.w+"%";
+                this.update=function(){
+                    this.w++;
+                    this.display.style.left=(20+this.x-this.w/2)+"%";
+                    this.display.style.top=(this.y-this.w/2)+"%";
+                    this.display.style.width=this.w+"%";
+                    this.display.style.height=this.w+"%";
+                    this.display.style.opacity=(this.tw-this.w)/this.tw;
+                    if(this.w>=this.tw){
+                        this.dead=1;
+                    }else if(frameC%3==0){
+                        for(var i=0;i<Blocks.length;i++){
+                            if(Math.sqrt(Math.pow(Blocks[i].x+5-this.x,2)+Math.pow(Blocks[i].y+5-this.y,2))<this.w){
+                                Blocks[i].health--;
+                            }
+                        }
+                    }
+                }
+                document.body.appendChild(this.display);
+            }
+            function block(x,y,t,h,r){
+                this.r=r;
+                this.t=t;
+                this.health=h;
+                this.display=document.createElement("div");
+                this.x=x;
+                this.y=y;
+                this.display.style="position:fixed;width:10%;height:10%;text-align:center;line-height:60px;font-size:25px;border-radius:15px;";
+                if(this.r){
+                    this.display.style.borderRadius="0px";
+                }
+                this.display.style.left=(20+this.x)+"%";
+                this.display.style.top =this.y + "%";
+                blockD(this.display,this.t,this.health);
+                this.display.innerHTML=t>=1&&t<=6 ? "+"+this.health :this.health;
+                document.body.appendChild(this.display);
+                
+                this.update=function(){
+                    this.display.style.left=(20+this.x)+"%";
+                    this.display.style.top =this.y + "%";
+                    blockD(this.display,this.t,this.health);
+                    this.display.innerHTML=t>=1&&t<=6 ? "+"+this.health :this.health;
+                    if(this.health<=0){
+                        this.dead=1;
+                        die(this);
+                    }else if(this.y>60){
+                        this.display.style.border="2px solid rgba(255,255,255,"+(this.y-60)/10+")";
+                    }
+                }
+            }
+            function bullet(x,y,t,vx,vy){
+                this.t=t;
+                this.vx=vx;
+                this.vy=vy;
+                this.display=document.createElement("div");
+                if(t==4){
+                    this.display=document.createElement("img");
+                    this.display.src="https://www.khanacademy.org/computer-programming/graphics/5559135989219328/6685035896061952.png";
+                }
+                this.x=x;
+                this.y=y;
+                this.display.style="position:fixed;";
+                this.display.style.left=(20+this.x)+"%";
+                this.display.style.top = + this.y + "%";
+                bulletD(this);
+                this.display.style.width=this.w+"%";
+                this.display.style.height=this.h+"%";
+                document.body.appendChild(this.display);
+                this.update=function(){
+                    if(this.vx>0&&this.x>60-this.w){
+                        this.vx*=-1;
+                    }else if(this.vx<0&&this.x<0){
+                        this.vx*=-1;
+                    }
+                    if(this.vy>0&&this.y>90-this.w){
+                        this.dead=1;
+                        storage[this.t]++;
+                    }else if(this.vy<0&&this.y<0){
+                        this.vy*=-1;
+                    }
+                    for(var i=0;i<Blocks.length;i++){
+                        if(this.x+this.w>Blocks[i].x&&this.x<Blocks[i].x+10&&this.y+this.h>Blocks[i].y&&this.y<Blocks[i].y+10){
+                            if(this.y+this.h-2>Blocks[i].y&&this.y+2<Blocks[i].y+10){
+                                if(this.vx<0&&this.x+this.w>Blocks[i].x+7){
+                                    this.vx*=-1;
+                                    collide(this,Blocks[i]);
+                                }else if(this.vx>0&&this.x<Blocks[i].x+3){
+                                    this.vx*=-1;
+                                    collide(this,Blocks[i]);
+                                }
+                            }
+                            if(this.x+this.w-2>Blocks[i].x&&this.x+2<Blocks[i].x+10){
+                                if(this.vy<0&&this.y+this.h>Blocks[i].y+7){
+                                    this.vy*=-1;
+                                    collide(this,Blocks[i]);
+                                }else if(this.vy>0&&this.y<Blocks[i].y+3){
+                                    this.vy*=-1;
+                                    collide(this,Blocks[i]);
+                                }
+                            }
+                        }
+                    }
+                    
+                    if(this.t==2||this.t==5){
+                        var rot=Math.atan(this.vy/this.vx);
+                        this.display.style.transform="rotate("+rot+"rad)";
+                    }
+                    
+                    var l=Math.sqrt(Math.pow(this.vx,2)+Math.pow(this.vy,2))/this.s;
+                    this.vx/=l;
+                    this.vy/=l;
+                    this.x+=this.vx;
+                    this.y+=this.vy;
+                    this.display.style.left=(20+this.x)+"%";
+                    this.display.style.top = + this.y + "%";
+                }
+            }
+            function aim(event){
+                var points=[];
+                var wid=document.body.clientWidth||600;
+                points[0]=event.clientY-540;
+                points[1]=event.clientX-9/20*wid;
+                if(event.clientX>wid/2-30){
+                    angle=Math.atan(points[0]/points[1]);
+                    angle=Math.min(angle,-accuracies[current]-0.2);
+                }else{
+                    angle=Math.PI+Math.atan(points[0]/points[1]);
+                    angle=Math.max(angle,Math.PI+accuracies[current]+0.2);
+                }
+                lines[0].style.transform="translate(-35%)rotate("+angle+"rad)translate(45%)";
+                lines[1].style.transform="translate(-35%)rotate("+(angle+accuracies[current])+"rad)translate(45%)";
+                lines[2].style.transform="translate(-35%)rotate("+(angle-accuracies[current])+"rad)translate(45%)";
+            }
+            function click(event){
+                if(page=='PLAY'&&shoot){
+                    shoot=0;
+                    fire=[];
+                    if(storage[0]+storage[1]+storage[2]+storage[3]+storage[4]+storage[5]==0){
+                        storage=[0,0,1,0,0,0];
+                    }
+                    for(var i=0;i<storage.length;i++){
+                        for(var a=0;a<storage[i];a++){
+                            fire.push(i);
+                        } 
+                    }
+                    storage=[0,0,0,0,0,0];
+                    fire.sort(randomly);
+                    angle2=angle;
+                }else{
+                    if(event.target.className=="button"){
+                        document.getElementById("HOME").style.visibility="hidden";
+                        document.getElementById("HOW").style.visibility="hidden";
+                        document.getElementById("SHOP").style.visibility="hidden";
+                        document.getElementById("DEAD").style.visibility="hidden";
+                        if(event.target.innerHTML!=="PLAY"){
+                            document.getElementById(event.target.innerHTML).style.visibility="visible";
+                        }
+                        document.getElementById("sMon").innerHTML="$"+money.toFixed(2);
+                        page=event.target.innerHTML;
+                    }else if(event.target.id=="close"){
+                        document.getElementById("HOME").style.visibility="hidden";
+                        document.getElementById("HOW").style.visibility="hidden";
+                        document.getElementById("SHOP").style.visibility="hidden";
+                        document.getElementById("DEAD").style.visibility="hidden";
+                        page="PLAY";
+                    }else if(event.target.id=="seed"||event.target.parentNode.id=="seed"){
+                        if(unlocked[0]<=0){
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[0]=-1;
+                            chrt.update(Arbor.seed,10);
+                            current=0;
+                            upShop();
+                        }else if(money>=unlocked[0]){
+                            money-=unlocked[0];
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[0]=-1;
+                            chrt.update(Arbor.seed,10);
+                            current=0;
+                            upShop();
+                        }
+                    }else if(event.target.id=="seedling"||event.target.parentNode.id=="seedling"){
+                        if(unlocked[1]<=0){
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[1]=-1;
+                            chrt.update(Arbor.seedling,12);
+                            current=1;
+                            upShop();
+                        }else if(money>=unlocked[1]&&unlocked[0]<=0){
+                            money-=unlocked[1];
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[1]=-1;
+                            chrt.update(Arbor.seedling,12);
+                            current=1;
+                            upShop();
+                        }
+                    }else if(event.target.id=="sapling"||event.target.parentNode.id=="sapling"){
+                        if(unlocked[2]<=0){
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[2]=-1;
+                            chrt.update(Arbor.sapling,14);
+                            current=2;
+                            upShop();
+                        }else if(money>=unlocked[2]&&unlocked[1]<=0){
+                            money-=unlocked[2];
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[2]=-1;
+                            chrt.update(Arbor.sapling,14);
+                            current=2;
+                            upShop();
+                        }
+                    }else if(event.target.id=="tree"||event.target.parentNode.id=="tree"){
+                        if(unlocked[3]<=0){
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[3]=-1;
+                            chrt.update(Arbor.tree,17);
+                            current=3;
+                            upShop();
+                        }else if(money>=unlocked[3]&&unlocked[2]<=0){
+                            money-=unlocked[3];
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[3]=-1;
+                            chrt.update(Arbor.tree,17);
+                            current=3;
+                            upShop();
+                        }
+                    }else if(event.target.id=="ultimate"||event.target.parentNode.id=="ultimate"){
+                        if(unlocked[4]<=0){
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[4]=-1;
+                            chrt.update(Arbor.ultimate,20);
+                            current=4;
+                            upShop();
+                        }else if(money>=unlocked[4]&&unlocked[3]<=0){
+                            money-=unlocked[4];
+                            unlocked[unlocked.indexOf(-1)]=0;
+                            unlocked[4]=-1;
+                            chrt.update(Arbor.ultimate,20);
+                            current=4;
+                            upShop();
+                        }
+                    }
+                }
+            }
+            function level(){
+                next=0;
+                round++;
+                shoot=1;
+                move=10;
+                money+=Math.ceil(round/5)/100;
+                for(var i=0;i<Blocks.length;i++){
+                    if(Blocks[i].r){
+                        Blocks[i].health+=Math.ceil(round/5);
+                    }
+                }
+                for(var i=0;i<6;i++){
+                    if(Math.random()<0.3+0.02*round){
+                        Blocks.push(new block(10*i,-10,randB(),Math.round((Math.random()*round*2+round)),Math.round(Math.random()*0.6)));
+                    }
+                }
+                if(round==1){
+                    for(var i=0;i<6;i++){
+                        if(Math.random()<0.3+0.03*round){
+                            Blocks.push(new block(10*i,0,randB(),Math.round(Math.random()*round*3+round),0));
+                        }
+                    }
+                    for(var i=0;i<6;i++){
+                        if(Math.random()<0.3+0.03*round){
+                            Blocks.push(new block(10*i,10,randB(),Math.round(Math.random()*round*3+round),0));
+                        }
+                    }
+                }
+                if(current==2){
+                    storage[0]+=Math.ceil(storage[2]/3);
+                }else if(current==3){
+                    storage[0]+=Math.ceil(storage[2]/3)+5;
+                }else if(current==4){
+                    storage[0]+=Math.ceil(storage[2]/3)+5;
+                    storage[1]++;
+                    storage[3]++;
+                    storage[4]++;
+                }
+            }
+            aim({clientY:0,clientX:(document.body.clientWidth||600)/2});
+            chrt=new arbor();
+            
+            function draw(){
+                if(page=="PLAY"){
+                    frameC++;
+                    var ch=document.getElementsByClassName("change");
+                    for(var i=0;i<ch.length;i++){
+                        ch[i].src=frameC%2?"https://www.khanacademy.org/computer-programming/graphics/5559135989219328/4625025196179456.png":"https://www.khanacademy.org/computer-programming/graphics/5559135989219328/6685035896061952.png";
+                    }
+                    for(var i=0;i<Bullet.length;i++){
+                        Bullet[i].update();
+                        if(Bullet[i].dead){
+                            document.body.removeChild(Bullet[i].display);
+                            Bullet.splice(i,1);
+                            i--;
+                        }
+                    }
+                    for(var i=0;i<Blocks.length;i++){
+                        Blocks[i].update();
+                        if(Blocks[i].dead){
+                            document.body.removeChild(Blocks[i].display);
+                            Blocks.splice(i,1);
+                            i--;
+                        }else if(move>0){
+                            Blocks[i].y++;
+                        }else if(Blocks[i].y>70){
+                            dead=1;
+                        }
+                    }
+                    move--;
+                    for(var i=0;i<exps.length;i++){
+                        exps[i].update();
+                        if(exps[i].dead){
+                            document.body.removeChild(exps[i].display);
+                            exps.splice(i,1);
+                            i--;
+                        }
+                    }
+                    if(Bullet.length==0&&next){
+                        level();
+                    }else if(Bullet.length!=0){
+                        next=1;
+                    }
+                    if(frameC%fireRate[current]==0){
+                        var times=current==2?3:1;
+                        for(var i=0;i<times;i++){
+                            if(fire.length){
+                                var rand=2*Math.random()*accuracies[current]-accuracies[current];
+                                var vx=Math.cos(-angle2+rand);
+                                var vy=Math.sin(-angle2+rand);
+                                Bullet.push(new bullet(28,90,fire[0],vx||0.1,-vy||-0.1));
+                                fire.splice(0,1);
+                            }
+                        }
+                    }
+                    if(dead){
+                        for(var i=0;i<Blocks.length;i++){
+                            document.body.removeChild(Blocks[i].display);
+                            Blocks.splice(i,1);
+                            i--;
+                        }
+                        for(var i=0;i<Bullet.length;i++){
+                            document.body.removeChild(Bullet[i].display);
+                            Bullet.splice(i,1);
+                            i--;
+                        }
+                        for(var i=0;i<exps.length;i++){
+                            document.body.removeChild(exps[i].display);
+                            exps.splice(i,1);
+                            i--;
+                        }
+                        storage=[0,0,1,0,0,0];
+                        shoot=1;
+                        round=0;
+                        dead=0;
+                        level();
+                        document.getElementById("DEAD").style.visibility="visible";
+                        page="DEAD";
+                    }
+                }
+                for(var i=0;i<storage.length;i++){
+                    b[i].innerHTML=storage[i];
+                }
+                levelB.innerHTML=round;
+                moneyB.innerHTML='$'+money.toFixed(2);
+            }
+            setInterval(draw,50);
+            document.addEventListener("mousemove",aim);
+            document.addEventListener("click",click);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<!--
+
+FFFFF| LL|    IIIIII|  CCC|  KK| KK| EEEEE| RRRRR|
+FF|¯¯  LL|      II|¯  CC|    KK|KK|  EE|¯¯  RR|¯RR|
+FFFFF| LL|      II|  CC|     KKKK|   EEEEE| RRRRR|
+FF|¯¯  LL|      II|  ¯CC|    KK|KK|  EE|¯¯  RR|¯RR|
+FF|    LLLLL| IIIIII| ¯CCC|  KK|¯KK| EEEEE| RR| ¯RR|
+¯¯     ¯¯¯¯¯  ¯¯¯¯¯¯   ¯¯¯   ¯¯  ¯¯  ¯¯¯¯¯  ¯¯   ¯¯
+My 19th game!
+Also my First (and probably last) Horror Game
+Based off of the British TV show, "Doctor Who"
+
+Yup, I messed up on the graphics big time. Not at all what I was aiming for. The head, especially the lack of a nose and the hair, make it look fairly bad.
+Luckily, it is still a little scary, but not anything like the original.
+
+WASD to move
+Mouse to turn around
+P or Esc to exit Pointer Lock
+
+If you see a pixelized frowning face, just restart the program.
+
+A combination of:
+
+HTML: Sets up the canvas.
+CSS: Sets the size and positioning of the canvas and other objects.
+Javascript: Loads and updates the Web GL, as well as doing the animations.
+WebGL 1: DisPlays the 3D, allows the js and GLSL to communicate.
+GLSL 100: Allows WebGL to disPlay and shade shapes.
+
+Credit to Mozilla Developer for some of the code.
+https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial
+Also credit to webGL Fundamentals for some of the code
+https://webglfundamentals.org/
+
+Thanks to these organizations:
+  »  Khan Academy
+  »  w3schools
+  »  Mozilla Developer
+  »  webGL Fundamentals
+  »  Stack overflow
+  »  Tutorialspoint
+  »  The Book of Shaders
+
+Also thanks to the following people for advice and some code
+  »  Xacer (@xacer)
+  »  Phi (@programming3d)
+  »  Daniel (@dk04317)
+  »  JentGent (@JentacularGent)
+
+If you have any questions about the code, feel free to ask.
+If you have any advanced WebGL questions, you should ask Phi, Xacer, JentGent, or Willard. They are some people on KA that I know are much better than me at WebGL. I can still answer all of the basics, though!
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Flicker</title>
+    <!--Loads Jolly Lodger Font-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&disPlay=swap" rel="stylesheet">
+    <!--Styles the page-->
+    <style>
+      body{
+        margin:0px;
+        overflow:hidden;
+        font-size:25px;
+        font-family:serif;
+        background-color:black;
+      }body:hover{
+        cursor:default;
+      }div{
+        z-index:1;
+        text-align:center;
+        font-size:1.5em;
+        font-family:"Jolly Lodger", cursive;
+        letter-spacing:0.2em;
+        position:fixed;
+        width:100%;
+      }h1,h2,h3{
+        margin:10px;
+        font-weight:normal;
+      }ol{
+        text-align:left;
+        padding-left:100px;
+      }a{
+        color:inherit;
+      }.but{
+        background-color:clear;
+        border-radius:15px;
+        border:1px solid rgba(0,0,0,0);
+        transition:background 1s,border 1s;
+      }.but:hover{
+        cursor:pointer;
+        background-color:black;
+        border:1px solid white;
+      }#load{
+        text-align:center;
+        top:500px;
+        font-size:25px;
+      }#warning{
+        font-size:1.3em;
+        padding:10px;
+        padding-top:40px;
+        background-color:white;
+        height:600px;
+      }#story, #quot, #How, #Lead{
+        font-size:1.3em;
+        padding-right:40px;
+        padding-top:40px;
+        background-color:black;
+        height:600px;
+        visibility:hidden;
+        color:white;
+        text-shadow:0px 3px 10px yellow;
+        z-index:1;
+      }#lost{
+        padding-right:40px;
+        padding-top:40px;
+        background-color:black;
+        height:600px;
+        color:white;
+        text-shadow:0px 3px 10px yellow;
+        visibility:hidden;
+        z-index:1;
+      }#Play{
+        visibility:hidden;
+      }#Home{
+        padding-right:40px;
+        padding-top:40px;
+        background-image:url("https://www.khanacademy.org/computer-programming/3d-graveyard/4778368121389056/5686076777381888.png");
+        height:600px;
+        visibility:hidden;
+        color:white;
+        text-shadow:0px 3px 10px yellow;
+      }#b1{
+        position:fixed;
+        width:50%;
+        text-align:center;
+        transform:rotate(0.5rad)skew(0.5rad);
+        top:40%;
+        left:0%;
+      }#b2{
+        position:fixed;
+        width:50%;
+        text-align:center;
+        transform:rotate(-0.5rad)skew(-0.5rad);
+        top:40%;
+        left:47%;
+      }#b3{
+        position:fixed;
+        width:80%;
+        text-align:center;
+        top:70%;
+        left:8%;
+      }#miniscore{
+        top:40px;
+        color:white;
+        text-align:left;
+        left:50px;
+        visibility:hidden;
+      }.b3{
+        position:absolute;
+        width:50%;
+        text-align:center;
+      }::selection{
+        /*Stop people from being able to highlight words*/
+        background-color:inherit;
+      }#score::selection, #proof::selection{
+        /*Allow users to highlight proof & score*/
+        background-color:rgba(255,255,0,0.5);
+      }#score:hover, #proof:hover{
+        /*Text cursor when user hovers over proof & score*/
+        cursor:auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!--Score displayed during game play-->
+    <div id="miniscore">0</div>
+    <!--Warning Message-->
+    <div id="warning">
+      <h1>Warning:</h1>
+      <br/>
+      <h3>This Game is Slightly Scary</h3>
+      <h4>Especially for Younger Viewers</h4>
+      <h4>Proceed With Caution</h4>
+      <h5>(Click to Continue)</h5>
+    </div>
+    <!--Loading Message-->
+    <div id="load">Loading...<br>0%</div>
+    <!--The Intro Credits/Story Containter-->
+    <div id="story"></div>
+    <!--Main Menu-->
+    <div id="Home">
+      <h1 style="font-size:130px;">Flicker</h1>
+      <h1 class="but" id="b1">Play</h1>
+      <h1 class="but" id="b2">How</h1>
+      <h1 class="but" id="b3">Leaderboard</h1>
+    </div>
+    <!--Scary Quote-->
+    <div id="quot">
+      <h3>&#8220;Don&#8219;t blink. Don&#8219;t even blink. Blink and you&#8219;re dead. They are fast. Faster than you can believe. Don&#8219;t turn your back. Don&#8219;t look away. And most of all, don't blink. Good luck.&#8221;</h3>
+      <h3>―<i>Blink</i> by Steven Moffat</h3>
+    </div>
+    <!--How to Play-->
+    <div id="How">
+      <h1>How</h1>
+      <h3>WASD Keys To Move</h3>
+      <h3>Mouse or Arrow Keys to Turn</h3>
+      <h3>Avoid the statues</h3>
+      <h3>The statues move whenever you aren&#8219;t looking.</h3>
+      <h3>The screen will become red if you are close to one.</h3>
+      <h1 class="but b4">Back</h1>
+    </div>
+    <!--Leaderboard-->
+    <div id="Lead">
+      <h1>Leaderboard</h1>
+      <ol>
+        <li><a href="https://www.khanacademy.org/profile/kaid_30369373396536161666048/projects">The Mandalorian</a> 14921</li>
+        <li><a href="https://www.khanacademy.org/profile/kaid_132233022675230112847194/projects">$alaM&er</a> 13125</li>
+        <li><a href="https://www.khanacademy.org/profile/kaid_931991577839373537473008/projects">coolkid567</a> 12503</li>
+        <li><a href="https://www.khanacademy.org/profile/kaid_211449052538208547318025/projects">AndrewF</a> 11170</li>
+        <li><a href="https://www.khanacademy.org/profile/kaid_597560540670500505797648/projects">Muscial Spoon</a> 10059</li>
+      </ol>
+      <p>Proof required. Taking highscores till 1/1/2021</p>
+      <h1 class="but b4">Back</h1>
+    </div>
+    <!--You lost page-->
+    <div id="lost">
+      <h1>You Lost</h1>
+      <h3>You couldn&#8219;t win anyways.</h3>
+      <br/>
+      <h2 id="score">Your Score: 1000</h2>
+      <h2 id="proof">Your Proof: Rs</h2>
+      <h1 class="but b4">Back</h1>
+    </div>
+    <canvas id="Play" width="600" height="600">Reload page. Your Browser may not support canvas</canvas>
+    <!--The helper library; Doesn't slow the program as badly as THREE.js, but I'll still be working on making 3D without it. Hopefully, learning WebGL2 will help-->
+    <script src='https://cdn.jsdelivr.net/npm/gl-matrix@3.0.0/gl-matrix-min.js'></script>
+    <!--You can see info about GLSL in here-->
+    <section><!--
+GLSL variable types for the shaders
+  attribute: a variable that is set with java script, and an be different between different vertices. The attribute can be used only in the vertex shader.
+  uniform: a variable that is set with javascript, and is uniform throughout all vertices in the buffer. This is used nly in the vertex shader.
+  varying: a variable that can't be set with javascript. varying variables are created in the vertex shader, but can be accessed in the fragment shader.
+  vec2: 2 dimensional floating vector
+  vec3: 3 dimensional floating vector (also used for holding rgb values)
+  vec4: 4 dimensional floating vector (also used for holding rgba values)
+  lowp: low precision variable
+  mediump: medium precision variable
+  highp: high precision variable
+  mat4 & mat3: matrix variable (the matrices do the fast 3D translating / rotating)
+  sampler2D: holds a 2D texture value
+    These are the same as the c languages:
+  bool: stores a boolean (true / false)
+  float: stores a decimal value
+  int: stores a integer value
+
+GLSL commands/functions I used
+  normalize(): changes all vaules so that they are in a range of -1 to 1
+  texture2D(): returns the value of a certain spot of a certain texture
+  max(): returns the maximum of 2 numbers
+  min(): returns the minimum of 2 numbers
+  pow(): returns the power of one number
+  sqrt(): returns the square root of a number
+  dot(): returns the dot product of 2 vectors
+  sin(): returns the sine of a value
+  cos(): returns the cosine of a value
+  tan(): returns the tangent of a value
+  fract(): returns the fractured decimal point.
+  discard; discards the fragment color value
+  
+Other stuff I use:
+  You will see me write things like: someVector.xy
+  Basically, a vector is a small array which holds 2 - 4 values.
+  This can be used for positions, like: v.x, v.y, v.z, and the strange z.w
+  Or for colors, like: v.r, v.g, v.b, v.a
+  I can also fetch them like: v[0], v[1], v[2], v[3]
+  By writing v.xy, I am fetching the first 2 variables as a vetor.
+    v.xy = vec2(v.x, v.y)
+  Similary,
+    v.xyz = vec3(v.x, v.y, v.z)
+    v.yz = vec2(v.y, v.z)
+    v.zx = vec2(v.z, v.x)
+  This can also be done with colors:
+    v.rgb = vec3(v.r, v.g, v.b)
+  I will also sometimes write something with reoccurring identifiers:
+    v.zzz = vec3(v.z, v.z, v.z)
+    v.yyx = vec3(v.y, v.y, v.x)
+    
+Also, I have 4 sets of GLSL script tags.
+There are 2 vertex shaders and 2 fragment shaders.
+The vertex shader gets the inputs from the WebGL, and sends the positions in for erndering to the API.
+The fragment shader colors the faces between the point positions.
+
+I have 2 of each set, because I am drawing the scene twice every frame.
+  As simply as I can explain it, the first time is to render the shadows
+  And the second time for the actual graphics.
+    --></section>
+    <!--Vertex Shader-->
+    <script type="not-js" id="vs">
+attribute vec4 avtx_pos;
+attribute vec3 avtx_norm;
+attribute vec2 aTextC;
+uniform vec3 u_lightPos;
+uniform vec3 u_viewPos;
+uniform vec3 u_lighting;
+uniform vec3 u_lightColor;
+uniform mat4 umtrx;
+uniform mat4 perspec;
+uniform mat4 light;
+varying vec3 v_surfaceToLight;
+varying vec3 v_surfaceToView;
+varying vec3 transformedNormal;
+varying vec3 v_lighting;
+varying vec3 v_lightColor;
+varying vec2 vTextC;
+varying vec4 vTextC2;
+varying vec4 pos;
+varying vec4 realPos;
+varying float dpth;
+void main(){
+  gl_Position = perspec * umtrx * avtx_pos;
+  pos=light * avtx_pos;
+  realPos = perspec * umtrx * avtx_pos;
+  dpth = -(umtrx * avtx_pos).z;
+  vTextC=aTextC;
+  vTextC2= light * avtx_pos;
+  transformedNormal=mat3(perspec * umtrx)*avtx_norm;
+  vec3 surfaceWorldPosition=vec3(perspec * umtrx*avtx_pos);
+  v_surfaceToLight=u_lightPos-surfaceWorldPosition;
+  v_surfaceToView=u_viewPos-surfaceWorldPosition;
+  v_lighting = u_lighting;
+  v_lightColor = u_lightColor;
+}
+    </script>
+    <!--Fragment Shader-->
+    <script type="not-js" id="fs">
+precision lowp float;
+varying vec4 pos;
+varying vec4 realPos;
+varying vec2 vTextC;
+varying vec4 vTextC2;
+varying vec3 v_lighting;
+varying vec3 v_lightColor;
+varying vec3 transformedNormal;
+varying vec3 v_surfaceToLight;
+varying vec3 v_surfaceToView;
+varying float dpth;
+uniform sampler2D uSamp;
+uniform sampler2D uSamp2;
+void main() {
+  float abpos=pos.z/pos.w;
+  vec3 nTextC2=0.5+0.5*vTextC2.xyz/vTextC2.w;
+  vec3 realC=0.5+0.5*realPos.xyz/realPos.w;
+  vec4 col=texture2D(uSamp,vTextC);
+  vec4 col2=texture2D(uSamp2,nTextC2.xy);
+  vec3 ntn=normalize(transformedNormal);
+  vec3 nsl=normalize(v_surfaceToLight);
+  bool inL=
+    nTextC2.x<=0.0 ||
+    nTextC2.x>=1.0 ||
+    nTextC2.y<=-1.0 ||
+    nTextC2.y>=1.0 ||
+    abpos <= col2.r + 0.005;
+  float inV=sqrt(pow(0.5-realC.x,2.0)+pow(0.5-realC.y,2.0));
+  //Get rid of one of the slashes below to get rid of the flash light effect and darkness
+  //*
+  if(inV < 1.0 / 2.1){
+    if(inL){
+      gl_FragColor=vec4(v_lightColor*(1.0 - dpth/20.0)*(1.0-2.1*inV)*col.rgb*(max(v_lighting[0]*dot(ntn,nsl),0.0)+v_lighting[1]*max(pow(dot(ntn,normalize(nsl+normalize(v_surfaceToView))),150.0),0.0)+v_lighting[2]),col.a);
+    }else{
+      gl_FragColor=vec4(v_lightColor*(1.0 - dpth/20.0)*(1.0-2.1*inV)*col.rgb*(max(v_lighting[0]/2.0*dot(ntn,nsl),0.0)+v_lighting[1]/2.0*max(pow(dot(ntn,normalize(nsl+normalize(v_surfaceToView))),150.0),0.0)+v_lighting[2]),col.a);
+    }
+  }else{
+    discard;
+  }
+  //*/gl_FragColor=vec4(v_lightColor*col.rgb*(max(v_lighting[0]*dot(ntn,nsl),0.0)+v_lighting[1]*max(pow(dot(ntn,normalize(nsl+normalize(v_surfaceToView))),150.0),0.0)+v_lighting[2]),col.a);
+  if(gl_FragColor.a<0.6){
+    discard;
+  }
+}
+    </script>
+    <!--Depth (shadow) Vertex Shader-->
+    <script type="not-js" id="Dvs">
+attribute vec4 avtx_pos;
+uniform mat4 perspec;
+varying vec4 v_lightP2;
+void main(){
+  gl_Position = perspec * avtx_pos;
+  v_lightP2 = perspec * avtx_pos;
+}
+    </script>
+    <!--Depth (shadow) Fragment Shader-->
+    <script type="not-js" id="Dfs">
+precision lowp float;
+varying vec4 v_lightP2;
+void main() {
+  vec3 realP = v_lightP2.xyz/ v_lightP2.w;
+  gl_FragColor=vec4(realP.zzz,1.0);
+}
+    </script>
+    <!--The javaScript / WebGL-->
+    <!--Outdated JS type allows ES6+ syntax without Ay Caray getting mad-->
+    <script type="application/javascript">
+//{Variables and Graphics
+//How far through the story?
+var where=0;
+//Make the story flicker through the pages
+var storyC = 0;
+//What does the story tell?
+var story=[
+  //My logo
+  "<img src=\"https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/latest.png\" style=\"width:400px;\">",
+  //Credits
+  "<h2>Based off of Doctor Who</h2><br/><h3>Credit to Mozilla Developer and WebGL fundamentals for some code.</h3><br/><h3>Great thanks to many people on Khan Academy, such as Xacer and Phi for making this possible.</h3>",
+  //Story
+  "<h3>There is an old adbandoned graveyard in your neighborhood. Some say it&#8219;s haunted. Strange noises come from it at night. Once you heard someone screaming. You hear rumors about people who go missing there.</h3>",
+  "<h3>But it&#8219;s either that or your neighbour&#8219;s nasty dogs. Your friend begins walking towards the graveyard. How can some ghost stories be worse than a danger, albeit minor, that&#8219;s very real?</h3>",
+  "<h3>You linger for a second, undecided. This time elapses into seconds, in which you are torn between braving the dogs alone, or going into the graveyard with your friend. You suddenly realize that you are very alone, in the dark, for your friend had the flashlight. You hurry into the graveyard.</h3>",
+  "<h3>You see a light up ahead. It must be your friend. But something is wrong; you can feel it. Upon reaching the light, you find it on the ground. It&#8219;s faulty, flickering, obviously dropped. You look around, but your friend is no where in sight.</h3>",
+  "<h3>You call out your friend&#8219;s name, but it is lost in the darkness, merely a silent echo answering back. Spooked, you run back to the way you came in, but you must be lost; there is no gate there. But the landmarks are just right, the gate was there just a minute ago...</h3>",
+  "<h3>Now panicking, you run to the other side of the graveyard, where you were planning to go out. No opening there either. You run around the grave yard, searching for any way out, but nothing; enclosed.</h3>",
+  "<h3>You must be alone, trapped, with a dim faulty light. But that&#8219;s not true.<br/>No, it isn&#8219;t.<br/>Because you aren&#8219;t alone.<br/>No, you definitely aren&#8219;t alone.</h3>"
+];
+//which scene is it on?
+//NOTE: this variable doesn't control which scene is it on, it just allows calculations to be  easier. Nothing will be achieved from changing this variable, unless you want to break the program.
+var scene="warning";
+//Have you already seen the quote?
+var sawQ = 0;
+//Countdown till quote disappears.
+var qTime;
+//Is there an angel close to you?
+var danger = 0;
+//the textures (will be later defined)
+var textu,textu2;
+//texture height
+var th = 64;
+//The translate matrices
+var posit=[
+  [0,0,-6]
+];
+//the rotate matrices
+var rots=[
+  [0,0]
+];
+//Countdown till light flickers
+var flickerA=330;
+//Frequency at which light flickers after initial flicker.
+var flickerF=280;
+//The lighting / shadow projection info
+var lightPers=[0.35*Math.PI,1,0.5,100,[5,0,-6],[Math.PI/2,0]];
+var score=0;
+//where all of the graavestones are at. Stored like x1, z1, x2, z2, etc.
+//probably should have used for loop, but Oh Well.
+var stones = [
+  -23, -24,
+  -19, -24,
+  -15, -24,
+  -11, -24,
+   -7, -24,
+   -3, -24,
+    3, -24,
+    7, -24,
+   11, -24,
+   15, -24,
+   19, -24,
+   23, -24,
+  -23, -20,
+  -19, -20,
+  -15, -20,
+  -11, -20,
+   -7, -20,
+   -3, -20,
+    3, -20,
+    7, -20,
+   11, -20,
+   15, -20,
+   19, -20,
+   23, -20,
+  -23, -16,
+  -19, -16,
+  -15, -16,
+  -11, -16,
+   -7, -16,
+   -3, -16,
+    3, -16,
+    7, -16,
+   11, -16,
+   15, -16,
+   19, -16,
+   23, -16,
+  -23, -10,
+  -19, -10,
+  -15, -10,
+  -11, -10,
+   -7, -10,
+   -3, -10,
+    3, -10,
+    7, -10,
+   11, -10,
+   15, -10,
+   19, -10,
+   23, -10,
+  -23,  -6,
+  -19,  -6,
+  -15,  -6,
+  -11,  -6,
+   -7,  -6,
+   -3,  -6,
+    3,  -6,
+    7,  -6,
+   11,  -6,
+   15,  -6,
+   19,  -6,
+   23,  -6,
+  -23,  -2,
+  -19,  -2,
+  -15,  -2,
+  -11,  -2,
+   -7,  -2,
+    7,  -2,
+   11,  -2,
+   15,  -2,
+   19,  -2,
+   23,  -2,
+  -23,  24,
+  -19,  24,
+  -15,  24,
+  -11,  24,
+   -7,  24,
+   -3,  24,
+    3,  24,
+    7,  24,
+   11,  24,
+   15,  24,
+   19,  24,
+   23,  24,
+  -23,  20,
+  -19,  20,
+  -15,  20,
+  -11,  20,
+   -7,  20,
+   -3,  20,
+    3,  20,
+    7,  20,
+   11,  20,
+   15,  20,
+   19,  20,
+   23,  20,
+  -23,  16,
+  -19,  16,
+  -15,  16,
+  -11,  16,
+   -7,  16,
+   -3,  16,
+    3,  16,
+    7,  16,
+   11,  16,
+   15,  16,
+   19,  16,
+   23,  16,
+  -23,  10,
+  -19,  10,
+  -15,  10,
+  -11,  10,
+   -7,  10,
+   -3,  10,
+    3,  10,
+    7,  10,
+   11,  10,
+   15,  10,
+   19,  10,
+   23,  10,
+  -23,   6,
+  -19,   6,
+  -15,   6,
+  -11,   6,
+   -7,   6,
+   -3,   6,
+    3,   6,
+    7,   6,
+   11,   6,
+   15,   6,
+   19,   6,
+   23,   6,
+  -23,   2,
+  -19,   2,
+  -15,   2,
+  -11,   2,
+   -7,   2,
+    7,   2,
+   11,   2,
+   15,   2,
+   19,   2,
+   23,   2
+];
+//where the trees are. Note: This is for physics only. Changing these numbers will change where the Player runs into trees, but will not change where the tree appears to be.
+var trees=[
+    0,  0,
+  -13,-13,
+  -13, 13,
+   13,-13,
+   13, 13,
+  -26,-26,
+  -26, 26,
+   26,-26,
+   26, 26
+];
+//Where are all of the nasties?
+var angels = [];
+//how many times has the light flickered?
+var flickered = 0;
+//When will a new statue be added?
+var additions = [1, 7, 12, 17];
+//current points
+var points = 0;
+//Can the player move
+var move=1;
+//Credit to Xacer for some of the next 10 lines of code.
+//Basically pjs lerp()
+var blendNumbers = (value1, value2, increment) => value1+increment*(value2-value1);
+//returns the fraction of a number. example: 1.23 becomes 0.23
+var fract = value => (value%1+1)%1;
+//pseudorandom function
+var rand = value => fract(1000*Math.sin(value));
+//makes lines smooth, not linear
+var smoothstep = value => value*value*(3-2*value);
+//Similar to Perlin Noise.
+var customNoise = value => {
+  let flooredValue = Math.floor(value);
+  let smoothFract = smoothstep(fract(value));
+  return blendNumbers(rand(flooredValue),rand(flooredValue+1),smoothFract);
+};
+//change angles to a range of 0 » 2π
+var toStandard = ang => (ang+2*Math.PI)%(2*Math.PI);
+//Are two values the same?
+var same = (a, b) => (a == b);
+//vertice positions
+var positions=[];
+//vertice normals (for shading)
+var normals=[];
+//which vertices should be connected?
+var indices=[];
+//I needed one of my favorite processing.js functions
+var dist=(x1,y1,x2,y2)=>Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+//same as above, but account for "z" coordinates
+var dist3d=(x1,y1,z1,x2,y2,z2)=>Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)+Math.pow(z2-z1,2));
+/**
+I didn't comment the next several functions, because they are extremely repetitive.
+Bascially, whenever you see a:
+  positions.push
+I am adding the x,y,z positions of a vertex.
+When there is a:
+  colors2.push
+I am giving a vertex its texture (color) coordinates.
+A
+  normals.push
+means that I am giving a vertex information about its shading, and which side of a shape the vertex is on.
+  indices.push
+Is used when I am connecting vertices to make a triangle. For example, if I wanted to connect the vertices 0,1, & 2, I would write this:
+  indices.push(0, 1, 2);
+*/
+//creates the statues.
+function statue(stage){
+  //base vertices
+  positions.push(0,-1.5,0);
+  colors2.push(0, 0);
+  normals.push(0,1,0);
+  var _=positions.length/3;
+  for(var i=0;i<10;i++){
+    positions.push(Math.sin(i*Math.PI/5),-1.5,Math.cos(i*Math.PI/5));
+    positions.push(Math.sin((i)*Math.PI/5),-2,Math.cos(i*Math.PI/5));
+    colors2.push(0, 0);
+    normals.push(Math.sin(i*Math.PI/5),0,Math.cos(i*Math.PI/5));
+    colors2.push(0, 0);
+    normals.push(Math.sin(i*Math.PI/5),0,Math.cos(i*Math.PI/5));
+    indices.push(_+2*i,_+2*i+1,_+(2*i+2)%20);
+    indices.push(_+(2*i+2)%20,_+2*i+1,_+(2*i+3)%20);
+    indices.push(_,_+i*2+1,_+(i*2+3)%20);
+  }
+  //la falda
+  _=positions.length/3;
+  for(var i=0;i<10;i++){
+    var alt=Math.sin((i+0.5)*Math.PI)/5;
+    positions.push(0.4*Math.sin(i*Math.PI/5)+Math.random()/10-0.05,0,0.25*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    positions.push(0.55*Math.sin(i*Math.PI/5)+Math.random()/10-0.05,-0.5,0.5*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    positions.push(0.65*Math.sin(i*Math.PI/5)+Math.random()/10-0.05,-1,0.7*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    positions.push(0.8*Math.sin((i)*Math.PI/5),-1.5,0.8*Math.cos(i*Math.PI/5));
+    colors2.push(0, 0);
+    colors2.push(0, 0);
+    colors2.push(0, 0);
+    colors2.push(0, 0);
+    normals.push(alt+Math.sin(i*Math.PI/5),0.3,alt+Math.cos(i*Math.PI/5));
+    normals.push(alt+Math.sin(i*Math.PI/5)+Math.random()/5-0.1,0.6,alt+Math.cos(i*Math.PI/5)+Math.random()/5-0.1);
+    normals.push(alt+Math.sin(i*Math.PI/5)+Math.random()/5-0.1,0.6,alt+Math.cos(i*Math.PI/5)+Math.random()/5-0.1);
+    normals.push(alt+Math.sin(i*Math.PI/5),0.6,alt+Math.cos(i*Math.PI/5));
+    indices.push(_+4*i,_+4*i+1,_+(4*i+4)%40);
+    indices.push(_+(4*i+4)%40,_+4*i+1,_+(4*i+5)%40);
+    indices.push(_+4*i+1,_+4*i+2,_+(4*i+5)%40);
+    indices.push(_+(4*i+5)%40,_+4*i+2,_+(4*i+6)%40);
+    indices.push(_+4*i+2,_+4*i+3,_+(4*i+6)%40);
+    indices.push(_+(4*i+6)%40,_+4*i+3,_+(4*i+7)%40);
+  }
+  //body
+  _=positions.length/3;
+  for(var i=0;i<10;i++){
+    var alt=Math.sin((i-0.5)*Math.PI)/5;
+    positions.push(0.2*Math.sin(i*Math.PI/5)+Math.random()/10-0.05,0.9,0.2*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    positions.push(0.35*Math.sin(i*Math.PI/5)+Math.random()/10-0.05,0.65,0.22*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    positions.push(0.5*Math.sin((i)*Math.PI/5)+Math.random()/10-0.05,-Math.random()/5,0.4*Math.cos(i*Math.PI/5)+Math.random()/10-0.05);
+    colors2.push(0, 0, 0, 0, 0, 0);
+    normals.push(alt+Math.sin(i*Math.PI/5),0,alt+Math.cos(i*Math.PI/5),alt+Math.sin(i*Math.PI/5),0,alt+Math.cos(i*Math.PI/5),alt+Math.sin(i*Math.PI/5),0,alt+Math.cos(i*Math.PI/5));
+    indices.push(_+3*i,_+3*i+1,_+(3*i+3)%30);
+    indices.push(_+(3*i+3)%30,_+3*i+1,_+(3*i+4)%30);
+    indices.push(_+3*i+1,_+3*i+2,_+(3*i+4)%30);
+    indices.push(_+(3*i+4)%30,_+3*i+2,_+(3*i+5)%30);
+  }
+  //wings
+  for(var wing=0;wing<4;wing++){
+    _=positions.length/3;
+    var a=2;
+    if(wing==0||wing==1){
+        a=-2;
+    }
+    for(var i=0;i<10;i++){
+      var alt=Math.sin((i-0.5)*Math.PI)/10;
+      positions.push((2*(wing%2)-1)*(0.3+i/8+Math.random()/10-0.05),0.8+Math.sin(i*Math.PI/10),0.15*Math.round(wing/4)+Math.random()/40+alt/8-0.025-i/15);
+      positions.push((2*(wing%2)-1)*(0.3+i/8+Math.random()/10-0.05),Math.abs(i/4-1.3)-1.2-Math.random()/10-alt,0.15*Math.round(wing/4)+Math.random()/40+alt/8-0.025-i/15);
+      colors2.push(0, 0);
+      normals.push(a*(0.5*(2*(wing%2)-1)+alt+Math.random()/2),0.5,4*Math.round(wing/4)-2);
+      colors2.push(0, 0);
+      normals.push(a*(0.5*(2*(wing%2)-1)+alt+Math.random()/2),-0.5,4*Math.round(wing/4)-2);
+      if(wing==0||wing==3){
+        indices.push(_+2*i,_+2*i+1,_+(2*i+2)%20);
+        indices.push(_+(2*i+2)%20,_+2*i+1,_+(2*i+3)%20);
+        indices.push(0,i*2+1,(i*2+3)%20);
+      }else{
+        indices.push(_+2*i+1,_+2*i,_+(2*i+2)%20);
+        indices.push(_+2*i+1,_+(2*i+2)%20,_+(2*i+3)%20);
+        indices.push(i*2+1,0,(i*2+3)%20);
+      }
+      if(i<9){
+        if(wing==1){
+          indices.push(_+2*i,_+2*i+40,_+2*i+2);
+          indices.push(_+2*i+40,_+2*i+42,_+2*i+2);
+          indices.push(_+2*i+41,_+2*i+1,_+2*i+3);
+          indices.push(_+2*i+43,_+2*i+41,_+2*i+3);
+        }else if(wing==0){
+          indices.push(_+2*i+40,_+2*i,_+2*i+2);
+          indices.push(_+2*i+42,_+2*i+40,_+2*i+2);
+          indices.push(_+2*i+1,_+2*i+41,_+2*i+3);
+          indices.push(_+2*i+41,_+2*i+43,_+2*i+3);
+        }
+      }
+    }
+  }
+  indices.push(_-42,_-1,_-2,_-42,_-41,_-1,_+19,_-22,_+18,_-21,_-22,_+19);
+  //arms
+  if(stage < 3){
+    //left arm
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(0.3+0.1*Math.sin(i*Math.PI/5),0.8,0.1*Math.cos(i*Math.PI/5)+0.05);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+      indices.push(_+(i+1)%10,_+i,_+i+10);
+      indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(0.15+0.1*Math.sin(i*Math.PI/5),-0.2*stage,0.07*Math.cos(i*Math.PI/5)+0.6-0.05*stage);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.07*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(0.15+0.1*Math.sin(i*Math.PI/5),1-0.25*stage,0.05*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.05*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(0.13+0.15*Math.sin(i*Math.PI/5),1.25-0.25*stage,0.07*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    };
+    for(let i=0;i<10;i++){
+      positions.push(0.13+0.12*Math.sin(i*Math.PI/5),1.4-0.25*stage,0.05*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+    }
+    //right arm
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(-0.3+0.1*Math.sin(i*Math.PI/5),0.8,0.1*Math.cos(i*Math.PI/5)+0.05);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+      indices.push(_+(i+1)%10,_+i,_+i+10);
+      indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(-0.15+0.1*Math.sin(i*Math.PI/5),-0.2*stage,0.07*Math.cos(i*Math.PI/5)+0.6-0.05*stage);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.07*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(-0.15+0.1*Math.sin(i*Math.PI/5),1-0.25*stage,0.05*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.05*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(-0.13+0.15*Math.sin(i*Math.PI/5),1.25-0.25*stage,0.07*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    for(let i=0;i<10;i++){
+      positions.push(-0.13+0.12*Math.sin(i*Math.PI/5),1.4-0.25*stage,0.05*Math.cos(i*Math.PI/5)+0.3);
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+    }
+    //8 fingers (no thumbs)
+    for(let finger = 0; finger < 8; finger++){
+      if(finger == 4){
+        finger += 0.5;
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(0.06*finger-0.22+0.03*Math.sin(i*Math.PI/5),1.4-0.25*stage,0.03*Math.cos(i*Math.PI/5)+0.3+(stage==1?0.01:0));
+        colors2.push(0, 0);
+        normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+        indices.push(_+i,_+(i+1)%10,_+i+10);
+        indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(0.06*finger-0.22+0.03*Math.sin(i*Math.PI/5),1.5-0.25*stage,0.03*Math.cos(i*Math.PI/5)+0.28+(stage==1?0.04:0));
+        colors2.push(0, 0);
+        normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+        indices.push(_+i,_+(i+1)%10,_+i+10);
+        indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(0.06*finger-0.22+0.03*Math.sin(i*Math.PI/5),1.6-0.25*stage,0.03*Math.cos(i*Math.PI/5)+0.24+(stage==1?0.07:(stage?0.02:0)));
+        colors2.push(0, 0);
+        normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+        indices.push(_+i, _+(i+1)%10, _+10);
+      }
+      positions.push(0.06*finger-0.22, 1.7-0.25*stage, 0.2+(stage==1?0.1:(stage?0.04:0)));
+      colors2.push(0, 0);
+      normals.push(0, 0.1, 0);
+    }
+  }else{
+    //Some math to make a random position for an elbow
+    let elbow1x=Math.random()*0.6+0.2;
+    let elbow1y=Math.random()*0.8+0.4;
+    let elbow1z=0.75-Math.pow(dist(0.3,0.7,elbow1x,elbow1y),2);
+    //And the hand
+    let wrist1x=Math.min(elbow1x,0.3)+Math.random()*Math.abs(elbow1x-0.3);
+    let wrist1y=Math.min(elbow1y,0.7)+Math.random()*Math.abs(elbow1y-0.7);
+    let wrist1z=elbow1z+0.65-Math.pow(dist(elbow1x,elbow1y,wrist1x,wrist1y),2);
+    //Also for the other elbow
+    let elbow2x=Math.random()*0.6-0.8;
+    let elbow2y=Math.random()*0.8+0.4;
+    let elbow2z=0.75-Math.pow(dist(-0.3,0.7,elbow2x,elbow2y),2);
+    //and other hand
+    let wrist2x=Math.min(elbow2x,-0.3)+Math.random()*Math.abs(elbow2x+0.3);
+    let wrist2y=Math.min(elbow2y,0.7)+Math.random()*Math.abs(elbow2y-0.7);
+    let wrist2z=elbow2z+0.65-Math.pow(dist(elbow2x,elbow2y,wrist2x,wrist2y),2);
+    //For easy access
+    let elbowx = [elbow1x, elbow2x];
+    let elbowy = [elbow1y, elbow2y];
+    let elbowz = [elbow1z, elbow2z];
+    let wristx = [wrist1x, wrist2x];
+    let wristy = [wrist1y, wrist2y];
+    let wristz = [wrist1z, wrist2z];
+    for(let arm = 0; arm<2; arm++){
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push((arm?-0.3:0.3)+0.12*Math.sin(i*Math.PI/5),0.7+0.12*Math.cos(i*Math.PI/5),0.1);
+        colors2.push(0, 0);
+        normals.push(Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5),0);
+        indices.push(_+(i+1)%10,_+i,_+i+10);
+        indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(elbowx[arm]+0.12*Math.sin(i*Math.PI/5),elbowy[arm]+0.12*Math.cos(i*Math.PI/5),elbowz[arm]);
+        colors2.push(0, 0);
+        normals.push(Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5),0);
+        indices.push(_+(i+1)%10,_+i,_+i+10);
+        indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(wristx[arm]+0.12*Math.sin(i*Math.PI/5),wristy[arm]+0.07*Math.cos(i*Math.PI/5),wristz[arm]);
+        colors2.push(0, 0);
+        normals.push(Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5),0);
+        indices.push(_+(i+1)%10,_+i,_+i+10);
+        indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(wristx[arm]+0.12*Math.sin(i*Math.PI/5),wristy[arm]+0.1,wristz[arm]-0.07*Math.cos(i*Math.PI/5)+0.1);
+        colors2.push(0, 0);
+        normals.push(Math.sin(i*Math.PI/5),0,-Math.cos(i*Math.PI/5));
+        indices.push(_+(i+1)%10,_+i,_+i+10);
+        indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+      }
+      _=positions.length/3;
+      for(let i=0;i<10;i++){
+        positions.push(wristx[arm]+0.13*Math.sin(i*Math.PI/5),wristy[arm]+0.2,wristz[arm]-0.07*Math.cos(i*Math.PI/5)+0.1);
+        colors2.push(0, 0);
+        normals.push(0.5*Math.sin(i*Math.PI/5),0,-Math.cos(i*Math.PI/5));
+        indices.push(_+(i+1)%10,_+i,_+i+10);
+        indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+      }
+      for(let i=0;i<10;i++){
+        positions.push(wristx[arm]+0.11*Math.sin(i*Math.PI/5),wristy[arm]+0.3,wristz[arm]-0.04*Math.cos(i*Math.PI/5)+0.1);
+        colors2.push(0, 0);
+        normals.push(0.3*Math.sin(i*Math.PI/5),0,-Math.cos(i*Math.PI/5));
+      }
+      for(let finger = 0; finger < 4; finger++){
+        _=positions.length/3;
+        for(let i=0;i<10;i++){
+          positions.push(wristx[arm]+0.06*finger-0.1+0.03*Math.sin(i*Math.PI/5),wristy[arm]+0.28,0.03*Math.cos(i*Math.PI/5)+wristz[arm]+0.11);
+          colors2.push(0, 0);
+          normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+          indices.push(_+i,_+(i+1)%10,_+i+10);
+          indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+        }
+        _=positions.length/3;
+        for(let i=0;i<10;i++){
+          positions.push(wristx[arm]+0.09*finger-0.15+0.03*Math.sin(i*Math.PI/5),wristy[arm]+0.39,0.03*Math.cos(i*Math.PI/5)+wristz[arm]+0.13);
+          colors2.push(0, 0);
+          normals.push(0.1*Math.sin(i*Math.PI/5),0,0.1*Math.cos(i*Math.PI/5));
+          indices.push(_+i,_+(i+1)%10,_+i+10);
+          indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+        }
+        for(let i=0;i<10;i++){
+          positions.push(wristx[arm]+0.1*finger-0.17+0.015*Math.sin(i*Math.PI/5),wristy[arm]+0.43,0.015*Math.cos(i*Math.PI/5)+wristz[arm]+0.19);
+          colors2.push(0, 0);
+          normals.push(Math.sin(i*Math.PI/5),-Math.cos(i*Math.PI/5),Math.cos(i*Math.PI/5));
+        }
+      }
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[0],wristy[0]+0.03*Math.sin(i*Math.PI/5)+0.1,0.03*Math.cos(i*Math.PI/5)+wristz[0]+0.11);
+      colors2.push(0, 0);
+      normals.push(0,Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[0]-0.2,wristy[0]+0.03*Math.sin(i*Math.PI/5)+0.2,0.03*Math.cos(i*Math.PI/5)+wristz[0]+0.11);
+      colors2.push(0, 0);
+      normals.push(0,Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5));
+      indices.push(_+i,_+(i+1)%10,_+i+10);
+      indices.push(_+(i+1)%10,_+(i+1)%10+10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[0]-0.25,wristy[0]+0.01*Math.sin(i*Math.PI/5)+0.21,0.01*Math.cos(i*Math.PI/5)+wristz[0]+0.21);
+      colors2.push(0, 0);
+      normals.push(Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5),0);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[1],wristy[1]+0.03*Math.sin(i*Math.PI/5)+0.1,0.03*Math.cos(i*Math.PI/5)+wristz[1]+0.11);
+      colors2.push(0, 0);
+      normals.push(0,Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5));
+      indices.push(_+(i+1)%10,_+i,_+i+10);
+      indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[1]+0.2,wristy[1]+0.03*Math.sin(i*Math.PI/5)+0.2,0.03*Math.cos(i*Math.PI/5)+wristz[1]+0.11);
+      colors2.push(0, 0);
+      normals.push(0,Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5));
+      indices.push(_+(i+1)%10,_+i,_+i+10);
+      indices.push(_+(i+1)%10+10,_+(i+1)%10,_+i+10);
+    }
+    _=positions.length/3;
+    for(let i=0;i<10;i++){
+      positions.push(wristx[1]+0.25,wristy[1]+0.01*Math.sin(i*Math.PI/5)+0.21,0.01*Math.cos(i*Math.PI/5)+wristz[1]+0.21);
+      colors2.push(0, 0);
+      normals.push(Math.sin(i*Math.PI/5),Math.cos(i*Math.PI/5),0);
+    }
+  }
+  //head
+  let f = positions.length;
+  let mouth=stage < 3 ? 14 : 16;
+  for(let de = 0; de < 15; de++){
+    let _ =positions.length/3;
+    for(var i=0; i<10; i++){
+      positions.push(0.27*Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/mouth),0.45*Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/mouth)+1.4 - 0.015 * de,-0.15-0.35 * Math.cos(de * Math.PI / 15));
+      colors2.push(0, 0);
+      normals.push(Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/mouth)+Math.random()/2,Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/mouth)+Math.random()/2,0.1 * de - 0.7);
+      if(de != 14){
+        indices.push(_+(i+1)%10,_+i,_+(i+1)%10 + 10);
+        indices.push(_+i,_+i+10,_+(i+1)%10 + 10);
+      }else{
+        indices.push(_+(i+1)%10,_+i,_+10);
+      }
+    }
+  }
+  positions.push(0, 1.2, 0);
+  colors2.push(0, 0);
+  normals.push(0, 0, -0.5);
+  if(mouth == 16){
+    //teeth
+    let _ = positions.length/3;
+    positions.push(
+          0, 1.22,  0.15,
+      -0.03, 1.35,  0.15,
+       0.03, 1.35,  0.15,
+       0.04, 1.19,  0.15,
+       0.09, 1.33,  0.15,
+      -0.04, 1.19,  0.15,
+      -0.09, 1.33,  0.15,
+          0, 1.18,  0.15,
+      -0.03, 1.05,  0.15,
+       0.03, 1.05,  0.15,
+       0.04, 1.21,  0.15,
+       0.09, 1.07,  0.15,
+      -0.04, 1.21,  0.15,
+      -0.09, 1.07,  0.15
+    );
+    colors2.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    normals.push(
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1
+    );
+    indices.push(
+      _+1,   _, _+2,
+      _+2, _+3, _+4,
+      _+1, _+6, _+5,
+      _+7, _+8, _+9,
+      _+10, _+9, _+11,
+      _+8, _+12, _+13
+    );
+  }
+  //tilt head
+  let rotatex = 0.1;
+  for(var i=f;i<positions.length;i+=3){
+    var t1=positions[i+1];
+    var t2=positions[i+2];
+    positions[i+1]=t1*Math.cos(rotatex)-t2*Math.sin(rotatex);
+    positions[i+2]=t2*Math.cos(rotatex)+t1*Math.sin(rotatex);
+  }
+  //eyes
+  for(let de = 0; de < 6; de++){
+    _ =positions.length/3;
+    for(let i=0; i<10; i++){
+      positions.push(0.12+0.05*Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.05*Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/5)+1.45,0.25 - 0.05 * Math.cos(de * Math.PI / 5) - (mouth == 14 ? 0.05 : 0));
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.1*Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.05 - 0.1 * Math.cos(de * Math.PI / 5));
+      if(de != 5){
+        indices.push(_+(i+1)%10,_+i,_+(i+1)%10 + 10);
+        indices.push(_+i,_+i+10,_+(i+1)%10 + 10);
+      }
+    }
+  }
+  for(let de = 0; de < 6; de++){
+    _ =positions.length/3;
+    for(let i=0; i<10; i++){
+      positions.push(-0.12+0.05*Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.05*Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/5)+1.45,0.25 - 0.05 * Math.cos(de * Math.PI / 5) - (mouth == 14 ? 0.05 : 0));
+      colors2.push(0, 0);
+      normals.push(0.1*Math.sin(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.1*Math.cos(i*Math.PI/5)*Math.sin(de*Math.PI/5),0.05 - 0.1 * Math.cos(de * Math.PI / 5));
+      if(de != 5){
+        indices.push(_+(i+1)%10,_+i,_+(i+1)%10 + 10);
+        indices.push(_+i,_+i+10,_+(i+1)%10 + 10);
+      }
+    }
+  }
+}
+//The branches
+function branch(x1,y1,z1,rY,rX,h,b1,b2){
+  var f=positions.length;
+  var _=positions.length/3;
+  for(var im=0;im<8;im++){
+    positions.push(b2*Math.sin(im*Math.PI/4),h,b2*Math.cos(im*Math.PI/4));
+    positions.push(b1*Math.sin(im*Math.PI/4),0,b1*Math.cos(im*Math.PI/4));
+    colors2.push(5/64,0);
+    normals.push(Math.sin(im*Math.PI/4),0,Math.cos(im*Math.PI/4));
+    colors2.push(5/64,0);
+    normals.push(Math.sin(im*Math.PI/4),0,Math.cos(im*Math.PI/4));
+    indices.push(_+2*im,_+2*im+1,_+((2*im+2)%16));
+    indices.push(_+((2*im+2)%16),_+2*im+1,_+((2*im+3)%16));
+  }
+  //translate and rotate the branch
+  for(var im=f;im<positions.length;im+=3){
+    var t1=positions[im];
+    var t2=positions[im+1];
+    positions[im]=t1*Math.cos(rY)-t2*Math.sin(rY);
+    positions[im+1]=y1+t2*Math.cos(rY)+t1*Math.sin(rY);
+    t1=positions[im];
+    t2=positions[im+2];
+    positions[im]=x1+t1*Math.cos(rX)-t2*Math.sin(rX);
+    positions[im+2]=z1+t2*Math.cos(rX)+t1*Math.sin(rX);
+    t1=normals[im];
+    t2=normals[im+1];
+    normals[im]=t1*Math.cos(rY)-t2*Math.sin(rY);
+    normals[im+1]=t2*Math.cos(rY)+t1*Math.sin(rY);
+    t1=normals[im];
+    t2=normals[im+2];
+    normals[im]=t1*Math.cos(rX)-t2*Math.sin(rX);
+    normals[im+2]=t2*Math.cos(rX)+t1*Math.sin(rX);
+  }
+}
+//The leaves
+function leaf(x1,y1,z1,rY,rX){
+  var f=positions.length;
+  var _=positions.length/3;
+  positions.push(0,0.2,0);
+  positions.push(0,0.2,0);
+  colors2.push(3/64,0,3/64,0);
+  normals.push(0,0,1);
+  normals.push(0,0,-1);
+  for(var im=0;im<6;im++){
+    positions.push(0.2*Math.sin(im*Math.PI/3),0.4*Math.cos(im*Math.PI/3)+0.2,0);
+    positions.push(0.2*Math.sin(im*Math.PI/3),0.4*Math.cos(im*Math.PI/3)+0.2,0);
+    colors2.push(3/64,0,3/64,0);
+    normals.push(0,0,1);
+    normals.push(0,0,-1);
+    indices.push(_,_+(im*2+2)%12+2,_+im*2+2);
+    indices.push(_+1,_+im*2+3,_+(im*2+2)%12+3);
+  }
+  //translate and rotate the leaf
+  for(var im=f;im<positions.length;im+=3){
+    var t1=positions[im];
+    var t2=positions[im+1]+0.2;
+    positions[im]=t1*Math.cos(rY)-t2*Math.sin(rY);
+    positions[im+1]=y1+t2*Math.cos(rY)+t1*Math.sin(rY);
+    t1=positions[im];
+    t2=positions[im+2];
+    positions[im]=x1+t1*Math.cos(rX)-t2*Math.sin(rX);
+    positions[im+2]=z1+t2*Math.cos(rX)+t1*Math.sin(rX);
+    t1=normals[im];
+    t2=normals[im+1];
+    normals[im]=t1*Math.cos(rY)-t2*Math.sin(rY);
+    normals[im+1]=t2*Math.cos(rY)+t1*Math.sin(rY);
+    t1=normals[im];
+    t2=normals[im+2];
+    normals[im]=t1*Math.cos(rX)-t2*Math.sin(rX);
+    normals[im+2]=t2*Math.cos(rX)+t1*Math.sin(rX);
+  }
+}
+//The fractal tree
+function tree(t,x,y,z,h){
+  //stores the information for the trunk
+  let b=[x,y,z,0,0,3.5,h];
+  //loops through a max of 9 times, using a fractal formula to create branches
+  for(var nb,i=0;i<9;i++){
+    //resets the "new_branches" variable
+    nb=[];
+    //for every branch in the current iteration
+    for(var rb,j=0;j<b.length;j+=7){
+      //makes the next iteration of branches slightly snaller
+      rb=b[j+6]*(Math.random()/3+0.55);
+      //creates the next iteration's x position
+      var x2=-b[j+5]*Math.sin(b[j+3]);
+      //math stuff
+      x2=[b[j]+x2*Math.cos(b[j+4]),b[j+1]+b[j+5]*Math.cos(b[j+3]),b[j+2]+x2*Math.sin(b[j+4])];
+      //if the branch is thick enough
+      if(b[j+6]>0.1){
+        //load the branch's shape
+        branch(b[j],b[j+1],b[j+2],b[j+3],b[j+4],b[j+5]+0.1,b[j+6],rb);
+        //Depending on the type of tree,
+        //create the next iterations branches in a different way.
+        switch(t){
+          case 0:
+            //standard Branches spread out randomly. This is the only style you will see in this program, because the others are never called.
+            nb.push(x2[0],x2[1],x2[2],((same(b[j+4],0)*b[j+3])||same(b[j+3],0)/90||(-b[j+3]-0.8))+0.8,0,b[j+5]*(Math.random()/3+0.5),rb);
+            nb.push(x2[0],x2[1],x2[2],((same(b[j+4],2.1)*b[j+3])||same(b[j+3],0)/90||(-b[j+3]-0.8))+0.8,2.1,b[j+5]*(Math.random()/3+0.5),rb);
+            nb.push(x2[0],x2[1],x2[2],((same(b[j+4],4.2)*b[j+3])||same(b[j+3],0)/90||(-b[j+3]-0.8))+0.8,4.2,b[j+5]*(Math.random()/3+0.5),rb);
+          break;
+          case 1:
+            //flat-top: Branches stop growing upward, but just outward after a certain point.
+            nb.push(x2[0],x2[1],x2[2],0.8+b[j+3]/2,0,b[j+5]*(Math.random()/3+0.5),rb);
+            if(b[j+6]+Math.random()/2>0.2){
+              nb.push(x2[0],x2[1],x2[2],0.8+b[j+3]/2,2.1,b[j+5]*(Math.random()/3+0.5),rb);
+              nb.push(x2[0],x2[1],x2[2],0.8+b[j+3]/2,4.2,b[j+5]*(Math.random()/3+0.5),rb);
+            }
+          break;
+          case 2:
+            //Tall: Less branches, but longer
+            nb.push(x2[0],x2[1],x2[2],0,0,b[j+5]*(Math.random()/4+0.7),rb);
+            nb.push(x2[0],x2[1],x2[2],0.6+Math.random()/2,Math.random()*7,b[j+5]*(Math.random()/3+0.5),rb);
+            if(Math.random>0.7){
+              nb.push(x2[0],x2[1],x2[2],0.6+Math.random()/2,Math.random()*7,b[j+5]*(Math.random()/3+0.5),rb);
+            }
+          break;
+        }
+      }else{
+        //If the branch isn't thick enough,
+        //turn it into a leaf.
+        leaf(b[j],b[j+1],b[j+2],b[j+3],b[j+4]);
+      }
+    }
+    //update the branches array for next iteration.
+    b=nb;
+  }
+}
+//The gravestone
+function stone(x,y,z){
+  let _=positions.length/3;
+  positions.push(
+    x-0.7,  y-2,z+0.3,
+    x+0.7,  y-2,z+0.3,
+    x+0.7,y+0.5,z+0.3,
+    x-0.7,y+0.5,z+0.3,
+    x-0.7,  y-2,z-0.3,
+    x+0.7,  y-2,z-0.3,
+    x+0.7,y+0.5,z-0.3,
+    x-0.7,y+0.5,z-0.3,
+    x+0.7,  y-2,z+0.3,
+    x+0.7,y+0.5,z+0.3,
+    x+0.7,y+0.5,z-0.3,
+    x+0.7,  y-2,z-0.3,
+    x-0.7,  y-2,z+0.3,
+    x-0.7,y+0.5,z+0.3,
+    x-0.7,y+0.5,z-0.3,
+    x-0.7,  y-2,z-0.3,
+    x+0.7,y+0.5,z+0.3,
+    x-0.7,y+0.5,z+0.3,
+    x-0.7,y+0.5,z-0.3,
+    x+0.7,y+0.5,z-0.3
+  );
+  colors2.push(
+     0, 128/th,
+     1, 128/th,
+     1, 64/th,
+     0, 64/th,
+     1, 128/th,
+     0, 128/th,
+     0, 64/th,
+     1, 64/th,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0,
+     0, 0
+  );
+  normals.push(
+     0, 0, 1,
+     0, 0, 1,
+     0, 0, 1,
+     0, 0, 1,
+     0, 0,-1,
+     0, 0,-1,
+     0, 0,-1,
+     0, 0,-1,
+     1, 0, 0,
+     1, 0, 0,
+     1, 0, 0,
+     1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+     0, 1, 0,
+     0, 1, 0,
+     0, 1, 0,
+     0, 1, 0
+  );
+  indices.push(
+      _ , _+1, _+2,
+     _+2, _+3,  _ ,
+     _+6, _+5, _+4,
+     _+4, _+7, _+6,
+    _+10, _+9, _+8,
+     _+8,_+11,_+10,
+    _+13,_+14,_+12,
+    _+15,_+12,_+14,
+    _+18,_+17,_+16,
+    _+16,_+19,_+18
+  );
+}
+//}Graphics and variables
+//{WebGL Credit to Mozilla for some of the code.
+//define mat4 (matrix creater)
+var mat4=glMatrix.mat4;
+//index count: how many indicess in a buffer count
+var i_c=[0,0,0];
+//find the canvas to disPlay the stuff.
+var canvas=document.getElementById("Play");
+//unlock the webGL contexts for the canvas (with multiple backups for different browsers)
+var gl=canvas.getContext("webgl")||canvas.getContext("experimental-webgl")||canvas.getContext('moz-webkit');
+//set the clear colour
+gl.clearColor(0,0.7,1,1);
+//set the clear depth
+gl.clearDepth(1.0);
+//vertex shader
+var vtxs=document.getElementById("vs").innerHTML;
+//fragment shader
+var frgs=document.getElementById("fs").innerHTML;
+//depth vertex shader
+var dvtxs=document.getElementById("Dvs").innerHTML;
+//depth fragment shader
+var dfrgs=document.getElementById("Dfs").innerHTML;
+//allows javascript access the shaders
+function loadshdr(type,source){
+  //create the shader
+  var shader=gl.createShader(type);
+  //link it with the GLSL code.
+  gl.shaderSource(shader,source);
+  //get it ready for drawing
+  gl.compileShader(shader);
+  //ommit it.
+  return shader;
+}
+//load the vertex shader
+var vtxShdr=loadshdr(gl.VERTEX_SHADER,vtxs);
+//load the fragment shader
+var frgShdr=loadshdr(gl.FRAGMENT_SHADER,frgs);
+//create the webGL program
+var program=gl.createProgram();
+//attach the shaders to the program
+gl.attachShader(program,vtxShdr);
+gl.attachShader(program,frgShdr);
+//links the program to the webGL interface
+gl.linkProgram(program);
+//the info on where the variable are
+//load the depth vertex shader
+var dVtxShdr=loadshdr(gl.VERTEX_SHADER,dvtxs);
+//load the depth fragment shader
+var dFrgShdr=loadshdr(gl.FRAGMENT_SHADER,dfrgs);
+//create the webGL depth program
+var dProgram=gl.createProgram();
+//attach the depth shaders to the depth program
+gl.attachShader(dProgram,dVtxShdr);
+gl.attachShader(dProgram,dFrgShdr);
+//links the depth program to the webGL interface
+gl.linkProgram(dProgram);
+//the info on where the GLSL variables are
+var pInfo={
+  //attrib type variables
+  aPlaces:{
+    vtx_pos:gl.getAttribLocation(program,'avtx_pos'),
+    vtx_norm:gl.getAttribLocation(program,'avtx_norm'),
+    vtx_txt:gl.getAttribLocation(program,'aTextC')
+  },
+  //uniform type variables
+  uPlaces:{
+    mtrx:gl.getUniformLocation(program,'umtrx'),
+    persp:gl.getUniformLocation(program,'perspec'),
+    light:gl.getUniformLocation(program,'light'),
+    lightP:gl.getUniformLocation(program,"u_lightPos"),
+    viewPos:gl.getUniformLocation(program,"u_viewPos"),
+    lightB:gl.getUniformLocation(program,"u_lighting"),
+    lightC:gl.getUniformLocation(program,"u_lightColor"),
+    sampler:gl.getUniformLocation(program,'uSamp'),
+    sampler2:gl.getUniformLocation(program,'uSamp2')
+  }
+};
+//the same for the depth program
+var dInfo={
+  //attrib type variables
+  aPlaces:{
+    vtx_pos:gl.getAttribLocation(dProgram,'avtx_pos')
+  },
+  //uniform type variables
+  uPlaces:{
+    persp:gl.getUniformLocation(dProgram,'perspec')
+  }
+};
+//load the textures!
+function loadTexture(imgA,width,height) {
+  //create the gl texture
+  var texture = gl.createTexture();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  //All the info about the texture (type, colours, ect. )
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(imgA));
+  //allow it to be used
+  gl.generateMipmap(gl.TEXTURE_2D);
+  //return it!!
+  return texture;
+}
+//Pisel Art: The RIP on the Gravestones
+var RIPT = 
+"00100000000000000000011000000000"+
+"01111110000011111100111111000000"+
+"00111111100000111100011111100000"+
+"00011011100000110000001101110000"+
+"00011000100000110000001100110000"+
+"00011001100000110000001100110000"+
+"00011001100000110000001101110000"+
+"00011011000000110000001111100000"+
+"00011110000000110000001110000000"+
+"00011110000000110000001100000000"+
+"00011110000000110000001100000000"+
+"00011011001100110011001100001100"+
+"00011001001100110011001000001100"+
+"00010001100000111000001000000000"+
+"00000000100001111000000000000000";
+//The texture colors array
+var t=[];
+//first texel is grey (statue color)
+t.push(90,90,90,255);
+//second texel is green (ground color)
+t.push(0,155,0,255);
+//third texel is brown (tree color)
+t.push(150,50,0,255);
+//the rest of the texels for the fence
+for(let i=2;i<32*64;i++){
+  if(Math.floor(i/32)%2||(i%32)%10==0||i%32==31){
+    t.push(110,110,110,255);
+  }else{
+    t.push(0,0,0,0);
+  }
+}
+//The texels for the Gravestones.
+for(let i=0;i<32*64;i++){
+  if(+RIPT[i-25*32]){
+    t.push(0,0,0,255);
+  }else{
+    t.push(100,100,100,255);
+  }
+}
+//create the crate teture!
+textu=loadTexture(t,32,128);
+//texture height
+var th = 128;
+//create the shadow map texture
+var textu2=gl.createTexture();
+//bind the buffer to the top webGL buffer editing interface
+gl.bindTexture(gl.TEXTURE_2D,textu2);
+//All the info about the texture (type, colours, ect. )
+gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,2048,2048,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+//allow it to be used without generating a mip-map, so that it can be changed with every movement of the light.
+//This is done through setting all of the texture settings
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+
+//a buffer, basically allows the WebGL to render to a texture instead of the canvas.
+var textCoB2=gl.createFramebuffer();
+//bind the buffer to the top webGL buffer editing interface
+gl.bindFramebuffer(gl.FRAMEBUFFER,textCoB2);
+//The texture attatchment point
+var ap = gl.COLOR_ATTACHMENT0;
+//bind the drawing surface to the shadow texture
+gl.framebufferTexture2D(gl.FRAMEBUFFER,ap,gl.TEXTURE_2D,textu2,0);
+
+//makes closer things render above further things when rendering to the texture.
+//create the buffer for that purpose
+var depthBuffer=gl.createRenderbuffer();
+//bind the buffer to the top webGL buffer editing interface
+gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+//What is the render buffer supposed to add? (depth component)
+gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,2048,2048);
+//attatch it to the frameBuffer (textCoB2)
+gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depthBuffer);
+//For storing textures
+var colors2;
+
+//initiate the buffer : turn the graphics info into buffers, which the GLSL can use
+function initB(position,normal,index,color,w,tr){
+  //create the buffer for the positions
+  var positBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,positBuffer);
+  //set the vertices 
+  i_c[w]=index.length;
+  //add the positions array data to the positions buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(position),gl.STATIC_DRAW);
+  
+  //create the buffer for the texture coordinates
+  var textCoB=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,textCoB);
+  //add the texture coordinates array data to the buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(color),gl.STATIC_DRAW);
+  //Now all of that was great, but what exactly does the texture coordinates do?
+    //From 0.0 - 1.0 in the x & y directions, it basically tells which section of the texture to draw.
+    //why??
+    //Because only 10 textures can be disPlayed at a time, and disPlaying more than one texture makes the code messier and slower.
+    //To fix these two problems, programmers make one large texture with all of their textures on it, and tell the WebGL which section of the texture it should disPlay.
+  //create the buffer for the indices
+  var indexBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+  //add the indices array data to the indices buffer.
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(index), gl.STATIC_DRAW);
+  //create the buffer for the normals
+  var normBuffer=gl.createBuffer();
+  //bind the buffer to the top webGL buffer editing interface
+  gl.bindBuffer(gl.ARRAY_BUFFER,normBuffer);
+  //add the normals array data to the normals buffer.
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(normal),gl.STATIC_DRAW);
+  return{
+    position:positBuffer,
+    normal:normBuffer,
+    textur:textCoB,
+    indices:indexBuffer,
+    translate:tr
+  };
+}
+//there are 3 buffers (background, cylinder, portal). This array stores them.
+var buffers=[];
+//allows WebGL to test for z positions, and makes closer things draw above further things
+gl.enable(gl.DEPTH_TEST);
+//even better, stops the things in the back from drawing at all.
+gl.enable(gl.CULL_FACE);
+//defines what is closer. (values: gl.CCW or gl.CW) (counterclockwise or clockwise)
+gl.frontFace(gl.CCW);
+//do I want to cut the back, or the front of a shape?
+gl.cullFace(gl.BACK);
+//aspect: width/height ratio
+var aspct=gl.canvas.clientWidth/gl.canvas.clientHeight;
+//With all this preparation, why not actually disPlay the great 3D?
+function draw(){
+  //z_far: If an object is further than this, it won't show
+  let zf = 20;
+  //make a new position variable which is translated to keep the main character in the center.
+  var newposit=[posit[0][0],posit[0][1]-2,posit[0][2]];
+  //makes the WebGL disPlay everything on the shadow texture instead of the canvas
+  gl.bindFramebuffer(gl.FRAMEBUFFER,textCoB2);
+  //tells the WebGL how big the texture that it is rendering to is.
+  gl.viewport(0,0,2048,2048);
+  //allows WebGL to use and access the gl depth (shadow) program
+  gl.useProgram(dProgram);
+  //make the js form of the matrix.
+  var pers=mat4.create();
+  //what is the background color for the shadow texture?
+  gl.clearColor(1,1,0,1);
+  //sets the background color, and deletes any old canvas drawing data, speeding up the webGL.
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  //draw everything from the perspective of the light
+  for(let j=0; j<angels.length + 1; j++){
+    //find which buffer holds the image
+    let i = j == 0 ? 0 : angels[j-1].stage + 1;
+    //Soooo... perpective,
+    mat4.perspective(pers,lightPers[0],lightPers[1],lightPers[2],zf+3);
+    //rotate x-axis
+    mat4.rotate(pers,pers,rots[0][0],[1,0,0]);
+    //translate
+    mat4.translate(pers,pers,[newposit[0]/2-0.5,newposit[1]/2+1,newposit[2]/2]);
+    //rotate y-axis
+    mat4.rotate(pers,pers,rots[0][1],[0,1,0]);
+    if(j != 0){
+      //Move the angel to the right place
+      mat4.translate(pers,pers,[-angels[j-1].x, 0, -angels[j-1].z]);
+      //Make the angel turn the right way
+      mat4.rotate(pers,pers,angels[j-1].turn,[0,1,0]);
+    }
+
+    //indices
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,buffers[i].indices);
+    //bind positions buffer to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER,buffers[i].position);
+    //send those positions to the vertex shader.
+    gl.vertexAttribPointer(dInfo.aPlaces.vtx_pos,3,gl.FLOAT,false,0,0);
+    //enable those positions
+    gl.enableVertexAttribArray(dInfo.aPlaces.vtx_pos);
+
+    //send the matrix to the vertex shader
+    gl.uniformMatrix4fv(dInfo.uPlaces.persp,false,pers);
+
+    //draw the shadow texture!!
+    gl.drawElements(gl.TRIANGLES,i_c[i],gl.UNSIGNED_SHORT,0);
+  }
+  
+  //Now onto the real stuff
+  
+  //makes the WebGL disPlay everything on the canvas again
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  //tells the WebGL how big the canvas is.
+  gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+  //makes the background blue (not that it matters when the whole thing is being covered be a big white plane).
+  gl.clearColor(0,0,0,1);
+  //allows WebGL to use and access the gl program
+  gl.useProgram(program);
+  //sets the background color, and deletes any old canvas drawing data, speeding up the webGL.
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  //field of view: how many degrees can your character see?
+  var fov=60*Math.PI/180;
+  //z_near: If an object is closer than this, it won't show
+  var zn=0.01;
+  //translucent stuff should allow you to see through them, but since I'm not using them, and they slow down the program:
+  // gl.enable(gl.BLEND)
+  // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  // gl.disable(gl.BLEND);
+  
+  //makes the flickering light effect
+  let brightness = customNoise(fc/3);
+  let flicker = (flickerA<12&&Math.random()<0.3)||(flickerA>=4&&flickerA<=8);
+  //uncomment these lines to stop the flickering.
+  //brightness = 1;
+  //flicker=0;
+  
+  //loop through the buffers
+  for(let j=0; j<angels.length + 1; j++){
+    //find which buffer holds the image
+    let i = j == 0 ? 0 : angels[j-1].stage + 1;
+    //make the js form of the matrices.
+    pers=mat4.create();
+    var mtrx=mat4.create();
+    var proj=mat4.create();
+    //set the view perspectives
+    mat4.perspective(pers,fov,aspct,zn,zf);
+    //rotate x-axis
+    mat4.rotate(mtrx,mtrx,rots[0][0],[1,0,0]);
+    //translate 3D
+    mat4.translate(mtrx,mtrx,[newposit[0]/2,newposit[1]/2,newposit[2]/2]);
+    //rotate y-axis
+    mat4.rotate(mtrx,mtrx,rots[0][1],[0,1,0]);
+    if(j != 0){
+      //Move the angel to the right place
+      mat4.translate(mtrx,mtrx,[-angels[j-1].x, 0, -angels[j-1].z]);
+      //Make the angel turn the right way
+      mat4.rotate(mtrx,mtrx,angels[j-1].turn,[0,1,0]);
+    }
+
+    //set the light projection perspectives
+    mat4.perspective(proj,lightPers[0],lightPers[1],lightPers[2],zf+3);
+    //rotate x-axis
+    mat4.rotate(proj,proj,rots[0][0],[1,0,0]);
+    //translate 3D
+    mat4.translate(proj,proj,[newposit[0]/2-0.5,newposit[1]/2+1,newposit[2]/2]);
+    //rotate y-axis
+    mat4.rotate(proj,proj,rots[0][1],[0,1,0]);
+    if(j != 0){
+      //Move the angel to the right place
+      mat4.translate(proj,proj,[-angels[j-1].x, 0, -angels[j-1].z]);
+      //Make the angel turn the right way
+      mat4.rotate(proj,proj,angels[j-1].turn,[0,1,0]);
+    }
+
+    //indices
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,buffers[i].indices);
+    //bind positions buffer to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER,buffers[i].position);
+    //send those positions to the vertex shader.
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_pos,3,gl.FLOAT,false,0,0);
+    //enable those positions
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_pos);
+    //bind positions normals to WebGL/GLSL interface
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].normal);
+    //send those normals to the vertex shader.
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_norm,3,gl.FLOAT,false,0,0);
+    //enable those normals
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_norm);
+
+    //fetches the crate texture coordinates and binds the buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER,buffers[i].textur);
+    //send the info into the GLSL
+    gl.vertexAttribPointer(pInfo.aPlaces.vtx_txt,2,gl.FLOAT,false,0,0);
+    //enable the coordinates
+    gl.enableVertexAttribArray(pInfo.aPlaces.vtx_txt);
+    //stops the anti-aliasing
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+
+    //send the matrix to the vertex shader
+    gl.uniformMatrix4fv(pInfo.uPlaces.persp,false,pers);
+    //send the matrix to the vertex shader
+    gl.uniformMatrix4fv(pInfo.uPlaces.mtrx,false,mtrx);
+    //send the matrix to the vertex shader
+    gl.uniformMatrix4fv(pInfo.uPlaces.light,false,proj);
+    //send the light position info to the vertex shader
+    gl.uniform3fv(pInfo.uPlaces.lightP,[0, -1, 0]);
+    //send the view position info to the vertex shader
+    gl.uniform3fv(pInfo.uPlaces.viewPos,[0,0,0]);
+    //Send the brightness of the light
+    gl.uniform3fv(pInfo.uPlaces.lightB,flicker?[0,0,0]:[0.4*brightness+0.7,0.2*brightness+0.4,0.1*brightness+0.1]);
+    //Send the color of light
+    gl.uniform3fv(pInfo.uPlaces.lightC,[1,1-0.6*danger,1-0.6*danger]);
+
+    // Tell WebGL I want to affect texture unit 0
+    gl.activeTexture(gl.TEXTURE1);
+    // Bind the texture to texture unit 0
+    gl.bindTexture(gl.TEXTURE_2D,textu);
+    // Tell the shader we bound the texture to texture unit 0
+    gl.uniform1i(pInfo.uPlaces.sampler,1);
+
+    //Draw, Draw, Draw! Finally!
+    gl.drawElements(gl.TRIANGLES,i_c[i],gl.UNSIGNED_SHORT,0);
+  }
+}
+//}WebGL:Credit to Mozilla for some of the code.
+//{Draw & render
+//which keys are being pressed?
+var keys=[];
+//frameCount
+var fc=0;
+//called every frame:
+function render(){
+  //This next section is really messy, with 28 else/if statements. Looking back on it, I should have used a switch/case block here, but that was unnecsessary when I started this section. Therefore, the syntax was kept horrible.
+  //if the loading is finished
+  if(fc>60 && scene=="Play"){
+    //Flicker countdown
+    flickerA --;
+    if(flickerA <= 0){
+      //reset flicker
+      flickerA = flickerF;
+      //make the wait time shorter (exponential decay)
+      flickerF = Math.max(Math.ceil(flickerF*0.9),15);
+      //acknowledge the flicker
+      flickered++;
+    }
+    //reset danger variable
+    danger=0;
+    //If it is possible to move
+    if(move){
+      //if the right arrow key is being pressed
+      if(keys.arrowright){
+        //Determine how much to rotate
+        let offX=0.1;
+        //add to the rotations
+        rots[0][1]+=offX;
+        //Rotate the positions, too, to make it look like everything rotated around the character, instead of the middle of the map.
+        let x=posit[0][0],z=posit[0][2];
+        posit[0][0]=x*Math.cos(-offX)-z*Math.sin(-offX);
+        posit[0][2]=z*Math.cos(-offX)+x*Math.sin(-offX);
+      }
+      //if the left arrow key is being pressed
+      if(keys.arrowleft){
+        //Determine how much to rotate
+        let offX=-0.1;
+        //add to the rotations
+        rots[0][1]+=offX;
+        //Rotate the positions, too, to make it look like everything rotated around the character, instead of the middle of the map.
+        let x=posit[0][0],z=posit[0][2];
+        posit[0][0]=x*Math.cos(-offX)-z*Math.sin(-offX);
+        posit[0][2]=z*Math.cos(-offX)+x*Math.sin(-offX);
+      }
+      //if the up arrow key is being pressed
+      if(keys.arrowup){
+        //Determine how much to rotate
+        let offY=-0.1;
+        //add to the rotations
+        rots[0][0]+=offY;
+      }
+      //if the down arrow key is being pressed
+      if(keys.arrowdown){
+        //Determine how much to rotate
+        let offY=0.1;
+        //add to the rotations
+        rots[0][0]+=offY;
+      }
+      //if the w key is being pressed
+      if(keys.w){
+        //move to the left
+        posit[0][2]+=0.5;
+      }
+      //if the s key is being pressed
+      if(keys.s){
+        //move to the right
+        posit[0][2]-=0.5;
+      }
+      //if the a key is being pressed
+      if(keys.a){
+        //move to the front
+        posit[0][0]+=0.5;
+      }
+      //if the d key is being pressed
+      if(keys.d){
+        //move to the back
+        posit[0][0]-=0.5;
+      }
+      //Stop the Player from using the down key if already looking directly down.
+      if(rots[0][0] <  - Math.PI / 2){
+        rots[0][0] = - Math.PI / 2;
+      }
+      //Stop the Player from using the up key if already looking directly up.
+      if(rots[0][0] > Math.PI / 2){
+        rots[0][0] = Math.PI / 2;
+      }
+      //standardize the y-axis rotation
+      rots[0][1] = toStandard(rots[0][1]);
+    }
+    //The absolue Player positions after factoring out the rotations done to the positions.
+    let abs=[
+      (posit[0][0]*Math.cos(rots[0][1])-posit[0][2]*Math.sin(rots[0][1]))/2,
+      (posit[0][2]*Math.cos(rots[0][1])+posit[0][0]*Math.sin(rots[0][1]))/2
+    ];
+    //keep character in fence
+    if(abs[0] > 29.5){
+      abs[0] = 29.5;
+    }else if(abs[0] < -29.5){
+      abs[0] = -29.5;
+    }
+    if(abs[1] > 29.5){
+      abs[1] = 29.5;
+    }else if(abs[1] < -29.5){
+      abs[1] = -29.5;
+    }
+    //for every tree
+    for(let i=0; i<trees.length; i+=2){
+      //Find the distance from it
+      let dis = dist(abs[0],abs[1],trees[i],trees[i+1]);
+      //If colliding with the tree
+      if(dis < 0.8){
+        //Move the character to the edge of the tree.
+        let diff=[trees[i]-abs[0],trees[i+1]-abs[1]];
+        diff[0]*=0.8/dis;
+        diff[1]*=0.8/dis;
+        abs[0]=trees[i]-diff[0];
+        abs[1]=trees[i+1]-diff[1];
+        //Stop the loop
+        i = Infinity;
+      }
+    }
+    //for every gravestone
+    for(let i=0; i<stones.length; i+=2){
+      //check if colliding
+      if(abs[0]+1.2>stones[i]&&abs[0]-1.2<stones[i]&&abs[1]+0.9>stones[i+1]&&abs[1]-0.9<stones[i+1]){
+        //move Player out of stone
+        if(abs[1]+0.6<stones[i+1]){
+          abs[1]=stones[i+1]-0.9;
+        }else if(abs[1]-0.6>stones[i+1]){
+          abs[1]=stones[i+1]+0.9;
+        }else if(abs[0]>stones[i]){
+          abs[0]=stones[i]+1.2;
+        }else{
+          abs[0]=stones[i]-1.2;
+        }
+        //Stop the loop
+        i = Infinity;
+      }
+    }
+    //for every angel
+    for(let i=0; i<angels.length; i++){
+      //Experimental: Make dem turn!
+      //angels[i].turn+=0.1;
+      //countdown until when they are allowed to move again.
+      angels[i].time --;
+      //Find the distance from it
+      let dis = dist(abs[0],abs[1],angels[i].x,angels[i].z);
+      //difference between angel's position and Player's
+      let diff=[abs[0]-angels[i].x,abs[1]-angels[i].z];
+      //angle of Player to angel (my favorite variable name)
+      let angelangle=2*Math.PI-toStandard((diff[1]<0?0:Math.PI)+Math.atan(diff[0]/diff[1]));
+      //angle to angel compared with angle Player is facing
+      let facingDiff=Math.abs(angelangle-rots[0][1]);
+      //console.log(facingDiff.toFixed(3) + "\n" + angelangle.toFixed(3) + "\n"+rots[0][1].toFixed(3));
+      //console.log(facingDiff);
+      //If angel wants to move
+      if((flickerA==6||(facingDiff>Math.PI-2.2&&facingDiff<Math.PI+2.2))&&angels[i].time<=0){
+        if(dis<7){
+          //If the angel was reaaly close
+          //automatically go to attack stage
+          angels[i].stage=Math.floor(Math.random()*4)+3;
+          //Move right next to Player
+          diff[0]*=2/dis;
+          diff[1]*=2/dis;
+          angels[i].x=abs[0]-diff[0];
+          angels[i].z=abs[1]-diff[1];
+          //Lose
+          move = 0;
+          setTimeout(function(){
+            scene="lost";
+            document.getElementById("Play").style.visibility="hidden";
+            document.getElementById("miniscore").style.visibility="hidden";
+            document.getElementById("lost").style.visibility="visible";
+            document.getElementById("score").innerHTML="Score: " + ~~score;
+            let proofS=(~~score).toString(36);
+            document.getElementById("proof").innerHTML="Proof: " + proofS;
+            document.exitPointerLock=document.exitPointerLock||document.mozExitPointerLock;
+            document.exitPointerLock();
+          }, 500);
+        }else if(dis<24){
+          //If the statue is within sight
+          //Make it go to the next stage
+          angels[i].stage ++;
+          //If it is in its attack stage, randomly choose which position it is contorted into.
+          if(angels[i].stage>=3){
+            angels[i].stage=Math.floor(Math.random()*4)+3;
+          }
+          //Move closer to the Player
+          diff[0]*=4.5/dis;
+          diff[1]*=4.5/dis;
+          angels[i].x += diff[0];
+          angels[i].z += diff[1];
+        }else{
+          //If the statue was really far
+          //reset to passive stage
+          angels[i].stage = 0;
+          //move to edge of vision
+          diff[0]*=21/dis;
+          diff[1]*=21/dis;
+          angels[i].x=abs[0]-diff[0];
+          angels[i].z=abs[1]-diff[1];
+        }
+        //face toward Player
+        angels[i].turn=2*Math.PI-angelangle+Math.random()-0.5;
+        //Add onto the wait time before the next move
+        angels[i].time=Math.min(flickerF/3, 30);
+        //For every other statue
+        for(let j=0; j<angels.length; j++){
+          let dista=dist(angels[j].x,angels[j].z,angels[i].x,angels[i].z);
+          if(i!=j&&dista<4){
+            //Move the statue away from the other one.
+            diff=[angels[j].x-angels[i].x,angels[j].z-angels[i].z];
+            diff[0]*=5/dista;
+            diff[1]*=5/dista;
+            angels[i].x=angels[j].x-diff[0];
+            angels[i].z=angels[j].z-diff[1];
+          }
+        }
+        //for every tree
+        for(let j=0; j<trees.length; j+=2){
+          //Find the distance from it
+          let dista = dist(angels[i].x,angels[i].z,trees[j],trees[j+1]);
+          //If colliding with the tree
+          if(dista < 0.8){
+            //Move the statue to the edge of the tree.
+            diff=[trees[j]-angels[i].x,trees[j+1]-angels[i].z];
+            diff[0]*=2/dista;
+            diff[1]*=2/dista;
+            angels[i].x=trees[j]-diff[0];
+            angels[i].z=trees[j+1]-diff[1];
+            //Stop the loop
+            j = Infinity;
+          }
+        }
+        //for every gravestone
+        for(let j=0; j<stones.length; j+=2){
+          //check if angel is colliding
+          if(angels[i].x+2>stones[j]&&angels[i].x-2<stones[j]&&angels[i].z+2>stones[j+1]&&angels[i].z-2<stones[j+1]){
+            //move angel out of stone
+            if(angels[i].z+1<stones[j+1]){
+              angels[i].z=stones[j+1]-2;
+            }else if(angels[i].z-1>stones[j+1]){
+              angels[i].z=stones[j+1]+2;
+            }else if(angels[i].x>stones[j]){
+              angels[i].x=stones[j]+2;
+            }else{
+              angels[i].x=stones[j]-2;
+            }
+            //Stop the loop
+            j = Infinity;
+          }
+        }
+        //if the angel got out the perimeter, then teleport it to the other side of the map to confuse Player
+        if(angels[i].x > 28){
+          angels[i].x = -28;
+        }else if(angels[i].x < -28){
+          angels[i].x = 28;
+        }
+        if(angels[i].z > 28){
+          angels[i].z = -28;
+        }else if(angels[i].z < -28){
+          angels[i].z = 28;
+        }
+      }
+      if(dis < 9){
+        danger = Math.max(danger,Math.min((9 - dis)/2, 1));
+        if(dis < 2.5){
+          //Move the character to the edge of the statue.
+          diff=[angels[i].x-abs[0],angels[i].z-abs[1]];
+          diff[0]*=2.5/dis;
+          diff[1]*=2.5/dis;
+          abs[0]=angels[i].x-diff[0];
+          abs[1]=angels[i].z-diff[1];
+        }
+      }
+    }
+    //If the lights are out
+    if(flickerA == 6){
+      //If it is time to add an angel
+      if(additions.indexOf(flickered)!=-1){
+        angels.push({
+          x:-28*Math.sign(abs[0]),
+          z:-28*Math.sign(abs[1]),
+          stage:0,
+          time:0,
+          turn:0
+        });
+      }
+    }
+    //update the positions
+    posit[0][0] = (abs[0]*Math.cos(-rots[0][1])-abs[1]*Math.sin(-rots[0][1]))*2;
+    posit[0][2] = (abs[1]*Math.cos(-rots[0][1])+abs[0]*Math.sin(-rots[0][1]))*2;
+    //draw the WebGL!!
+    draw();
+    //update the score
+    score += 10000/Math.pow(flickerF, 2);
+    document.getElementById("miniscore").innerHTML=~~score;
+  }else if(fc==3){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Prepare to make the ground
+    let _=positions.length/3;
+    //Make the ground
+    positions.push(
+      -50,-2, 50,
+       50,-2, 50,
+       50,-2,-50,
+      -50,-2,-50
+    );
+    normals.push(
+      0,1,0,
+      0,1,0,
+      0,1,0,
+      0,1,0
+    );
+    //make the fence
+    colors2.push(3/64,0,3/64,0,3/64,0,3/64,0);
+    indices.push(_,_+1,_+2,_,_+2,_+3);
+    positions.push(
+      -30,-2, 30,
+      -30, 3, 30,
+      -10, 3, 30,
+      -10,-2, 30,
+       10,-2, 30,
+       10, 3, 30,
+       30, 3, 30,
+       30,-2, 30,
+      -30,-2,-30,
+      -30, 3,-30,
+      -10, 3,-30,
+      -10,-2,-30,
+       10,-2,-30,
+       10, 3,-30,
+       30, 3,-30,
+       30,-2,-30,
+       30,-2,-30,
+       30, 3,-30,
+       30, 3,-10,
+       30,-2,-10,
+       30,-2, 10,
+       30, 3, 10,
+       30, 3, 30,
+       30,-2, 30,
+      -30,-2,-30,
+      -30, 3,-30,
+      -30, 3,-10,
+      -30,-2,-10,
+      -30,-2, 10,
+      -30, 3, 10,
+      -30, 3, 30,
+      -30,-2, 30
+    );
+    normals.push(
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0,-1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+       0,0, 1,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+      -1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0,
+       1,0, 0
+    );
+    colors2.push(
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th,
+      0, 1/th,
+      1, 1/th,
+      1, 64/th,
+      0, 64/th
+    );
+    indices.push(
+      _+4,_+5,_+6,
+      _+4,_+6,_+7,
+      _+7,_+6,_+9,
+      _+8,_+7,_+9,
+      _+8,_+9,_+10,
+      _+8,_+10,_+11,
+      _+13,_+12,_+14,
+      _+14,_+12,_+15,
+      _+14,_+15,_+17,
+      _+15,_+16,_+17,
+      _+17,_+16,_+18,
+      _+18,_+16,_+19,
+      _+21,_+20,_+22,
+      _+22,_+20,_+23,
+      _+22,_+23,_+25,
+      _+23,_+24,_+25,
+      _+25,_+24,_+26,
+      _+26,_+24,_+27,
+      _+28,_+29,_+30,
+      _+28,_+30,_+31,
+      _+31,_+30,_+33,
+      _+32,_+31,_+33,
+      _+32,_+33,_+34,
+      _+32,_+34,_+35
+    );
+  }else if(fc == 5){
+    //load central tree
+    tree(0,0,-2,0,0.35);
+  }else if(fc == 7){
+    //load inner tree 1
+    tree(0,13,-2,13,0.35);
+  }else if(fc == 9){
+    //load inner tree 2
+    tree(0,13,-2,-13,0.35);
+  }else if(fc == 11){
+    //load inner tree 3
+    tree(0,-13,-2,13,0.35);
+  }else if(fc == 13){
+    //load inner tree 4
+    tree(0,-13,-2,-13,0.35);
+  }else if(fc == 15){
+    //load corner tree 1
+    tree(0,26,-2,26,0.35);
+  }else if(fc == 17){
+    //load corner tree 2
+    tree(0,26,-2,-26,0.35);
+  }else if(fc == 19){
+    //load corner tree 3
+    tree(0,-26,-2,26,0.35);
+  }else if(fc == 21){
+    //load corner tree 4
+    tree(0,-26,-2,-26,0.35);
+  }else if(fc == 23){
+    //load the first set of 70 stones
+    for(let i=0; i<stones.length/4; i+=2){
+      stone(stones[i],0,stones[i+1]);
+    }
+  }else if(fc == 25){
+    //load the second set of 70 stones
+    for(let i=stones.length/4; i<stones.length/2; i+=2){
+      stone(stones[i],0,stones[i+1]);
+    }
+  }else if(fc == 27){
+    //load the third set of 70 stones
+    for(let i=stones.length/2; i<3*stones.length/4; i+=2){
+      stone(stones[i],0,stones[i+1]);
+    }
+  }else if(fc == 29){
+    //load the fourth set of 70 stones
+    for(let i=3*stones.length/4; i<stones.length; i+=2){
+      stone(stones[i],0,stones[i+1]);
+    }
+  }else if(fc == 31){
+    //create the WebGL buffer
+    buffers[0]=initB(positions,normals,indices,colors2,0,[0,0,0]);
+  }else if(fc == 33){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(0);
+  }else if(fc == 35){
+    //create the WebGL buffer
+    buffers[1]=initB(positions,normals,indices,colors2,1,[0,0,0]);
+  }else if(fc == 37){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(1);
+  }else if(fc == 39){
+    //create the WebGL buffer
+    buffers[2]=initB(positions,normals,indices,colors2,2,[0,0,0]);
+  }else if(fc == 41){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(2);
+  }else if(fc == 43){
+    //create the WebGL buffer
+    buffers[3]=initB(positions,normals,indices,colors2,3,[0,0,0]);
+  }else if(fc == 45){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(3);
+  }else if(fc == 47){
+    //create the WebGL buffer
+    buffers[4]=initB(positions,normals,indices,colors2,4,[0,0,0]);
+  }else if(fc == 49){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(3);
+  }else if(fc == 51){
+    //create the WebGL buffer
+    buffers[5]=initB(positions,normals,indices,colors2,5,[0,0,0]);
+  }else if(fc == 53){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(3);
+  }else if(fc == 55){
+    //create the WebGL buffer
+    buffers[6]=initB(positions,normals,indices,colors2,6,[0,0,0]);
+  }else if(fc == 57){
+    //clear the positions
+    positions=[];
+    //and the shading normals
+    normals=[];
+    //and the indices
+    indices=[];
+    //create the array for texture Coordinates (bad name for the variable)
+    colors2=[];
+    //Make the statue
+    statue(3);
+  }else if(fc == 59){
+    //create the WebGL buffer
+    buffers[7]=initB(positions,normals,indices,colors2,7,[0,0,0]);
+  }
+  //if it is loading:
+  if(fc<=60){
+    //if the loading just finished
+    if(fc==60){
+      //hide the loading symbol
+      document.getElementById("load").style.visibility="hidden";
+    }
+    //what does the loading say?
+    //obviously, loading
+    var string="Loading";
+    for(let i=0;i<fc%4;i++){
+      //with 1 - 3 periods after it.
+      string+=".";
+    }
+    //and how far it loaded
+    string+="<br>"+(10*fc/6).toFixed(1)+"%";
+    //update what the loading says
+    document.getElementById("load").innerHTML=string;
+  }
+  //add to the frame count
+  fc++;
+  if(scene=="story"){
+    storyC--;
+    if((storyC>0&&Math.random()<0.4)||(storyC>=4&&storyC<=6)){
+      document.getElementById("story").style.opacity=0;
+    }else{
+      document.getElementById("story").style.opacity=0.4+0.6*customNoise(fc/6);
+    }
+  }else if(scene=="Home"){
+    storyC--;
+    if((storyC>0&&Math.random()<0.4)||(storyC>=4&&storyC<=6)){
+      document.getElementById("Home").style.opacity=0;
+    }else{
+      document.getElementById("Home").style.opacity=0.4+0.6*customNoise(fc/6);
+    }
+  }else if(scene=="How"){
+    storyC--;
+    if((storyC>0&&Math.random()<0.4)||(storyC>=4&&storyC<=6)){
+      document.getElementById("How").style.opacity=0;
+    }else{
+      document.getElementById("How").style.opacity=0.4+0.6*customNoise(fc/6);
+    }
+  }else if(scene=="Lead"){
+    storyC--;
+    if((storyC>0&&Math.random()<0.4)||(storyC>=4&&storyC<=6)){
+      document.getElementById("Lead").style.opacity=0;
+    }else{
+      document.getElementById("Lead").style.opacity=0.4+0.6*customNoise(fc/6);
+    }
+  }else if(scene=="quote"){
+    qTime -= 0.05;
+    document.getElementById("quot").style.opacity=Math.min(1,qTime);
+    document.getElementById("miniscore").style.visibility="visible";
+    if(qTime <= 0){
+      scene="Play";
+      document.getElementById("quot").style.visibility="hidden";
+      //enter pointer lock
+      canvas.requestPointerLock=canvas.requestPointerLock||canvas.mozRequestPointerLock;
+      canvas.requestPointerLock();
+    }
+  }
+}
+//call the render function every 90 milliseconds
+setInterval(render,60);
+
+
+//when Player presses key
+function down(e){
+  //prevent scrolling when arrow keys space is pressed
+  e.preventDefault();
+  //add the key to the array
+  keys[e.key.toLowerCase()]=1;
+  //exit pointerlock
+  if(e.key.toLowerCase()=="p"){
+    document.exitPointerLock=document.exitPointerLock||document.mozExitPointerLock;
+    document.exitPointerLock();
+  }
+}
+//when Player releases key
+function up(e){
+  //take the key out of the array
+  delete keys[e.key.toLowerCase()];
+}
+//when Player clicks screen
+
+function click(e){
+  if(e.target.id=="Play"){
+    //enter pointer lock
+    canvas.requestPointerLock=canvas.requestPointerLock||canvas.mozRequestPointerLock;
+    canvas.requestPointerLock();
+  }else if(e.target.innerHTML=="Play"&&fc>60){
+    qTime = 10;
+    scene="quote";
+    setTimeout(function(){
+      scene="quote";
+    }, 300);
+    document.getElementById("Home").style.visibility="hidden";
+    if(sawQ){
+      qTime=0;
+    }else{
+      document.getElementById("quot").style.visibility="visible";
+    }
+    document.getElementById("Play").style.visibility="visible";
+    sawQ = 1;
+    danger=0;
+    flickerA=330;
+    flickerF=280;
+    score=0;
+    angels=[];
+    posit=[
+      [0,0,-6]
+    ];
+    rots=[
+      [0,0]
+    ];
+    move=1;
+    flickered=0;
+    draw();
+  }else if(e.target.innerHTML=="How"){
+    setTimeout(function(){
+      scene="How";
+      document.getElementById("Home").style.visibility="hidden";
+      document.getElementById("How").style.visibility="visible";
+    },300);
+    storyC=10;
+  }else if(e.target.innerHTML=="Leaderboard"){
+    setTimeout(function(){
+      scene="Lead";
+      document.getElementById("Home").style.visibility="hidden";
+      document.getElementById("Lead").style.visibility="visible";
+    },300);
+    storyC=10;
+  }else if(e.target.innerHTML=="Back"){
+    setTimeout(function(){
+      scene="Home";
+      document.getElementById("Home").style.visibility="visible";
+      document.getElementById("How").style.visibility="hidden";
+      document.getElementById("Lead").style.visibility="hidden";
+      document.getElementById("lost").style.visibility="hidden";
+    },300);
+    storyC=10;
+  }else if(e.target.id=="warning"||e.target.parentNode.id=="warning"){
+    document.getElementById("warning").style.visibility="hidden";
+    scene="story";
+    let sto=document.getElementById("story");
+    sto.style.visibility="visible";
+    sto.innerHTML=story[where]+"<p>(Click)</p>";
+    storyC = 6;
+  }else if(e.target.id=="story"||e.target.parentNode.id=="story"){
+    let sto=document.getElementById("story");
+    if(where<story.length-1){
+      where++;
+      setTimeout(function(){
+        sto.innerHTML=story[where]+"<p>(Click)</p>";
+      },300);
+      storyC=10;
+    }else{
+      setTimeout(function(){
+        sto.style.visibility="hidden";
+        scene="Home";
+        document.getElementById("Home").style.visibility="visible";
+      },300);
+      storyC=10;
+    }
+  }
+}
+//when user moves the cursor
+function mMove(e){
+  if(scene=="Play"){
+    //find a fraction of how far the user moved the mouse
+    var offX=e.movementX/100;
+    var offY=e.movementY/100;
+    //add onto the rotations
+    rots[0][1]+=offX;
+    rots[0][0]+=offY;
+    //Rotate the positions, too, to make it look like everything rotated around the character, instead of the middle of the map.
+    var x=posit[0][0],z=posit[0][2];
+    posit[0][0]=x*Math.cos(-offX)-z*Math.sin(-offX);
+    posit[0][2]=z*Math.cos(-offX)+x*Math.sin(-offX);
+  }
+}
+
+//event listeners
+document.body.addEventListener('keydown',down);
+document.body.addEventListener('keyup',up);
+document.body.addEventListener('mousemove',mMove);
+document.body.addEventListener('click',click);
+
+//}Draw & render
+    </script>
+    <!--For the restart button-->
+    <script></script>
+  </body>
+</html>
+<!--2500+ lines!-->
