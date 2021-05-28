@@ -161,4 +161,5 @@ window.addEventListener("load", () => {
       }, 30000);
     });
   };
+  post();
 });
