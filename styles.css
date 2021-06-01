@@ -29,6 +29,9 @@ body{
   height: 100vh;
   padding-top: 30vh;
   text-align: center;
+}.git{
+  filter: invert(1);
+  -webkit-filter: invert(1);
 }#back{
   width: 100vw;
   height: 100vh;
