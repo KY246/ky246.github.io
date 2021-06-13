@@ -109,7 +109,7 @@ window.addEventListener("load", () => {
    
     fc ++;
     
-    if(window.location.href.match(/games\/.+/g)){
+    if(!window.location.href.match(/games\/.+/g)){
       window.requestAnimationFrame(draw);
     }
   };
