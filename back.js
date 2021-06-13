@@ -115,4 +115,8 @@ window.addEventListener("load", () => {
   };
 
   window.requestAnimationFrame(draw);
+  
+  if(window.location.href.match(/games\/.+/g)){
+    window.onscroll = window.onresize = draw;
+  }
 });
