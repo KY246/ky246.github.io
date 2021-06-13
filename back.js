@@ -108,7 +108,10 @@ window.addEventListener("load", () => {
     }
    
     fc ++;
-    window.requestAnimationFrame(draw);
+    
+    if(window.location.href.match(/games\/.+/g)){
+      window.requestAnimationFrame(draw);
+    }
   };
 
   window.requestAnimationFrame(draw);
